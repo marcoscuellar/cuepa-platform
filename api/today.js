@@ -10,11 +10,10 @@ module.exports = (req, res) => {
   const u = new URL(req.url, 'http://x');
   const ws = u.searchParams.get('ws') || '';
   // Google Calendar connect returns to /<ws>?google=...#connect; that flow lives in the classic hub.
-  // During onboarding (/<ws>/start sets a short-lived cookie) it goes back to the onboarding card instead.
+  // Always land back on the onboarding card (new look): it shows the result, turns on the main calendar,
+  // and offers "Choose calendars" for anyone who wants more. Never drop people into the classic hub.
   if (u.searchParams.has('google') && /^[a-z0-9-]{1,60}$/.test(ws)) {
-    const onboarding = /(?:^|;\s*)cuepa_start=1(?:;|$)/.test(String(req.headers.cookie || ''));
-    const g = encodeURIComponent(u.searchParams.get('google'));
-    return go(res, onboarding ? '/' + ws + '/start?google=' + g : '/' + ws + '/hub?google=' + g + '#connect');
+    return go(res, '/' + ws + '/start?google=' + encodeURIComponent(u.searchParams.get('google')));
   }
   if (!/^[a-z0-9-]{1,60}$/.test(ws) || !WORKSPACES[ws]) { res.statusCode = 404; return res.end('Not found'); }
   let s = null; try { s = readSession(req); } catch (e) { s = null; }
