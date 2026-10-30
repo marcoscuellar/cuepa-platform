@@ -1,0 +1,66 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/_app/:path*",
+      "destination": "/",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/google/callback",
+      "destination": "/api/google?action=callback"
+    },
+    {
+      "source": "/api/gmail/callback",
+      "destination": "/api/gmail?action=callback"
+    },
+    {
+      "source": "/:ws([a-z0-9-]+)/today",
+      "destination": "/api/today?ws=:ws"
+    },
+    {
+      "source": "/:ws([a-z0-9-]+)/inbox",
+      "destination": "/api/gmail?action=page&ws=:ws"
+    },
+    {
+      "source": "/t/:token",
+      "destination": "/timecard"
+    },
+    {
+      "source": "/:ws([a-z0-9-]+)/hub",
+      "destination": "/api/hub?ws=:ws"
+    },
+    {
+      "source": "/:ws((?!privacy$|terms$|timecard$)[a-z0-9-]+)",
+      "destination": "/api/today?ws=:ws"
+    }
+  ],
+  "functions": {
+    "api/hub.js": {
+      "includeFiles": "_app/**"
+    },
+    "api/google.js": {
+      "maxDuration": 60
+    },
+    "api/gmail.js": {
+      "maxDuration": 30
+    },
+    "api/timecards.js": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
+  ]
+}
