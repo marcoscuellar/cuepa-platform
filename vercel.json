@@ -22,6 +22,10 @@
       "destination": "/api/today?ws=:ws"
     },
     {
+      "source": "/:ws([a-z0-9-]+)/start",
+      "destination": "/api/start?ws=:ws"
+    },
+    {
       "source": "/:ws([a-z0-9-]+)/inbox",
       "destination": "/api/gmail?action=page&ws=:ws"
     },

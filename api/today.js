@@ -10,7 +10,12 @@ module.exports = (req, res) => {
   const u = new URL(req.url, 'http://x');
   const ws = u.searchParams.get('ws') || '';
   // Google Calendar connect returns to /<ws>?google=...#connect; that flow lives in the classic hub.
-  if (u.searchParams.has('google') && /^[a-z0-9-]{1,60}$/.test(ws)) return go(res, '/' + ws + '/hub?google=' + encodeURIComponent(u.searchParams.get('google')) + '#connect');
+  // During onboarding (/<ws>/start sets a short-lived cookie) it goes back to the onboarding card instead.
+  if (u.searchParams.has('google') && /^[a-z0-9-]{1,60}$/.test(ws)) {
+    const onboarding = /(?:^|;\s*)cuepa_start=1(?:;|$)/.test(String(req.headers.cookie || ''));
+    const g = encodeURIComponent(u.searchParams.get('google'));
+    return go(res, onboarding ? '/' + ws + '/start?google=' + g : '/' + ws + '/hub?google=' + g + '#connect');
+  }
   if (!/^[a-z0-9-]{1,60}$/.test(ws) || !WORKSPACES[ws]) { res.statusCode = 404; return res.end('Not found'); }
   let s = null; try { s = readSession(req); } catch (e) { s = null; }
   if (!canSee(s, ws)) return go(res, '/?next=/' + ws);
@@ -365,7 +370,13 @@ $('needs').addEventListener('keydown',e=>{const c=e.target.closest('.need');if(c
 $('vList').onclick=()=>{S.view='list';try{localStorage.setItem('cuepa_dayview','list')}catch(e){}renderDay();};
 $('vLine').onclick=()=>{S.view='line';try{localStorage.setItem('cuepa_dayview','line')}catch(e){}renderDay();};
 $('resync').onclick=async()=>{await loadCal();render();toast('Calendar resynced.');};
-Promise.all([loadCal(),loadTc(),loadMail()]).then(render);
+Promise.all([loadCal(),loadTc(),loadMail()]).then(()=>{
+  // Brand-new person: nothing connected and they haven't skipped onboarding → one card at a time at /<ws>/start.
+  let skipped=false;try{skipped=localStorage.getItem('cuepa_start_'+WS)==='done'}catch(e){skipped=true}
+  const calOk=S.cal&&S.cal.connected&&!S.cal.error, mailOk=S.mail&&S.mail.connected;
+  if(!skipped&&!calOk&&!mailOk){location.replace('/'+WS+'/start');return;}
+  render();
+});
 setInterval(()=>{if(!document.hidden)renderDay();},60000);
 </script></body></html>`;
 }

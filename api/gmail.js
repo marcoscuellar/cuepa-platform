@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
       res.setHeader('Set-Cookie', flowCookie('', 0));
       if (!flow || flow.exp < Date.now()) return go(res, '/');
       const ws = flow.ws;
-      const back = (q) => go(res, `/${ws}/inbox?${q}`);
+      const back = (q) => go(res, `/${ws}/${flow.back === 'start' ? 'start' : 'inbox'}?${q}`);
       if (url.searchParams.get('error')) return back('connect=cancelled');
       const st = String(url.searchParams.get('state') || '');
       if (st.length !== flow.state.length || !crypto.timingSafeEqual(Buffer.from(st), Buffer.from(flow.state))) return back('connect=failed');
@@ -73,7 +73,8 @@ module.exports = async (req, res) => {
 
     if (action === 'start') {
       const state = crypto.randomBytes(24).toString('base64url');
-      res.setHeader('Set-Cookie', flowCookie(g.seal({ state, ws, exp: Date.now() + 600000 }, 'gmail-flow')));
+      const back = url.searchParams.get('back') === 'start' ? 'start' : 'inbox'; // where Google sends them afterwards
+      res.setHeader('Set-Cookie', flowCookie(g.seal({ state, ws, back, exp: Date.now() + 600000 }, 'gmail-flow')));
       return go(res, g.authUrl(state));
     }
     if (action === 'status') {
