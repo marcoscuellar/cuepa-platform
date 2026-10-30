@@ -164,6 +164,20 @@ nav a.on .ct{background:var(--turq);color:#04201d}
 @media (max-width:980px){.cols{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:820px){.shell{grid-template-columns:minmax(0,1fr)}.side{position:static;height:auto}.side .tiles,.side .me{display:none}nav{grid-auto-flow:column;overflow-x:auto}.topbar{position:static;padding:12px 16px}.center{padding:20px 16px 40px}.why{padding:20px 16px 40px}.conn{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* Start-here tour: a soft spotlight on one real thing at a time */
+.tourbtn{background:var(--soft);border:0;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+.tourbtn:hover{background:var(--line)}
+.tour-spot{position:absolute;z-index:40;border-radius:18px;box-shadow:0 0 0 9999px rgba(10,10,10,.58),0 0 0 2px var(--turq);pointer-events:none;transition:all .35s cubic-bezier(.2,.7,.2,1)}
+:root[data-look="dark"] .tour-spot{box-shadow:0 0 0 9999px rgba(0,0,0,.72),0 0 0 2px var(--turq)}
+.tour-card{position:absolute;z-index:41;width:min(340px,calc(100vw - 32px));background:var(--card);color:var(--ink);border-radius:18px;padding:18px 20px;box-shadow:0 2px 6px rgba(0,0,0,.12),0 28px 60px rgba(0,0,0,.35);display:grid;gap:10px;transition:top .35s cubic-bezier(.2,.7,.2,1),left .35s cubic-bezier(.2,.7,.2,1)}
+.tour-card .lab{display:flex;justify-content:space-between;gap:10px}
+.tour-card h3{margin:0;font-size:19px;font-weight:800;letter-spacing:-.025em;line-height:1.15}
+.tour-card p{margin:0;color:var(--ink2);font-size:14.5px;line-height:1.5}
+.tour-card .acts{display:flex;gap:8px;align-items:center;margin-top:4px}
+.tour-card .skip{margin-left:auto;background:none;border:0;color:var(--mute);font-size:13px;padding:6px 4px}
+.tour-card .skip:hover{color:var(--ink)}
+.tour-dots{display:flex;gap:5px}.tour-dots i{width:6px;height:6px;border-radius:50%;background:var(--line);display:block}.tour-dots i.on{background:var(--turq)}
+@media (max-width:820px){.tour-card{position:fixed;left:16px!important;right:16px;bottom:16px;top:auto!important;width:auto}}
 </style></head><body>
 <div class="shell">
   <aside class="side">
@@ -195,6 +209,7 @@ nav a.on .ct{background:var(--turq);color:#04201d}
       <form class="search" id="sform" role="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
         <input id="q" placeholder="Search your email, like “invoice” or a name" aria-label="Search your email"><kbd>⌘K</kbd></form>
       <div class="conn" id="conn"><i id="connDot"></i><span id="connTxt">Checking connections…</span></div>
+      <button class="tourbtn" id="tourBtn" type="button">Show me around</button>
     </div>
 
     <main class="center">
@@ -365,7 +380,47 @@ $('needs').addEventListener('keydown',e=>{const c=e.target.closest('.need');if(c
 $('vList').onclick=()=>{S.view='list';try{localStorage.setItem('cuepa_dayview','list')}catch(e){}renderDay();};
 $('vLine').onclick=()=>{S.view='line';try{localStorage.setItem('cuepa_dayview','line')}catch(e){}renderDay();};
 $('resync').onclick=async()=>{await loadCal();render();toast('Calendar resynced.');};
-Promise.all([loadCal(),loadTc(),loadMail()]).then(render);
+Promise.all([loadCal(),loadTc(),loadMail()]).then(render).then(()=>{if(!tourDone())setTimeout(()=>tour.start(),700);});
 setInterval(()=>{if(!document.hidden)renderDay();},60000);
+
+/* ---- Start-here tour: shows once per person, replay from "Show me around" ---- */
+const TOUR_KEY='cuepa_tour_'+WS;
+function tourDone(){try{return localStorage.getItem(TOUR_KEY)==='done'}catch(e){return true}}
+const STEPS=[
+  {el:()=>$('needs').parentElement,lab:'Start here',title:'What needs you.',text:'Every morning this column is the whole to-do list: only the things that need your decision. Everything else is already tracked or prepared.'},
+  {el:()=>document.querySelector('.day'),lab:'Your day',title:'Today, in one view.',text:'Your calendar, deadlines and program events together. Switch between List and One line, whichever reads faster for you.'},
+  {el:()=>$('why'),lab:'Why',title:'Why this is here.',text:'Pick any card on the left and this panel explains where it came from and what happens if you act on it. No guessing.'},
+  {el:()=>document.querySelector('nav a[href$="/inbox"]'),lab:'Email',title:'Your inbox lives here.',text:'Read and reply to your Gmail without leaving the hub. Nothing is ever sent without you pressing send.'},
+  {el:()=>document.querySelector('nav a[href$="#connect"]'),lab:'Last step',title:'Set up in about 5 minutes.',text:'Connect your calendar and email, then add your team. Setup walks you through it one step at a time. Classes and your new website are built by CUEPA, so nothing to do there.',cta:['Go to Setup','/'+WS+'/hub#connect']}
+];
+const tour={i:0,spot:null,card:null,
+  start(){this.i=0;this.spot=document.createElement('div');this.spot.className='tour-spot';this.card=document.createElement('div');this.card.className='tour-card';this.card.setAttribute('role','dialog');this.card.setAttribute('aria-live','polite');document.body.append(this.spot,this.card);document.body.style.overflowX='hidden';this.show();addEventListener('resize',this.onResize);document.addEventListener('keydown',this.onKey);},
+  onResize:()=>tour.place(),
+  onKey:e=>{if(e.key==='Escape')tour.end();else if(e.key==='ArrowRight'||e.key==='Enter')tour.next();else if(e.key==='ArrowLeft')tour.prev();},
+  show(){const s=STEPS[this.i];const el=s.el();if(!el){this.next();return;}
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    const last=this.i===STEPS.length-1;
+    this.card.innerHTML='<div class="lab"><span class="t">'+esc(s.lab)+'</span><span>'+(this.i+1)+' of '+STEPS.length+'</span></div><h3>'+esc(s.title)+'</h3><p>'+esc(s.text)+'</p>'
+      +'<div class="acts">'+(this.i?'<button class="btn" data-t="prev">Back</button>':'')
+      +(last&&s.cta?'<a class="btn go" href="'+esc(s.cta[1])+'" data-t="done">'+esc(s.cta[0])+'</a><button class="btn dark" data-t="done">Done</button>':'<button class="btn dark" data-t="next">Next →</button>')
+      +'<button class="skip" data-t="end">'+(last?'Close':'Skip tour')+'</button></div>'
+      +'<div class="tour-dots">'+STEPS.map((_,k)=>'<i class="'+(k===this.i?'on':'')+'"></i>').join('')+'</div>';
+    this.card.onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;const t=b.dataset.t;if(t==='next')this.next();else if(t==='prev')this.prev();else this.end();};
+    setTimeout(()=>this.place(),250);setTimeout(()=>this.place(),700);
+    const f=this.card.querySelector('.btn.dark,.btn.go');f&&f.focus({preventScroll:true});},
+  place(){const s=STEPS[this.i];const el=s&&s.el();if(!el||!this.spot)return;const r=el.getBoundingClientRect();const pad=10;const sx=scrollX,sy=scrollY;
+    Object.assign(this.spot.style,{left:(r.left+sx-pad)+'px',top:(r.top+sy-pad)+'px',width:(r.width+pad*2)+'px',height:(r.height+pad*2)+'px'});
+    if(innerWidth<=820)return;
+    const cw=this.card.offsetWidth,ch=this.card.offsetHeight;let left,top;
+    if(r.right+cw+28<innerWidth){left=r.right+sx+18;top=r.top+sy;}
+    else if(r.left-cw-28>0){left=r.left+sx-cw-18;top=r.top+sy;}
+    else{left=Math.max(16,Math.min(r.left+sx,innerWidth-cw-16));top=r.bottom+sy+18;}
+    top=Math.max(sy+16,Math.min(top,sy+innerHeight-ch-16));
+    Object.assign(this.card.style,{left:left+'px',top:top+'px'});},
+  next(){if(this.i>=STEPS.length-1){this.end();return;}this.i++;this.show();},
+  prev(){if(this.i>0){this.i--;this.show();}},
+  end(){try{localStorage.setItem(TOUR_KEY,'done')}catch(e){}this.spot&&this.spot.remove();this.card&&this.card.remove();this.spot=this.card=null;document.body.style.overflowX='';removeEventListener('resize',this.onResize);document.removeEventListener('keydown',this.onKey);}
+};
+$('tourBtn').onclick=()=>{if(!tour.spot)tour.start();};
 </script></body></html>`;
 }
