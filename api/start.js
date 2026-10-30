@@ -155,7 +155,7 @@ function render(){
       +msg()
       +(ok?'<div class="state ok"><i></i><span>Google Calendar connected'+((S.cal.selected||[]).length?' · '+(S.cal.selected||[]).length+' calendar'+((S.cal.selected||[]).length===1?'':'s')+' showing':'')+'</span></div>':'')
       +'<p class="fine"><b>Same heads up:</b> if Google says CUEPA isn’t verified yet, click <b>Advanced</b>, then <b>Go to CUEPA</b>.</p>'
-      +'<div class="acts">'+(ok?'<button class="btn go" data-a="next">Next: Your team →</button><a class="btn" href="/'+WS+'/hub#connect">Choose calendars</a>'
+      +'<div class="acts">'+(ok?'<button class="btn go" data-a="next">Next: Your team →</button><a class="btn" href="/'+WS+'/hub#connect">Choose calendars (classic hub)</a>'
         :'<a class="btn go" id="calGo" href="/api/google?action=start&ws='+WS+'">Connect Google Calendar</a><button class="skip" data-a="next">Skip for now</button>')
       +'</div>';
     const g=$('calGo');if(g)g.onclick=()=>onboarding(true);
@@ -178,7 +178,7 @@ function render(){
       +'<p class="lede">'+(n.length?'Connected: '+esc(n.join(', '))+'. ':'')+'Your Today page shows what needs you, your day in one view, and why each thing is there. Anything you skipped is waiting in Setup.</p>'
       +'<div class="acts"><button class="btn go" data-a="finish">Open my hub →</button>'+(n.length<3?'<button class="btn" data-a="later">Finish setup later</button>':'')+'</div>';
   }
-  c.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.dataset.a==='next'){S.step++;render();window.scrollTo({top:0,behavior:'smooth'});}else if(b.dataset.a==='finish')finish();else if(b.dataset.a==='later'){try{localStorage.setItem('cuepa_start_'+WS,'done')}catch(e){}onboarding(false);location.href='/'+WS+'/hub#connect';}};
+  c.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.dataset.a==='next'){S.step++;render();window.scrollTo({top:0,behavior:'smooth'});}else if(b.dataset.a==='finish')finish();else if(b.dataset.a==='later'){try{localStorage.setItem('cuepa_start_'+WS,'done')}catch(e){}onboarding(false);location.href='/'+WS;}};
 }
 load().catch(()=>render());
 </script></body></html>`;
