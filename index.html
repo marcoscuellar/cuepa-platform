@@ -47,6 +47,15 @@ input:focus{outline:2px solid var(--turq)}
 .help{text-align:center;color:var(--mute);font-size:13px;padding:0 16px 28px;margin:0}
 .contact{font-weight:600;color:var(--teal);user-select:all;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+.stage{align-content:center}
+.duo{width:min(1040px,100%);display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(24px,5vw,72px);align-items:center}
+.hero{display:grid;gap:14px}
+h1{font-size:clamp(40px,5.6vw,64px);line-height:1.0}
+.sub{font-size:19px;max-width:38ch}
+.card{width:100%;padding:32px;gap:14px}
+.card .day,.card .sub,.card>h1{display:none}
+@media (max-width:860px){.duo{grid-template-columns:1fr;gap:20px}h1{font-size:clamp(32px,9vw,44px)}}
 </style></head>
 <body>
 <div class="wrap">
@@ -54,10 +63,7 @@ input:focus{outline:2px solid var(--turq)}
     <div class="brand"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b></div>
     <button class="look" id="look" type="button" title="Switch light / dark" aria-label="Switch light or dark look">◐</button>
   </div>
-  <div class="stage"><main class="card">
-    <p class="day" id="day"></p>
-    <h1 id="h">Welcome to CUEPA<span class="dot">.</span></h1>
-    <p class="sub" id="sub">Your day, your team and your business in one place.</p>
+  <div class="stage"><div class="duo"><div class="hero"><p class="day" id="day"></p><h1 id="h">Welcome to CUEPA<span class="dot">.</span></h1><p class="sub" id="sub">Your day, your team and your business in one place.</p></div><main class="card">
     <div class="ok" id="out" hidden>You're signed out. See you next time.</div>
     <div id="signin">
       <p class="lead" id="lead" style="margin-top:6px;font-weight:600;color:var(--ink)">Sign in to your personal hub.</p>
@@ -85,7 +91,7 @@ input:focus{outline:2px solid var(--turq)}
       </form>
       <p class="err" id="serr" role="alert"></p>
     </div>
-  </main></div>
+  </main></div></div>
   <p class="help">Forgot your password or need access? Write to <span class="contact">marcoscuellar@elipangroup.com</span></p>
 </div>
 <script>
