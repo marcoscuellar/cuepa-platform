@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
       try {
         const t = await g.exchangeCode(String(url.searchParams.get('code') || ''));
         const p = await g.profile(t.access_token);
-        await g.saveConnection(ws, { refreshToken: t.refresh_token, email: p.emailAddress, connectedAt: new Date().toISOString() });
+        await g.saveConnection(ws, s.email, { refreshToken: t.refresh_token, email: p.emailAddress, connectedAt: new Date().toISOString() });
         return back('connect=ok');
       } catch (e) {
         console.error('gmail callback', e.status || 500, e.message);
@@ -78,22 +78,23 @@ module.exports = async (req, res) => {
       return go(res, g.authUrl(state));
     }
     if (action === 'status') {
-      const c = await g.readConnection(ws);
+      await g.removeLegacyConnection(ws); // retire the old shared connection the first time anyone looks
+      const c = await g.readConnection(ws, s.email);
       return json(res, 200, { ok: true, connected: !!c, email: c ? c.email : null });
     }
     if (action === 'list') {
-      const token = await g.accessToken(ws);
+      const token = await g.accessToken(ws, s.email);
       return json(res, 200, { ok: true, messages: await g.listInbox(token, url.searchParams.get('q')) });
     }
     if (action === 'read') {
-      const token = await g.accessToken(ws);
+      const token = await g.accessToken(ws, s.email);
       return json(res, 200, { ok: true, message: await g.readMessage(token, url.searchParams.get('id')) });
     }
     if (req.method === 'POST' && (action === 'send' || action === 'disconnect')) {
       if (!sameOrigin(req)) return json(res, 403, { ok: false, error: 'Blocked.' });
-      if (action === 'disconnect') { await g.removeConnection(ws); return json(res, 200, { ok: true }); }
+      if (action === 'disconnect') { await g.removeConnection(ws, s.email); return json(res, 200, { ok: true }); }
       const b = await body(req);
-      const token = await g.accessToken(ws);
+      const token = await g.accessToken(ws, s.email);
       const sent = await g.sendMessage(token, b);
       return json(res, 200, { ok: true, sent });
     }
