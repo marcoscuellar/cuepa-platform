@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Cirques Experience Operations Hub by CUEPA. Preview with sample data.">
+<style>*{box-sizing:border-box}html,body{margin:0;background:#fff}body{font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>try{if(localStorage.getItem("cuepa_look")!=="dark")document.documentElement.classList.add("light")}catch(e){document.documentElement.classList.add("light")}</script>
+<title>Cirques Experience · Operations Hub · CUEPA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Inter:wght@800&family=Kaushan+Script&display=swap">
+<style>
+/* CUEPA hub · ELIPAN layout: pure black page, almost-black cards on a 12px grid, one teal spark.
+   Dark is the default. html.light switches to the white reading look. */
+:root{color-scheme:dark}
+html.light{color-scheme:light}
+html,body{background:#000000}
+html.light,html.light body{background:#ffffff}
+.hub{
+  --h-ground:#000000;--h-panel:#0b0b0b;--h-panel2:#121212;--h-line:#222222;--h-line2:#1a1a1a;--h-strong:#3a3a3a;
+  --h-ink:#ffffff;--h-ink2:#d6d6d6;--h-muted:#a0a0a0;
+  --h-teal:#5eead4;--h-turq:#2dd4bf;--h-teal-soft:rgba(45,212,191,.09);--h-teal-line:rgba(45,212,191,.38);
+  --h-accent:#2dd4bf;--h-on-accent:#0a0a0a;--h-swap:#ffffff;--h-swap-ink:#0a0a0a;
+  --h-bar:rgba(0,0,0,.85);--h-input:#121212;--h-overlay:rgba(0,0,0,.72);
+  --h-class:#b69cf0;--h-class-bg:rgba(175,139,232,.11);--h-meet:#78aef0;--h-meet-bg:rgba(47,111,181,.16);
+  --h-vend:#e3a33b;--h-vend-bg:rgba(227,163,59,.11);--h-dead-bg:rgba(45,212,191,.10);
+  --h-warn:#e3a33b;--h-warn-bg:rgba(227,163,59,.09);--h-warn-line:rgba(227,163,59,.35);
+  --h-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1px 2px rgba(0,0,0,.8),0 14px 36px rgba(0,0,0,.7);
+  --h-shadow-hover:inset 0 1px 0 rgba(255,255,255,.08),0 2px 4px rgba(0,0,0,.8),0 22px 50px rgba(0,0,0,.8),0 10px 40px rgba(0,0,0,.35);
+  --h-display:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;--h-body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;--h-mono:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --h-ease:cubic-bezier(.2,.7,.2,1);
+  min-height:100vh;background:var(--h-ground);color:var(--h-ink);font-family:var(--h-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+html.light .hub{
+  --h-ground:#ffffff;--h-panel:#ffffff;--h-panel2:#f5f6f5;--h-line:#e4e4e4;--h-line2:#ededed;--h-strong:#c9c9c9;
+  --h-ink:#0a0a0a;--h-ink2:#3c4547;--h-muted:#5e5e5e;
+  --h-teal:#0b756a;--h-teal-soft:#e9f6f3;--h-teal-line:#95cec7;
+  --h-accent:#2dd4bf;--h-on-accent:#0a0a0a;--h-swap:#0a0a0a;--h-swap-ink:#ffffff;
+  --h-bar:rgba(255,255,255,.88);--h-input:#ffffff;--h-overlay:rgba(10,10,10,.45);
+  --h-class:#8a63d2;--h-class-bg:#f2ecfc;--h-meet:#2f6fb5;--h-meet-bg:#eaf2fb;
+  --h-vend:#b9771c;--h-vend-bg:#fbf2e3;--h-dead-bg:#e6f6f2;
+  --h-warn:#92570c;--h-warn-bg:#fbf2e3;--h-warn-line:#e6c48f;
+  --h-shadow:0 1px 2px rgba(10,10,10,.06),0 12px 30px rgba(10,10,10,.07);
+  --h-shadow-hover:0 2px 4px rgba(10,10,10,.08),0 20px 44px rgba(10,10,10,.12),0 10px 36px rgba(10,10,10,.10)}
+.hub *{box-sizing:border-box}
+.hub p{margin:0}
+.hub h1,.hub h2,.hub h3{margin:0;font-family:var(--h-display);font-weight:500;letter-spacing:-.02em;line-height:1.12;text-wrap:balance}
+.hub button{font-family:inherit;cursor:pointer}
+.hub :focus-visible{outline:2px solid var(--h-turq);outline-offset:2px}
+.hub .hub-eyebrow{display:block;color:var(--h-muted);font-family:var(--h-mono);font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+
+/* Top bar: brand left, Library menu + look switch right. No sidebar. */
+.hub .hub-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--h-bar);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--h-line)}
+.hub .hub-bar-in{max-width:1500px;margin:auto;padding:14px clamp(16px,4vw,56px);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hub .hub-brand{display:flex;align-items:center;gap:14px;min-width:0}
+.hub .hub-mark{display:inline-flex;gap:4px;flex:none}
+.hub .hub-mark i{width:9px;height:20px;border-radius:2px;background:var(--h-ink);display:block}
+.hub .hub-mark i+i{background:var(--h-turq)}
+.hub .hub-wm{font-family:var(--h-body);font-weight:600;letter-spacing:.22em;font-size:16px}
+.hub .hub-sep{width:1px;height:20px;background:var(--h-strong);flex:none}
+.hub .hub-wsname{font-weight:500;font-size:15px;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hub .hub-tools{display:flex;align-items:center;gap:8px;margin-left:auto}
+.hub .hub-lib{position:relative}
+.hub .hub-libbtn,.hub .hub-mode{display:inline-flex;align-items:center;gap:10px;min-height:38px;padding:8px 12px;border:1px solid var(--h-line);border-radius:6px;background:var(--h-panel);color:var(--h-ink);font-family:var(--h-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;box-shadow:var(--h-shadow);transition:border-color .15s ease}
+.hub .hub-mode{background:transparent;box-shadow:none}
+.hub .hub-libbtn:hover,.hub .hub-libbtn[aria-expanded="true"],.hub .hub-mode:hover{border-color:var(--h-turq)}
+.hub .hub-libk{color:var(--h-muted)}
+.hub .hub-libcur{color:var(--h-teal)}
+.hub .hub-libbtn svg{transition:rotate .2s var(--h-ease)}
+.hub .hub-libbtn[aria-expanded="true"] svg{rotate:180deg}
+.hub .hub-libmenu{position:absolute;right:0;top:calc(100% + 8px);width:260px;display:grid;gap:2px;padding:8px;background:var(--h-panel);border:1px solid var(--h-line);border-radius:12px;box-shadow:var(--h-shadow-hover);z-index:30;animation:hubIn .25s var(--h-ease) both}
+.hub .hub-libmenu > button{border:0;background:transparent;color:var(--h-muted);font-family:var(--h-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 12px;border-radius:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left}
+.hub .hub-libmenu > button:hover{color:var(--h-ink);background:var(--h-panel2)}
+.hub .hub-libmenu > button[aria-current="page"]{color:var(--h-ink)}
+.hub .hub-libmenu > button[aria-current="page"] .hub-cur{width:6px;height:6px;border-radius:50%;background:var(--h-turq);display:block}
+.hub .hub-count{background:transparent;border:1px solid var(--h-teal-line);color:var(--h-teal);border-radius:6px;min-width:22px;height:20px;padding:0 6px;display:grid;place-items:center;font-family:var(--h-mono);font-size:11px;letter-spacing:0}
+.hub .hub-libacct{margin-top:6px;border-top:1px solid var(--h-line);padding:12px 12px 4px;display:grid;gap:10px}
+.hub .hub-user{display:flex;align-items:center;gap:10px;line-height:1.35;font-size:13px;color:var(--h-muted)}
+.hub .hub-user b{color:var(--h-ink)!important;font-weight:600}
+.hub .hub-avatar{width:32px;height:32px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--h-panel2);border:1px solid var(--h-line);color:var(--h-ink);font-size:11px;font-weight:600;font-family:var(--h-mono)}
+.hub .hub-acctlinks{display:flex;flex-wrap:wrap;gap:6px 14px}
+.hub .hub-link{border:0;background:none;padding:0;color:var(--h-muted);font-size:13px;text-decoration:underline;text-underline-offset:3px;text-align:left;font-family:var(--h-body)}
+.hub .hub-link:hover{color:var(--h-ink)}
+
+/* Page */
+.hub .hub-content{padding:28px clamp(16px,4vw,56px) 96px;max-width:1500px;margin:auto}
+.hub .hub-actions{display:flex;align-items:center;justify-content:space-between;gap:12px 16px;flex-wrap:wrap;margin-bottom:30px}
+.hub .hub-crumb{color:var(--h-muted);font-family:var(--h-mono);font-size:12px;letter-spacing:.06em}
+.hub .hub-top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.hub .hub-badge{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:1px solid var(--h-line);border-radius:6px;color:var(--h-ink);font-family:var(--h-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.hub .hub-badge i{width:6px;height:6px;flex:none;border-radius:50%;background:var(--h-turq)}
+.hub .hub-primary{border:1px solid var(--h-accent);border-radius:999px;min-height:42px;padding:0 18px;background:var(--h-accent);color:var(--h-on-accent);font-weight:600;font-size:14px;display:inline-flex;align-items:center;justify-content:center;transition:background-color .15s ease,color .15s ease,border-color .15s ease}
+.hub .hub-primary:hover{background:var(--h-swap);border-color:var(--h-swap);color:var(--h-swap-ink)}
+.hub .hub-primary:disabled{opacity:.45;cursor:default;background:var(--h-accent);border-color:var(--h-accent);color:var(--h-on-accent)}
+.hub .hub-hello{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px;flex-wrap:wrap}
+.hub .hub-hello h1,.hub .hub-pagehead h1{font-family:var(--h-display);font-weight:400;font-size:clamp(34px,4.4vw,56px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 12px}
+.hub .hub-hello h1 .dot,.hub .hub-pagehead h1 .dot{color:var(--h-turq)}
+.hub .hub-hello p,.hub .hub-pagehead p{color:var(--h-muted);line-height:1.6;max-width:60ch;font-size:16px}
+.hub .hub-status{color:var(--h-muted);font-size:13px;text-align:right;font-family:var(--h-mono);letter-spacing:.06em;text-transform:uppercase}
+.hub .hub-status b{display:block;margin-top:6px;color:var(--h-ink);font-family:var(--h-body);font-weight:600;font-size:15px;letter-spacing:0;text-transform:none}
+.hub .hub-status b::first-letter{color:var(--h-turq)}
+.hub .hub-pagehead{margin-bottom:28px}
+
+/* Cards */
+.hub .hub-card{border:1px solid var(--h-line);background:var(--h-panel);border-radius:18px;padding:28px;min-width:0;box-shadow:var(--h-shadow);transition:border-color .2s ease,box-shadow .25s ease}
+.hub .hub-card:hover{border-color:var(--h-teal-line);box-shadow:var(--h-shadow-hover)}
+.hub .hub-card-title{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}
+.hub .hub-card h2{font-size:22px;margin-top:8px}
+.hub .hub-card h3{font-size:18px;margin-top:8px;font-weight:600}
+.hub .hub-tag{display:inline-flex;align-items:center;height:24px;padding:0 8px;font-family:var(--h-mono);font-size:11px;font-weight:500;letter-spacing:.12em;border:1px solid var(--h-teal-line);color:var(--h-teal);background:transparent;border-radius:6px;white-space:nowrap}
+.hub .hub-tag-quiet{border-color:var(--h-line);color:var(--h-muted)}
+.hub .hub-tag-warn{border-color:var(--h-warn-line);color:var(--h-warn)}
+.hub .hub-grid{display:grid;grid-template-columns:.9fr 1.35fr .9fr;gap:12px;align-items:start}
+.hub .hub-col{display:grid;gap:12px;min-width:0}
+
+/* Needs you */
+.hub .hub-needs{padding:0;overflow:hidden}
+.hub .hub-needs .hub-card-title{padding:28px 28px 18px;margin:0;border-bottom:1px solid var(--h-line)}
+.hub .hub-need{padding:20px 28px;border-bottom:1px solid var(--h-line);display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start}
+.hub .hub-need:last-child{border-bottom:0}
+.hub .hub-need-num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--h-strong);color:var(--h-ink);font-family:var(--h-mono);font-size:11px}
+.hub .hub-need.done .hub-need-num{background:var(--h-turq);border-color:var(--h-turq);color:var(--h-on-accent)}
+.hub .hub-need b{font-size:15px;font-weight:600}
+.hub .hub-need p{color:var(--h-muted);font-size:13.5px;line-height:1.55;margin:6px 0 0}
+.hub .hub-need .hub-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.hub .hub-pill{border:1px solid var(--h-strong);background:transparent;border-radius:999px;min-height:36px;padding:0 13px;font-size:13px;font-weight:600;color:var(--h-ink);transition:background-color .15s ease,color .15s ease,border-color .15s ease}
+.hub .hub-pill:hover{border-color:var(--h-ink)}
+.hub .hub-pill.hub-go{background:var(--h-accent);border-color:var(--h-accent);color:var(--h-on-accent)}
+.hub .hub-pill.hub-go:hover{background:var(--h-swap);border-color:var(--h-swap);color:var(--h-swap-ink)}
+.hub .hub-done{margin-top:10px;font-size:13px;font-weight:600;color:var(--h-teal)}
+
+/* Unified calendar */
+.hub .hub-sched{padding:0;overflow:hidden}
+.hub .hub-sched-head{padding:26px 28px 20px;border-bottom:1px solid var(--h-line);display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.hub .hub-sched-head h2{font-size:24px;margin:8px 0 0}
+.hub .hub-daynav{display:flex;gap:6px;align-items:center}
+.hub .hub-arrow{width:34px;height:34px;border:1px solid var(--h-line);background:transparent;border-radius:8px;font-size:14px;color:var(--h-ink);transition:border-color .15s}
+.hub .hub-arrow:hover{border-color:var(--h-turq)}
+.hub .hub-arrow:disabled{opacity:.3;cursor:default;border-color:var(--h-line)}
+.hub .hub-slots{padding:6px 28px 18px}
+.hub .hub-slot{display:grid;grid-template-columns:78px 1fr;min-height:60px;border-bottom:1px solid var(--h-line2)}
+.hub .hub-slot:last-child{border-bottom:0}
+.hub .hub-slot time{font-family:var(--h-mono);font-size:11.5px;color:var(--h-muted);padding-top:17px}
+.hub .hub-slot.now time{color:var(--h-teal)}
+.hub .hub-block{display:block;width:100%;text-align:left;margin:7px 0;padding:12px 14px;border:0;border-left:3px solid var(--h-strong);background:var(--h-panel2);border-radius:0 8px 8px 0;color:var(--h-ink);font-family:var(--h-body)}
+.hub button.hub-block:hover{filter:brightness(1.12)}
+html.light .hub button.hub-block:hover{filter:brightness(.97)}
+.hub .hub-block b{display:block;font-size:14px;font-weight:600}
+.hub .hub-block small{color:var(--h-muted);font-size:12px}
+.hub .hub-deadline{border-color:var(--h-turq)!important;background:var(--h-dead-bg)!important}
+.hub .hub-program{border-color:var(--h-class)!important;background:var(--h-class-bg)!important}
+.hub .hub-vendor{border-color:var(--h-vend)!important;background:var(--h-vend-bg)!important}
+.hub .hub-meeting{border-color:var(--h-meet)!important;background:var(--h-meet-bg)!important}
+.hub .hub-blocknote{margin-top:10px;padding-top:10px;border-top:1px solid var(--h-line);font-size:13px;color:var(--h-ink2);line-height:1.5}
+.hub .hub-blocknote b{font-family:var(--h-mono);font-weight:500;color:var(--h-muted)}
+.hub .hub-blocknote ul{margin:6px 0 0;padding-left:16px;display:grid;gap:3px}
+.hub .hub-legend{display:flex;gap:16px;flex-wrap:wrap;padding:0 28px 16px;font-size:12px;color:var(--h-muted);font-family:var(--h-mono);letter-spacing:.04em}
+.hub .hub-legend span{display:inline-flex;align-items:center;gap:7px}
+.hub .hub-legend i{width:10px;height:10px;border-radius:3px;display:block}
+.hub .hub-sched-actions{display:flex;gap:8px;padding:0 28px 22px;flex-wrap:wrap}
+.hub .hub-ghost{border:1px solid var(--h-line);background:transparent;border-radius:999px;min-height:38px;padding:0 14px;font-size:13px;font-weight:600;color:var(--h-ink);transition:border-color .15s ease,background-color .15s ease,color .15s ease}
+.hub .hub-ghost:hover{border-color:var(--h-turq);background:var(--h-panel2)}
+.hub .hub-ghost[aria-pressed="true"]{background:var(--h-swap);border-color:var(--h-swap);color:var(--h-swap-ink)}
+
+/* Right column */
+.hub .hub-item{padding:16px 0;border-top:1px solid var(--h-line)}
+.hub .hub-item:first-of-type{border-top:0;padding-top:0}
+.hub .hub-item b{font-size:14.5px;font-weight:600}
+.hub .hub-item p{color:var(--h-muted);font-size:13px;line-height:1.5;margin:6px 0 12px}
+.hub .hub-when{float:right;color:var(--h-teal);font-family:var(--h-mono);font-size:11px;letter-spacing:.08em}
+.hub .hub-mini{display:flex;gap:8px;flex-wrap:wrap}
+.hub .hub-mini button{border:1px solid var(--h-line);background:transparent;color:var(--h-ink);min-height:32px;padding:0 12px;border-radius:999px;font-size:12.5px;font-weight:600;transition:border-color .15s,background-color .15s,color .15s}
+.hub .hub-mini button:hover{border-color:var(--h-ink)}
+.hub .hub-mini .hub-send{background:var(--h-accent);border-color:var(--h-accent);color:var(--h-on-accent)}
+.hub .hub-mini .hub-send:hover{background:var(--h-swap);border-color:var(--h-swap);color:var(--h-swap-ink)}
+.hub .hub-event{display:grid;grid-template-columns:70px 1fr auto;gap:12px;padding:13px 0;border-top:1px solid var(--h-line);align-items:center;font-size:13.5px}
+.hub .hub-event:first-child{border-top:0}
+.hub .hub-event time{color:var(--h-muted);font-family:var(--h-mono);font-size:11.5px}
+.hub .hub-trustline{display:flex;gap:10px;align-items:center;color:var(--h-muted);font-size:13px;margin-top:18px;line-height:1.5}
+.hub .hub-trustline i{width:6px;height:6px;flex:none;background:var(--h-turq);border-radius:50%;box-shadow:0 0 0 5px rgba(45,212,191,.12)}
+
+/* Calendar page */
+.hub .hub-weekwrap{overflow-x:auto;border:1px solid var(--h-line);border-radius:18px;background:var(--h-panel);box-shadow:var(--h-shadow)}
+.hub .hub-week{display:grid;grid-template-columns:repeat(7,minmax(150px,1fr));min-width:1050px}
+.hub .hub-wcol{border-right:1px solid var(--h-line);min-height:440px}
+.hub .hub-wcol:last-child{border-right:0}
+.hub .hub-whead{padding:16px 14px 14px;display:grid;gap:4px;color:var(--h-ink);font-family:var(--h-body);border-bottom:1px solid var(--h-line)!important}
+.hub .hub-whead b{font-size:15px;font-weight:600}
+.hub .hub-whead.today{background:var(--h-teal-soft)!important}
+.hub .hub-whead.today .hub-eyebrow,.hub .hub-whead.today b{color:var(--h-teal)}
+.hub .hub-wbody{padding:8px 10px;display:grid;gap:2px;align-content:start}
+.hub .hub-wbody .hub-block{margin:3px 0}
+.hub .hub-wbody time{display:block;font-family:var(--h-mono);font-size:11px;color:var(--h-muted);margin:8px 0 3px}
+
+/* Tables and forms */
+.hub .hub-table{margin-top:18px;border:1px solid var(--h-line);border-radius:18px;overflow:hidden;background:var(--h-panel);box-shadow:var(--h-shadow)}
+.hub .hub-row{display:grid;grid-template-columns:1fr 160px 170px 150px;gap:16px;padding:18px 24px;border-bottom:1px solid var(--h-line);align-items:center;transition:background-color .15s}
+.hub .hub-row:hover{background:var(--h-panel2)}
+.hub .hub-row:last-child{border-bottom:0}
+.hub .hub-row b{font-size:15px;font-weight:600}
+.hub .hub-row small{display:block;color:var(--h-muted);margin-top:4px;font-size:13px;line-height:1.5}
+.hub .hub-state{font-family:var(--h-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--h-teal)}
+.hub .hub-state.hub-open{color:var(--h-warn)}
+.hub .hub-meta{font-size:13.5px;color:var(--h-muted);line-height:1.45;font-variant-numeric:tabular-nums}
+.hub .hub-rowact{justify-self:end}
+.hub .hub-form{display:grid;grid-template-columns:2fr 2fr 1fr 1fr auto;gap:10px;align-items:end;padding:18px 24px;border-top:1px solid var(--h-line);background:var(--h-panel2)}
+.hub label{display:grid;gap:7px;font-family:var(--h-mono);font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--h-muted)}
+.hub input,.hub textarea,.hub select{font-family:var(--h-body);font-size:14px;letter-spacing:0;text-transform:none;padding:11px 12px;border:1px solid var(--h-line);border-radius:10px;background:var(--h-input);color:var(--h-ink);width:100%;transition:border-color .15s}
+.hub input:hover,.hub textarea:hover,.hub select:hover{border-color:var(--h-strong)}
+.hub input:focus,.hub textarea:focus,.hub select:focus{outline:2px solid var(--h-turq);outline-offset:1px;border-color:var(--h-turq)}
+.hub input::placeholder,.hub textarea::placeholder{color:var(--h-muted);opacity:.7}
+.hub textarea{min-height:110px;resize:vertical}
+.hub .hub-meets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+.hub .hub-meet{display:grid;gap:16px;align-content:start}
+.hub .hub-meet small{color:var(--h-muted)!important;font-size:13px}
+.hub .hub-last{background:var(--h-panel2);border:1px solid var(--h-line);border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.55;color:var(--h-ink2)}
+.hub .hub-last ul{margin:8px 0 0;padding-left:16px;display:grid;gap:4px}
+.hub .hub-check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--h-line);font-family:var(--h-body);font-size:14px;letter-spacing:0;text-transform:none;line-height:1.45;color:var(--h-ink)!important}
+.hub .hub-check input{width:16px;height:16px;margin-top:2px;accent-color:var(--h-turq)}
+.hub .hub-check.dim span{text-decoration:line-through;color:var(--h-muted)}
+.hub .hub-switch{position:relative;width:42px;height:24px;border-radius:999px;border:1px solid var(--h-line);background:var(--h-panel2)}
+.hub .hub-switch::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--h-muted);transition:left .15s,background-color .15s}
+.hub .hub-switch[aria-checked="true"]{background:var(--h-turq);border-color:var(--h-turq)}.hub .hub-switch[aria-checked="true"]::after{left:21px;background:#0a0a0a}
+.hub .hub-switch:disabled{opacity:.55;cursor:default}
+
+/* Toast and dialogs */
+.hub .hub-toast{position:fixed;right:24px;bottom:24px;z-index:60;background:var(--h-panel);color:var(--h-ink);padding:14px 18px;border-radius:10px;border:1px solid var(--h-line);box-shadow:var(--h-shadow-hover);font-size:14px;max-width:min(380px,calc(100vw - 48px));transform:translateY(140px);opacity:0;transition:transform .3s var(--h-ease),opacity .25s;pointer-events:none}
+.hub .hub-toast.hub-show{transform:none;opacity:1}
+.hub .hub-overlay{position:fixed;inset:0;z-index:50;background:var(--h-overlay);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;padding:20px}
+.hub .hub-modal{width:min(680px,100%);max-height:88vh;overflow:auto;background:var(--h-panel);color:var(--h-ink);border:1px solid var(--h-line);border-radius:18px;box-shadow:var(--h-shadow-hover);animation:hubIn .35s var(--h-ease) both}
+.hub .hub-modal-head{padding:26px 28px;border-bottom:1px solid var(--h-line);display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.hub .hub-modal-head h2{font-size:24px;margin-top:8px}
+.hub .hub-x{width:38px;height:38px;flex:none;border:1px solid var(--h-line);background:transparent;color:var(--h-ink);border-radius:8px;font-size:18px;line-height:1}
+.hub .hub-x:hover{border-color:var(--h-turq)}
+.hub .hub-modal-body{padding:26px 28px}
+.hub .hub-quote{background:var(--h-panel2);border:1px solid var(--h-line);padding:16px 18px;border-radius:10px;color:var(--h-ink2);font-size:15px;line-height:1.6;margin:10px 0 22px}
+.hub .hub-change{padding:14px 0;border-bottom:1px solid var(--h-line);display:grid;grid-template-columns:96px 1fr;gap:12px;font-size:14px;align-items:baseline}
+.hub .hub-change b{font-family:var(--h-mono);font-size:11px;font-weight:500;letter-spacing:.12em;color:var(--h-teal)}
+.hub .hub-modal-actions{padding:18px 28px;border-top:1px solid var(--h-line);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+
+/* Setup notice, sources, connections */
+.hub .hub-notice{display:flex;align-items:center;justify-content:space-between;gap:20px;background:var(--h-panel);border:1px solid var(--h-teal-line);border-radius:18px;padding:22px 26px;margin-bottom:12px;flex-wrap:wrap;box-shadow:var(--h-shadow)}
+.hub .hub-notice p{margin:8px 0 14px;color:var(--h-muted);font-size:14px;line-height:1.55;max-width:70ch}
+.hub .hub-notice-k{color:var(--h-teal);font-family:var(--h-mono);font-size:11.5px;font-weight:500;letter-spacing:.14em}
+.hub .hub-prog{height:4px;border-radius:2px;background:var(--h-line);overflow:hidden;max-width:360px}
+.hub .hub-prog i{display:block;height:100%;background:var(--h-turq);border-radius:2px;transition:width .4s var(--h-ease)}
+.hub .hub-btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.hub .hub-src{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--h-warn);padding:11px 28px;border-bottom:1px solid var(--h-line);background:var(--h-warn-bg)}
+.hub .hub-src.on{background:var(--h-teal-soft);color:var(--h-teal)}
+.hub .hub-src.inline{border:1px solid var(--h-warn-line);border-radius:10px;padding:10px 14px;margin-bottom:16px}
+.hub .hub-src.inline.on{border-color:var(--h-teal-line)}
+.hub .hub-card .hub-src.inline{margin:-4px 0 16px}
+.hub .hub-dot{width:6px;height:6px;flex:none;border-radius:50%;background:var(--h-warn);display:block}
+.hub .hub-src.on .hub-dot{background:var(--h-turq)}
+.hub .hub-linkbtn{border:0;background:none;padding:0;color:var(--h-ink);font-weight:600;font-size:13px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--h-turq)}
+.hub .hub-conns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.hub .hub-conn{display:grid;gap:14px;align-content:start}
+.hub .hub-sub{font-size:14px;color:var(--h-muted);line-height:1.6}
+.hub .hub-feeds{font-size:11px;color:var(--h-muted);font-family:var(--h-mono);letter-spacing:.1em}
+.hub .hub-opts{display:grid;gap:8px;margin-top:12px}
+.hub label.hub-opt{display:flex;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--h-line);border-radius:10px;cursor:pointer;font-family:var(--h-body);font-size:15px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--h-ink);transition:border-color .15s,background-color .15s}
+.hub label.hub-opt:hover{border-color:var(--h-strong)}
+.hub label.hub-opt:has(input:checked){border-color:var(--h-turq);background:var(--h-teal-soft)}
+.hub label.hub-opt input{width:auto;margin:0;accent-color:var(--h-turq)}
+.hub .hub-fgrid{display:grid;gap:16px}
+.hub .hub-form2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hub .hub-warnnote{background:var(--h-warn-bg);border:1px solid var(--h-warn-line);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--h-warn);line-height:1.5}
+
+html.light .hub{background:linear-gradient(180deg,#f3f3f1 0,#ffffff 560px) #ffffff}
+html.light .hub .hub-bar{background:rgba(255,255,255,.82)}
+/* Fallback sample sign-in (not used on the live site) */
+.hub-signin{min-height:100vh;display:grid;place-items:center;padding:40px 16px;background:#000;font-family:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;color:#fff}
+.hub-signin form{width:min(420px,100%);background:#0b0b0b;border:1px solid #222;border-radius:18px;padding:32px;display:grid;gap:16px}
+.hub-signin h1{font-family:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;font-weight:400;font-size:30px;margin:0}
+.hub-signin input{font:inherit;padding:11px 12px;border:1px solid #222;border-radius:10px;background:#121212;color:#fff}
+.hub-signin button{border:0;border-radius:10px;padding:13px;background:#2dd4bf;color:#0a0a0a;font-weight:600;font-family:inherit;cursor:pointer}
+
+/* Motion: everything floats in, one after another */
+@keyframes hubIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.hub .hub-content > section > *,.hub .hub-col > *,.hub .hub-meets > *,.hub .hub-conns > *{animation:hubIn .6s var(--h-ease) both}
+.hub .hub-content > section > *:nth-child(2),.hub .hub-col > *:nth-child(2),.hub .hub-meets > *:nth-child(2),.hub .hub-conns > *:nth-child(2){animation-delay:70ms}
+.hub .hub-content > section > *:nth-child(3),.hub .hub-col-2 > *,.hub .hub-meets > *:nth-child(3),.hub .hub-conns > *:nth-child(3){animation-delay:140ms}
+.hub .hub-col-3 > *,.hub .hub-conns > *:nth-child(4){animation-delay:210ms}
+.hub .hub-col-3 > *:nth-child(2),.hub .hub-conns > *:nth-child(5){animation-delay:280ms}
+.hub .hub-conns > *:nth-child(6){animation-delay:350ms}
+
+/* Responsive */
+@media(max-width:1200px){.hub .hub-grid{grid-template-columns:1fr 1.35fr}.hub .hub-col-3{grid-column:1/-1;grid-template-columns:1fr 1fr}.hub .hub-meets,.hub .hub-conns{grid-template-columns:1fr 1fr}}
+@media(max-width:1050px){.hub .hub-row{grid-template-columns:1fr 130px 150px}.hub .hub-row .hub-rowact{grid-column:1/-1;justify-self:start}.hub .hub-form{grid-template-columns:1fr 1fr}}
+@media(max-width:860px){
+  .hub .hub-grid{grid-template-columns:minmax(0,1fr)}
+  .hub .hub-col-3{grid-column:auto;grid-template-columns:minmax(0,1fr)}
+  .hub .hub-col-2{order:-1}
+  .hub .hub-row{grid-template-columns:1fr}
+  .hub .hub-status{text-align:left}
+  .hub .hub-meets,.hub .hub-conns,.hub .hub-form2{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:640px){
+  .hub .hub-sep,.hub .hub-wsname,.hub .hub-libk{display:none}
+  .hub .hub-bar-in{padding:12px 16px}
+  .hub .hub-content{padding:22px 16px 80px}
+  .hub .hub-card{padding:22px}
+  .hub .hub-needs .hub-card-title,.hub .hub-sched-head{padding:22px 22px 16px}
+  .hub .hub-need{padding:18px 22px}
+  .hub .hub-slots{padding:4px 22px 16px}
+  .hub .hub-legend,.hub .hub-sched-actions{padding-left:22px;padding-right:22px}
+  .hub .hub-src{padding-left:22px;padding-right:22px}
+  .hub .hub-slot{grid-template-columns:64px 1fr}
+  .hub .hub-form{grid-template-columns:1fr}
+  .hub .hub-libmenu{position:fixed;left:12px;right:12px;width:auto;top:64px}
+  .hub .hub-mode{padding:8px 10px}
+}
+@media(prefers-reduced-motion:reduce){.hub *,.hub *::before,.hub *::after{transition:none!important;animation:none!important}}
+/* ELIPAN feel: Figtree, bold headings, rounded chips, more air, fewer lines, soft glow, one inverted card */
+.hub{font-size:16px}
+.hub h1,.hub h2,.hub h3{font-weight:700;letter-spacing:-.02em}
+.hub .hub-hello h1,.hub .hub-pagehead h1{font-weight:800;letter-spacing:-.035em;line-height:1.02}
+.hub .hub-card h2{font-size:24px}.hub .hub-card h3{font-size:20px;font-weight:700}
+.hub .hub-eyebrow{display:inline-flex;align-items:center;gap:7px;width:fit-content;padding:5px 11px;border:1px solid var(--h-line);border-radius:999px;background:var(--h-panel2);color:var(--h-ink2);font-size:12.5px;font-weight:500;letter-spacing:0;text-transform:none;line-height:1.2}
+.hub .hub-hello .hub-eyebrow::before,.hub .hub-pagehead .hub-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--h-turq)}
+.hub .hub-card-title .hub-eyebrow{margin-bottom:4px}
+.hub .hub-tag{border-radius:999px;letter-spacing:.04em;padding:0 10px}
+.hub .hub-card{border-radius:22px;padding:32px;box-shadow:var(--h-shadow),0 0 60px rgba(255,255,255,.035)}
+html.light .hub .hub-card{box-shadow:var(--h-shadow)}
+.hub .hub-needs,.hub .hub-sched{padding:0}
+.hub .hub-weekwrap,.hub .hub-table,.hub .hub-notice{border-radius:22px}
+.hub .hub-needs .hub-card-title,.hub .hub-sched-head{padding:32px 32px 14px;border-bottom:0}
+.hub .hub-need{padding:18px 32px;border-bottom:0}
+.hub .hub-need:last-child{padding-bottom:30px}
+.hub .hub-need b{font-size:16.5px}.hub .hub-need p{font-size:15px;line-height:1.65}
+.hub .hub-slots{padding:4px 32px 18px}.hub .hub-slot{border-bottom:0;min-height:0}
+.hub .hub-slot time{font-size:13px}
+.hub .hub-block{border-radius:0 12px 12px 0;padding:14px 16px}
+.hub .hub-block b{font-size:15px}.hub .hub-block small{font-size:13px}
+.hub .hub-legend,.hub .hub-sched-actions{padding-left:32px;padding-right:32px}
+.hub .hub-src{padding:12px 32px;border-bottom:0}
+.hub .hub-item{border-top:0;padding:14px 0}
+.hub .hub-item b{font-size:16px}.hub .hub-item p{font-size:14.5px}
+.hub .hub-event{border-top:0;padding:10px 0;font-size:14.5px}
+.hub .hub-hello p,.hub .hub-pagehead p{font-size:17px;line-height:1.65}
+.hub .hub-notice p{font-size:15.5px}
+.hub .hub-notice-k{font-size:13px;letter-spacing:.02em;font-weight:600}
+.hub .hub-badge,.hub .hub-libbtn,.hub .hub-mode{border-radius:999px;letter-spacing:.02em;text-transform:none;font-size:13.5px;font-weight:500}
+.hub .hub-crumb{font-size:13.5px;letter-spacing:0}
+.hub .hub-libmenu > button{letter-spacing:0;text-transform:none;font-size:15px}
+.hub label{letter-spacing:0;text-transform:none;font-size:13.5px;font-weight:600}
+.hub .hub-state,.hub .hub-when,.hub .hub-change b,.hub .hub-feeds,.hub .hub-status{letter-spacing:.03em}
+.hub .hub-row{padding:20px 28px}
+/* One inverted card: white on dark, black on light */
+.hub .hub-invert{--h-panel:#ffffff;--h-panel2:#f3f4f3;--h-line:#e4e4e4;--h-line2:#ededed;--h-strong:#c9c9c9;--h-ink:#0a0a0a;--h-ink2:#3c4547;--h-muted:#5e5e5e;--h-teal:#0b756a;--h-teal-soft:#e9f6f3;--h-teal-line:#95cec7;--h-swap:#0a0a0a;--h-swap-ink:#ffffff;--h-warn:#92570c;--h-warn-bg:#fbf2e3;--h-warn-line:#e6c48f;color:var(--h-ink)}
+html.light .hub .hub-invert{--h-panel:#0b0b0b;--h-panel2:#161616;--h-line:#262626;--h-line2:#1c1c1c;--h-strong:#3a3a3a;--h-ink:#ffffff;--h-ink2:#d6d6d6;--h-muted:#a0a0a0;--h-teal:#5eead4;--h-teal-soft:rgba(45,212,191,.09);--h-teal-line:rgba(45,212,191,.38);--h-swap:#ffffff;--h-swap-ink:#0a0a0a;--h-warn:#e3a33b;--h-warn-bg:rgba(227,163,59,.09);--h-warn-line:rgba(227,163,59,.35)}
+@media(max-width:640px){.hub .hub-card{padding:24px}.hub .hub-needs .hub-card-title,.hub .hub-sched-head{padding:24px 24px 12px}.hub .hub-need{padding:16px 24px}.hub .hub-slots{padding:4px 24px 16px}.hub .hub-legend,.hub .hub-sched-actions,.hub .hub-src{padding-left:24px;padding-right:24px}}
+
+/* Depth, room and motion: deeper shadows, wider gaps, a gentle lift on hover */
+.hub{--h-lift:0 1px 0 rgba(255,255,255,.05) inset,0 2px 6px rgba(0,0,0,.6),0 24px 60px rgba(0,0,0,.75),0 0 70px rgba(255,255,255,.04);
+  --h-lift-hover:0 1px 0 rgba(255,255,255,.07) inset,0 4px 10px rgba(0,0,0,.6),0 34px 80px rgba(0,0,0,.85),0 0 90px rgba(45,212,191,.10)}
+html.light .hub{--h-lift:0 1px 3px rgba(10,10,10,.06),0 10px 24px rgba(10,10,10,.06),0 28px 64px rgba(10,10,10,.08);
+  --h-lift-hover:0 2px 6px rgba(10,10,10,.08),0 16px 34px rgba(10,10,10,.09),0 40px 90px rgba(10,10,10,.12),0 12px 40px rgba(45,212,191,.12)}
+.hub .hub-card,.hub .hub-table,.hub .hub-weekwrap,.hub .hub-notice{box-shadow:var(--h-lift)!important;transition:translate .35s var(--h-ease),box-shadow .35s var(--h-ease),border-color .25s ease;will-change:translate}
+.hub .hub-card:hover,.hub .hub-table:hover,.hub .hub-weekwrap:hover,.hub .hub-notice:hover{translate:0 -3px;box-shadow:var(--h-lift-hover)!important;border-color:var(--h-teal-line)}
+.hub .hub-content{padding-top:40px}
+.hub .hub-actions{margin-bottom:44px}
+.hub .hub-hello{margin-bottom:40px}
+.hub .hub-notice{margin-bottom:24px;padding:28px 32px}
+.hub .hub-grid,.hub .hub-col,.hub .hub-meets,.hub .hub-conns{gap:24px}
+.hub .hub-card{padding:36px}
+.hub .hub-needs,.hub .hub-sched{padding:0}
+.hub .hub-needs .hub-card-title,.hub .hub-sched-head{padding:36px 36px 16px}
+.hub .hub-need{padding:22px 36px}
+.hub .hub-need:last-child{padding-bottom:36px}
+.hub .hub-slots{padding:6px 36px 22px}
+.hub .hub-slot + .hub-slot{margin-top:4px}
+.hub .hub-legend,.hub .hub-sched-actions,.hub .hub-src{padding-left:36px;padding-right:36px}
+.hub .hub-sched-actions{padding-bottom:30px}
+.hub .hub-item{padding:18px 0}
+.hub .hub-event{padding:12px 0}
+.hub .hub-table{margin-top:24px}
+.hub .hub-pagehead{margin-bottom:36px}
+/* Small things lift a little too */
+.hub .hub-block{transition:translate .25s var(--h-ease),box-shadow .25s var(--h-ease),filter .2s}
+.hub .hub-block:hover{translate:0 -2px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+html.light .hub .hub-block:hover{box-shadow:0 10px 24px rgba(10,10,10,.08)}
+.hub .hub-primary,.hub .hub-pill,.hub .hub-ghost,.hub .hub-mini button,.hub .hub-libbtn,.hub .hub-mode{transition:translate .2s var(--h-ease),background-color .15s ease,color .15s ease,border-color .15s ease,box-shadow .2s ease}
+.hub .hub-primary:hover,.hub .hub-pill:hover,.hub .hub-ghost:hover,.hub .hub-mini button:hover{translate:0 -1px;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+.hub .hub-row{transition:background-color .2s ease}
+@media(max-width:640px){.hub .hub-card{padding:26px}.hub .hub-needs .hub-card-title,.hub .hub-sched-head{padding:26px 26px 12px}.hub .hub-need{padding:18px 26px}.hub .hub-slots{padding:4px 26px 18px}.hub .hub-legend,.hub .hub-sched-actions,.hub .hub-src{padding-left:26px;padding-right:26px}.hub .hub-grid,.hub .hub-col{gap:18px}.hub .hub-content{padding-top:28px}}
+.hub .hub-empty{margin:0;padding:0 36px 32px;color:var(--h-muted);font-size:15px;line-height:1.6}
+.hub .hub-empty.in{padding:4px 0 8px}
+.hub .hub-empty.row{padding:24px 28px}
+@media(hover:none){.hub .hub-card:hover,.hub .hub-table:hover,.hub .hub-weekwrap:hover,.hub .hub-notice:hover,.hub .hub-block:hover{translate:none}}
+.hub{--h-lift-hover:0 1px 0 rgba(255,255,255,.07) inset,0 4px 10px rgba(0,0,0,.6),0 34px 80px rgba(0,0,0,.85),0 0 90px rgba(255,255,255,.05)}html.light .hub{--h-lift-hover:0 2px 6px rgba(10,10,10,.08),0 16px 34px rgba(10,10,10,.09),0 40px 90px rgba(10,10,10,.12)}.hub .hub-card:hover,.hub .hub-table:hover,.hub .hub-weekwrap:hover{border-color:var(--h-line)}.hub .hub-notice:hover{border-color:var(--h-teal-line)}
+
+/* ===== Setup + Timecards (ELIPAN light: white cards, soft shadow, black contrast panels, one teal action) ===== */
+.hub a.hub-primary,.hub a.hub-dark,.hub a.hub-ghost{text-decoration:none}
+.hub .hub-dark{border:1px solid #0a0a0a;border-radius:10px;min-height:42px;padding:0 16px;background:#0a0a0a;color:#fff;font-weight:600;font-size:14px;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;cursor:pointer}
+.hub .hub-dark:hover{background:var(--h-accent);border-color:var(--h-accent);color:var(--h-on-accent)}
+.hub .hub-dark:disabled{opacity:.5;cursor:default}
+html:not(.light) .hub .hub-dark{background:#fff;border-color:#fff;color:#0a0a0a}
+.hub .hub-primary{border-radius:10px}
+.hub .hub-ghost{border-radius:10px;min-height:42px;font-size:14px}
+.hub .hub-off{opacity:.45;pointer-events:none}
+.hub .hub-tc-dark{background:#0a0a0a!important;color:#fff;border-color:#0a0a0a!important;box-shadow:0 2px 4px rgba(10,10,10,.12),0 18px 40px rgba(10,10,10,.18)}
+.hub .hub-tc-dark .hub-eyebrow{color:#a0a0a0}
+html:not(.light) .hub .hub-tc-dark{background:#121212!important;border-color:#2a2a2a!important}
+.hub .hub-tc-tag{display:inline-flex;align-items:center;gap:8px;height:26px;padding:0 10px;border:1px solid var(--h-line);border-radius:6px;font-size:11.5px;font-weight:600;letter-spacing:.1em;color:var(--h-ink);white-space:nowrap;width:fit-content}
+.hub .hub-tc-tag i{width:7px;height:7px;border-radius:50%;background:#78aef0;display:block;flex:none}
+.hub .hub-tc-ok{border-color:var(--h-turq);color:var(--h-teal)}.hub .hub-tc-ok i{background:var(--h-turq)}
+.hub .hub-tc-look{border-color:var(--h-warn-line);color:var(--h-warn)}.hub .hub-tc-look i{background:#e3a33b}
+.hub .hub-tc-late{border-style:dashed;color:var(--h-muted)}.hub .hub-tc-late i{background:var(--h-strong)}
+.hub .hub-weeknav{display:flex;align-items:center;gap:12px;margin:-8px 0 20px;flex-wrap:wrap}
+.hub .hub-weeknav span{font-weight:600;min-width:120px;text-align:center}
+.hub .hub-tc-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.hub .hub-tc-stat{border:1px solid var(--h-line);background:var(--h-panel);border-radius:18px;padding:22px 24px;display:grid;gap:8px;box-shadow:var(--h-shadow)}
+.hub .hub-tc-stat b{font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.hub .hub-tc-stat b small{font-size:20px;font-weight:600;opacity:.6}
+.hub .hub-tc-table{padding:0;overflow-x:auto;margin-bottom:14px}
+.hub .hub-tc-row{display:grid;grid-template-columns:minmax(150px,2fr) minmax(110px,1.4fr) 70px minmax(150px,1.5fr) minmax(200px,2fr);gap:12px;padding:16px 24px;border-bottom:1px solid var(--h-line2);align-items:center;min-width:780px}
+.hub .hub-tc-row:last-child{border-bottom:0}
+.hub .hub-tc-row > div:first-child b{display:block;font-weight:700}
+.hub .hub-tc-row small{display:block;color:var(--h-muted);font-size:13px}
+.hub .hub-tc-head{background:var(--h-panel2);color:var(--h-muted);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding-block:12px}
+.hub .hub-tc-head span:last-child,.hub .hub-tc-act{justify-content:flex-end;text-align:right}
+.hub .hub-tc-hours{font-weight:700}
+.hub .hub-tc-work{color:var(--h-ink2)}
+.hub .hub-tc-st{display:grid;gap:4px}
+.hub .hub-tc-flag{color:var(--h-warn)!important}
+.hub .hub-tc-act{display:flex;gap:8px;flex-wrap:wrap}
+.hub .hub-tc-payroll{background:#0a0a0a;color:#fff;border-radius:18px;padding:28px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px;box-shadow:0 2px 4px rgba(10,10,10,.12),0 22px 48px rgba(10,10,10,.22)}
+.hub .hub-tc-payroll .hub-eyebrow{color:#a0a0a0}.hub .hub-tc-payroll h2{font-size:22px;margin:8px 0 6px;font-weight:700;color:#fff}.hub .hub-tc-payroll p{color:#d6d6d6;max-width:56ch}
+.hub .hub-tc-soon{font-size:13px;color:#a0a0a0;border:1px dashed #3a3a3a;border-radius:10px;padding:10px 14px}
+.hub .hub-team-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--h-line2);flex-wrap:wrap}
+.hub .hub-team-row b{display:block}.hub .hub-team-row small{color:var(--h-muted)}
+.hub .hub-team-form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:10px;align-items:end;margin-top:18px}
+.hub .hub-team-form label{display:grid;gap:6px;font-size:12px;font-weight:600;color:var(--h-muted)}
+.hub .hub-team-form input{min-height:44px;border:1px solid var(--h-line);border-radius:10px;background:var(--h-input);color:var(--h-ink);padding:0 12px;font:inherit;font-size:15px}
+.hub .hub-form-err{color:#b42318;font-size:14px;margin-top:10px}
+.hub .hub-team .hub-sub{margin-top:12px}
+.hub .hub-remind{display:grid;gap:14px}
+.hub .hub-remind-msg{display:grid;gap:8px;font-size:13px;font-weight:600;color:var(--h-muted)}
+.hub .hub-remind-msg textarea{font:inherit;font-size:15px;line-height:1.55;color:var(--h-ink);background:var(--h-input);border:1px solid var(--h-line);border-radius:12px;padding:14px;resize:vertical}
+.hub .hub-remind-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--h-line);border-radius:14px;padding:12px 14px;flex-wrap:wrap}
+.hub .hub-remind-row b{display:block}.hub .hub-remind-row small{color:var(--h-muted)}
+.hub .hub-remind-preview{border:1px solid var(--h-line);border-radius:12px;padding:14px;display:grid;gap:8px}
+.hub .hub-remind-preview p{white-space:pre-line;font-size:14.5px;color:var(--h-ink2);overflow-wrap:anywhere}
+.hub .hub-remind-note{background:var(--h-panel2);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--h-ink2);margin-top:12px}
+.hub .hub-setup-grid{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}
+.hub .hub-setup-main{flex:999 1 560px;min-width:0;display:grid;gap:22px}
+.hub .hub-setup-main .hub-pagehead{margin-bottom:0}
+.hub .hub-setup-aside{flex:1 1 280px;display:grid;gap:14px}
+.hub .hub-setup-aside .hub-card{display:grid;gap:10px}
+.hub .hub-setup-aside .hub-card p b{color:inherit}
+.hub .hub-setup-prog > div:first-child{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px}
+.hub .hub-setup-prog span{color:var(--h-muted)}
+.hub .hub-steps{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.hub .hub-step{border:1px solid var(--h-line);background:var(--h-panel);border-radius:18px;padding:22px 24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:var(--h-shadow)}
+.hub .hub-step-n{width:38px;height:38px;border-radius:50%;border:1px solid var(--h-line);display:grid;place-items:center;flex:none;font-weight:700;color:var(--h-muted)}
+.hub .hub-step.done .hub-step-n{background:var(--h-teal-soft);border-color:transparent;color:var(--h-teal)}
+.hub .hub-step-t{flex:1 1 260px;display:grid;gap:3px}
+.hub .hub-step-t b{font-size:18px}.hub .hub-step-t > span:last-child{font-size:14px;color:var(--h-muted)}
+.hub .hub-step.next{background:#0a0a0a;color:#fff;border-color:#0a0a0a;padding:28px 26px;box-shadow:0 2px 4px rgba(10,10,10,.12),0 22px 48px rgba(10,10,10,.22),0 10px 36px rgba(10,10,10,.14)}
+.hub .hub-step.next .hub-step-n{background:var(--h-turq);border-color:var(--h-turq);color:#0a0a0a}
+.hub .hub-step.next .hub-eyebrow{color:#5eead4}.hub .hub-step.next .hub-step-t b{font-size:22px}.hub .hub-step.next .hub-step-t > span:last-child{color:#d6d6d6;font-size:15px}
+.hub .hub-step.built{border-style:dashed;box-shadow:none}
+.hub .hub-qb{display:grid;gap:16px}
+.hub .hub-qb-steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.hub .hub-qb-steps li{display:flex;gap:14px;border:1px solid var(--h-line);border-radius:14px;padding:14px 16px}
+.hub .hub-qb-steps li > span{width:28px;height:28px;border-radius:50%;background:#0a0a0a;color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.hub .hub-qb-steps b{display:block}.hub .hub-qb-steps small{color:var(--h-muted)}
+.hub .hub-qb-can{border-radius:14px;padding:18px 20px;display:grid;gap:8px}
+.hub .hub-qb-can p{color:#d6d6d6;margin:0}
+.hub .hub-setup-prog .hub-prog{max-width:none;height:8px;border-radius:999px}
+.hub .hub-setup-prog .hub-prog i{background:var(--h-ink)}
+.hub .hub-step.next .hub-eyebrow,.hub .hub-tc-dark .hub-eyebrow,.hub .hub-tc-payroll .hub-eyebrow{background:transparent;border-color:#3a3a3a;color:#5eead4}
+.hub .hub-tc-dark .hub-eyebrow,.hub .hub-tc-payroll .hub-eyebrow{color:#a0a0a0}
+
+/* Cirques Experience one-line logo (client brand: blue #1E5FB0, green #00C75A) */
+.hub .hub-cx{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;color:#1e5fb0;flex:none}
+.hub .hub-cx-a{font-family:'Inter',system-ui,sans-serif;font-weight:800;font-size:21px;letter-spacing:-.03em;line-height:1;color:#1e5fb0}
+.hub .hub-cx-b{font-family:'Kaushan Script',cursive;font-size:22px;line-height:1;color:#00c75a;transform:translateY(1px)}
+html:not(.light) .hub .hub-cx,html:not(.light) .hub .hub-cx-a{color:#ffffff}
+html:not(.light) .hub .hub-cx-b{color:#00d662}
+@media (max-width:560px){.hub .hub-wm{display:none}.hub .hub-brand{gap:10px;min-width:0}.hub .hub-cx{gap:6px}.hub .hub-cx svg{width:22px;height:19px}.hub .hub-cx-a{font-size:16px}.hub .hub-cx-b{font-size:17px}.hub .hub-tools{flex:none;gap:6px}.hub .hub-mode{font-size:0;padding:6px 10px;min-width:38px;justify-content:center}.hub .hub-mode::before{content:"◐";font-size:16px;letter-spacing:0}}
+@media (max-width:900px){.hub .hub-tc-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hub .hub-team-form{grid-template-columns:1fr 1fr}.hub .hub-team-form button{grid-column:1/-1}}
+@media (max-width:520px){.hub .hub-team-form{grid-template-columns:1fr}.hub .hub-tc-stat b{font-size:32px}}
+</style>
+</head><body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+const {useState,useEffect,useRef} = React;
+const html = htm.bind(React.createElement);
+const KEY="cirques-hub-v4" + ":" + (window.CUEPA_CONTEXT?.ws||"preview") + ":" + (window.CUEPA_CONTEXT?.userKey||"preview");
+const VIEWS=[["today","Today","NOW"],["calendar","Calendar","CAL"],["timecards","Timecards","TIME"],["vendors","Vendors","VEND"],["meetings","Meetings","MEET"],["access","Access","WHO"],["connect","Setup","LINK"]];
+const CONNS=[
+  {id:"calendar",name:"Calendars",what:"Classes, meetings and deadlines in your Today view.",mode:"self",tools:["Google Calendar","Outlook / Microsoft 365","Apple iCloud Calendar"],feeds:"Today · Calendar"},
+  {id:"email",name:"Email",what:"So reminders are drafted from your own address. Nothing sends without your OK.",mode:"self",tools:["Gmail / Google Workspace","Outlook / Microsoft 365"],feeds:"Drafted reminders"},
+  {id:"classes",name:"Class schedule & registration",what:"Class times, enrollment and waitlists.",mode:"assist",tools:["Jackrabbit Class","iClassPro","Sawyer","Mindbody","Something else"],feeds:"Today · Calendar"},
+  {id:"payroll",name:"Timecards & payroll",what:"Who has submitted hours, and when payroll is due.",mode:"assist",tools:["Gusto","QuickBooks Payroll","ADP","Paychex","Homebase","Something else"],feeds:"Timecards · Today"},
+  {id:"books",name:"Accounting & bills",what:"Vendor bills, due dates and amounts.",mode:"assist",tools:["QuickBooks Online","Xero","Bill.com","Something else"],feeds:"Vendors"},
+  {id:"team",name:"Your team",what:"Invite the people who should use the hub. You choose what each one sees.",mode:"invite",tools:[],feeds:"Access"}
+];
+const MODE={self:"Connect yourself · about 1 minute",assist:"We connect it for you",invite:"Invite your team"};
+const CUEPA_EMAIL="marcos@ollinos.com";
+function mailCUEPA(subject,lines){try{window.location.href=`mailto:${CUEPA_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`}catch(e){}}
+const CTA={self:"Connect",assist:"Tell us what you use",invite:"Invite people"};
+const KIND={class:"hub-program",deadline:"hub-deadline",meeting:"hub-meeting",vendor:"hub-vendor",studio:""};
+const DAYS=[
+  {key:"fri",short:"Fri",label:"Friday, Oct 9",today:true,ev:[
+    {t:"9:00 AM",n:"Open the studio",s:"Studio · daily",k:"studio"},
+    {t:"11:00 AM",n:"Weekly ops check-in",s:"Meeting · 30 minutes",k:"meeting",mtg:"m1"},
+    {t:"3:30 PM",n:"Beginner aerial · ages 8–11",s:"Class · Main gym",k:"class"},
+    {t:"5:00 PM",n:"Timecards close",s:"Payroll deadline",k:"deadline"},
+    {t:"5:15 PM",n:"Intermediate tumbling",s:"Class · Studio B",k:"class"}]},
+  {key:"sat",short:"Sat",label:"Saturday, Oct 10",ev:[
+    {t:"10:00 AM",n:"Saturday aerial (new class)",s:"Class · Main gym",k:"class"},
+    {t:"1:00 PM",n:"Open gym",s:"Class · Main gym",k:"class"}]},
+  {key:"sun",short:"Sun",label:"Sunday, Oct 11",ev:[]},
+  {key:"mon",short:"Mon",label:"Monday, Oct 12",ev:[
+    {t:"9:00 AM",n:"Waitlist email goes out",s:"Drafted · needs your OK",k:"deadline"},
+    {t:"3:30 PM",n:"Beginner aerial · ages 8–11",s:"Class · Main gym",k:"class"}]},
+  {key:"tue",short:"Tue",label:"Tuesday, Oct 13",ev:[
+    {t:"3:30 PM",n:"Juggling & clowning",s:"Class · Studio B",k:"class"},
+    {t:"6:00 PM",n:"Fall showcase planning",s:"Meeting · 1 hour",k:"meeting",mtg:"m2"}]},
+  {key:"wed",short:"Wed",label:"Wednesday, Oct 14",ev:[
+    {t:"All day",n:"Rig inspection due",s:"Vendor · Summit Rigging",k:"vendor"},
+    {t:"5:15 PM",n:"Intermediate tumbling",s:"Class · Studio B",k:"class"}]},
+  {key:"thu",short:"Thu",label:"Thursday, Oct 15",ev:[
+    {t:"9:00 AM",n:"Payroll submits",s:"Payroll deadline",k:"deadline"},
+    {t:"7:00 PM",n:"Parent advisory group",s:"Meeting · 1 hour",k:"meeting",mtg:"m3"}]}
+];
+const SEED={
+  signedIn:true, view:"today", day:0, payroll:"open",
+  conn:{calendar:{status:"none"},email:{status:"none"},classes:{status:"none"},payroll:{status:"none"},books:{status:"none"},team:{status:"none"}},
+  feed:[
+    ["8:02 AM","Timecards checked: 2 still to come in","PREPARED"],
+    ["8:14 AM","Payroll lands the morning after the parent meeting","FLAGGED"],
+    ["8:31 AM","Rig inspection added to your list, no one assigned yet","QUEUED"]],
+  timecards:[
+    {id:"t1",name:"Maya R.",role:"Aerial instructor",hours:"22.5",status:"submitted"},
+    {id:"t2",name:"Diego L.",role:"Tumbling coach",hours:"18.0",status:"submitted"},
+    {id:"t3",name:"Priya S.",role:"Front desk",hours:"—",status:"notin"},
+    {id:"t4",name:"Sam K.",role:"Juggling & clowning",hours:"—",status:"notin"},
+    {id:"t5",name:"Ana V.",role:"Program lead",hours:"32.0",status:"approved"}],
+  vendors:[
+    {id:"v1",name:"Summit Rigging Co.",item:"Annual rig inspection",due:"Oct 14",amount:"$640",status:"needs"},
+    {id:"v2",name:"SafeLanding Mats",item:"Replacement crash mat",due:"Oct 20",amount:"$1,180",status:"open"},
+    {id:"v3",name:"Northside Insurance",item:"Liability renewal",due:"Oct 31",amount:"$2,450",status:"open"},
+    {id:"v4",name:"Bright Print",item:"Fall showcase flyers",due:"Oct 2",amount:"$210",status:"paid"}],
+  drafts:[
+    {id:"d2",title:"Saturday class for waitlist families",to:"12 waitlist families",when:"MON · 9:00 AM",whenLong:"Monday at 9:00 AM",body:"We opened a Saturday 10 AM beginner aerial class. Reply to this email to hold a spot.",status:"draft"},
+    {id:"d3",title:"Friendly tuition note",to:"3 families with September tuition open",when:"MON · 10:00 AM",whenLong:"Monday at 10:00 AM",body:"A friendly note that September tuition is still open. You can pay at the front desk or online anytime.",status:"draft"}],
+  meetings:[
+    {id:"m1",title:"Weekly ops check-in",when:"Today · 11:00 AM",with:"Ana V., Priya S.",
+     last:["Fall enrollment at 84 students","Rig inspection needs a date before Oct 14","Priya to send waitlist families the Saturday option"],
+     actions:[{t:"Pick a date for the rig inspection",d:false},{t:"Priya: email Saturday option to waitlist",d:true},{t:"Decide on a sub for tumbling, Oct 20",d:false}],notes:""},
+    {id:"m2",title:"Fall showcase planning",when:"Tue Oct 13 · 6:00 PM",with:"Program team",
+     last:["Showcase set for Nov 14 in the main gym","Need 40 more chairs","Each class performs one 4-minute piece"],
+     actions:[{t:"Confirm chair rental",d:false},{t:"Collect music files from instructors",d:false}],notes:""},
+    {id:"m3",title:"Parent advisory group",when:"Thu Oct 15 · 7:00 PM",with:"5 parents",
+     last:["Parents asked for a pickup text when class runs late","Interest in a summer camp"],
+     actions:[{t:"Draft the late-class pickup text",d:false}],notes:""}],
+  people:[
+    {id:"u1",name:"Christian Ochsner",role:"Owner · everything, including approvals",fin:true,locked:true},
+    {id:"u2",name:"Ana V.",role:"Program lead · calendar, meetings, her next steps",fin:false},
+    {id:"u3",name:"Priya S.",role:"Front desk · her own timecard and reminders",fin:false},
+    {id:"u4",name:"Bookkeeper",role:"Outside accountant · payroll and vendor amounts",fin:true}]
+};
+// New-client mode: same hub, nothing filled in yet. Only used when the server sets window.CUEPA_BLANK.
+const BLANK=!!window.CUEPA_BLANK;
+if(BLANK){
+  const t=new Date(),f=(d,o)=>d.toLocaleDateString("en-US",o);
+  DAYS.length=0;
+  for(let i=0;i<7;i++){const d=new Date(t);d.setDate(t.getDate()+i);DAYS.push({key:"d"+i,short:f(d,{weekday:"short"}),label:f(d,{weekday:"long",month:"short",day:"numeric"}),today:i===0,ev:[]})}
+  Object.assign(SEED,{feed:[],timecards:[],vendors:[],drafts:[],meetings:[],people:[{id:"u1",name:window.CUEPA_OWNER||"You",role:"Owner · everything, including approvals",fin:true,locked:true}]});
+  Object.assign(CONNS[2],{name:"Scheduling & bookings",what:"Appointments, bookings and class times.",tools:["Calendly","Acuity Scheduling","Square Appointments","Mindbody","Something else"]});
+}
+const clone=o=>JSON.parse(JSON.stringify(o));
+function load(){try{const s=localStorage.getItem(KEY);if(s)return {...clone(SEED),...JSON.parse(s)}}catch(e){}return clone(SEED)}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify({...s,conn:{...s.conn,calendar:{status:"none"}}}))}catch(e){}}
+const now=()=>new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+
+// Live Google calendar data stays in memory; it is never written to localStorage.
+const GC_WS=window.CUEPA_CONTEXT?.ws||location.pathname.split('/')[1];
+function googleUrl(action,params={}){return '/api/google?'+new URLSearchParams({action,ws:GC_WS,...params});}
+async function googleApi(action,params={},payload,signal){
+  const r=await fetch(googleUrl(action,params),{method:payload===undefined?'GET':'POST',credentials:'same-origin',headers:payload===undefined?{}:{'Content-Type':'application/json'},body:payload===undefined?undefined:JSON.stringify(payload),signal});
+  const data=await r.json();if(!r.ok)throw new Error(data.error||'Could not load your calendar.');return data;
+}
+function localDate(date){return [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');}
+// ---- Timecards (live, stored on the server; never in localStorage) ----
+function tcUrl(action,params={}){return '/api/timecards?'+new URLSearchParams({action,...params});}
+async function tcApi(action,params={},payload){
+  const r=await fetch(tcUrl(action,payload===undefined?{ws:GC_WS,...params}:{}),{method:payload===undefined?'GET':'POST',credentials:'same-origin',headers:payload===undefined?{}:{'Content-Type':'application/json'},body:payload===undefined?undefined:JSON.stringify({ws:GC_WS,...payload})});
+  const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.error||'Timecards are unavailable right now.');return data;
+}
+function mondayLocal(offset=0){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7)+7*offset);return localDate(d);}
+const dayLabel=(date,o)=>new Date(date+'T12:00:00').toLocaleDateString('en-US',o);
+function useTimecards(){
+  const [offset,setOffset]=useState(0),[rev,setRev]=useState(0);
+  const [d,setD]=useState({loading:true,error:'',team:[],cards:{},days:[],week:mondayLocal(0)});
+  const week=mondayLocal(offset);
+  useEffect(()=>{let stop=false;setD(p=>({...p,loading:true,error:''}));
+    tcApi('week',{week}).then(r=>{if(!stop)setD({loading:false,error:'',team:r.team,cards:r.cards,days:r.days,week})}).catch(e=>{if(!stop)setD(p=>({...p,loading:false,error:e.message,week}))});
+    return()=>{stop=true}},[week,rev]);
+  return {...d,offset,setOffset,refresh:()=>setRev(x=>x+1)};
+}
+const TC_STATE={notin:["NOT IN YET","hub-tc-late"],sent:["SENT","hub-tc-sent"],approved:["APPROVED","hub-tc-ok"],fix:["ASKED TO FIX","hub-tc-look"]};
+function tcStatus(c){if(c.status==='sent'&&c.flags&&c.flags.length)return ["NEEDS A LOOK","hub-tc-look"];return TC_STATE[c.status]||TC_STATE.notin;}
+const fmtH=n=>(Math.round(n*100)/100).toString();
+const firstName=n=>String(n||'').split(' ')[0];
+const DEFAULT_MSG="Hi {first name}, a quick reminder to add your hours for {week}. It takes about a minute: {link}\n\nThank you!\n{owner}";
+function fillMsg(t,m,weekText,owner){return t.split('{first name}').join(firstName(m.name)).split('{link}').join(m.link).split('{week}').join(weekText).split('{owner}').join(owner);}
+
+function Timecards({s,say,tc}){
+  const [remind,setRemind]=useState(null),[fix,setFix]=useState(null),[busy,setBusy]=useState('');
+  const {team,cards,days,week}=tc;
+  const weekText=days.length?`${dayLabel(days[0],{month:'short',day:'numeric'})} – ${dayLabel(days[6],{month:'short',day:'numeric'})}`:'';
+  const card=id=>cards[id]||{status:'notin',hours:0,days:{},flags:[]};
+  const sent=team.filter(m=>card(m.id).status==='sent');
+  const approved=team.filter(m=>card(m.id).status==='approved');
+  const late=team.filter(m=>['notin','fix'].includes(card(m.id).status));
+  const look=team.filter(m=>card(m.id).status==='sent'&&card(m.id).flags.length);
+  const total=team.reduce((a,m)=>a+(card(m.id).status==='notin'?0:card(m.id).hours),0);
+  const review=async(m,decision,note)=>{setBusy(m.id+decision);try{await tcApi('review',{},{id:m.id,week,decision,note});tc.refresh();say(decision==='approve'?`${m.name} approved.`:decision==='fix'?`Sent back to ${m.name}.`:'Undone.')}catch(e){say(e.message)}finally{setBusy('')}};
+  const approveAll=async()=>{setBusy('all');try{for(const m of sent)await tcApi('review',{},{id:m.id,week,decision:'approve'});tc.refresh();say(`${sent.length} timecards approved.`)}catch(e){say(e.message);tc.refresh()}finally{setBusy('')}};
+  const copy=m=>{try{navigator.clipboard.writeText(m.link).then(()=>say(`${firstName(m.name)}’s link copied.`),()=>say('Could not copy. Long-press the link instead.'))}catch(e){say('Could not copy.')}};
+  return html`<section class="hub-tc">
+    <div class="hub-hello">
+      <div><span class="hub-eyebrow">Week of ${weekText} · Due Friday 5:00 PM</span>
+        <h1>Timecards<span class="dot">.</span></h1>
+        <p>${!team.length?'Add your team below. Each person gets a private link to send their hours from their phone. No app or password needed.'
+          :late.length?`${late.length===1?'1 person hasn’t':`${late.length} people haven’t`} sent their hours yet. Approve the rest, then download them for payroll.`
+          :sent.length?'Everyone’s hours are in. Approve them, then download them for payroll.':'Everything for this week is approved.'}</p></div>
+      <div class="hub-btns">
+        ${late.length?html`<button type="button" class="hub-primary" onClick=${()=>setRemind(late.map(m=>m.id))}>Remind ${late.length} ${late.length===1?'person':'people'}</button>`:null}
+        ${sent.length?html`<button type="button" class="hub-dark" disabled=${!!busy} onClick=${approveAll}>Approve all sent (${sent.length})</button>`:null}
+      </div>
+    </div>
+    <div class="hub-weeknav" role="group" aria-label="Choose week">
+      <button type="button" class="hub-ghost" onClick=${()=>tc.setOffset(tc.offset-1)}>← Earlier</button>
+      <span>${tc.offset===0?'This week':tc.offset===-1?'Last week':`Week of ${weekText}`}</span>
+      <button type="button" class="hub-ghost" disabled=${tc.offset>=0} onClick=${()=>tc.setOffset(tc.offset+1)}>Later →</button>
+    </div>
+    ${tc.error&&html`<div class="hub-warnnote" role="alert">${tc.error} <button type="button" class="hub-linkbtn" onClick=${tc.refresh}>Try again</button></div>`}
+    ${team.length?html`<div class="hub-tc-stats">
+      <div class="hub-tc-stat hub-tc-dark"><span class="hub-eyebrow">Sent in</span><b>${team.length-team.filter(m=>card(m.id).status==='notin').length}<small> of ${team.length}</small></b></div>
+      <div class="hub-tc-stat"><span class="hub-eyebrow">Approved</span><b>${approved.length}</b></div>
+      <div class="hub-tc-stat"><span class="hub-eyebrow">Total hours</span><b>${fmtH(total)}</b></div>
+      <div class="hub-tc-stat"><span class="hub-eyebrow">Needs a look</span><b>${look.length}</b></div>
+    </div>
+    <div class="hub-card hub-tc-table">
+      <div class="hub-tc-row hub-tc-head"><span>Person</span><span>Worked on</span><span>Hours</span><span>Status</span><span>Action</span></div>
+      ${team.map(m=>{const c=card(m.id),[label,cls]=tcStatus(c),works=[...new Set(Object.values(c.days||{}).map(x=>x.work).filter(Boolean))];return html`<div class="hub-tc-row" key=${m.id}>
+        <div><b>${m.name}</b><small>${m.role||'Team member'}</small></div>
+        <span class="hub-tc-work">${works.join(', ')||'—'}</span>
+        <span class="hub-tc-hours">${c.status==='notin'?'—':fmtH(c.hours)}</span>
+        <div class="hub-tc-st"><span class=${'hub-tc-tag '+cls}><i aria-hidden="true"></i>${label}</span>
+          ${c.status==='sent'&&c.flags.map(f=>html`<small class="hub-tc-flag" key=${f}>${f}</small>`)}
+          ${c.status==='fix'&&c.fixNote&&html`<small class="hub-tc-flag">“${c.fixNote}”</small>`}
+          ${c.note&&c.status!=='notin'&&html`<small>Note: ${c.note}</small>`}</div>
+        <div class="hub-tc-act">
+          ${c.status==='sent'?html`<button type="button" class="hub-ghost" disabled=${!!busy} onClick=${()=>setFix(m)}>Ask to fix</button><button type="button" class="hub-primary" disabled=${!!busy} onClick=${()=>review(m,'approve')}>Approve</button>`
+           :c.status==='approved'||c.status==='fix'?html`<button type="button" class="hub-ghost" disabled=${!!busy} onClick=${()=>review(m,'undo')}>Undo</button>${c.status==='fix'?html`<button type="button" class="hub-dark" onClick=${()=>setRemind([m.id])}>Remind</button>`:null}`
+           :html`<button type="button" class="hub-dark" onClick=${()=>setRemind([m.id])}>Remind</button>`}
+        </div></div>`})}
+    </div>
+    <div class="hub-tc-payroll">
+      <div><span class="hub-eyebrow">When everyone’s approved</span><h2>Get the hours to payroll.</h2><p>Download the approved hours, then run payroll in QuickBooks like you always do. The hub never pays anyone.</p></div>
+      <div class="hub-btns">
+        <a class=${'hub-primary'+(approved.length?'':' hub-off')} aria-disabled=${!approved.length} href=${approved.length?tcUrl('export',{ws:GC_WS,week}):undefined}>Download for payroll · ${approved.length} of ${team.length} approved</a>
+        <span class="hub-tc-soon">Send to QuickBooks · coming soon</span>
+      </div>
+    </div>`:null}
+    <${TeamCard} tc=${tc} say=${say} copy=${copy}/>
+    ${remind&&html`<${RemindModal} ids=${remind} tc=${tc} card=${card} weekText=${weekText} owner=${firstName(window.CUEPA_OWNER_NAME||'')} say=${say} close=${()=>setRemind(null)}/>`}
+    ${fix&&html`<${FixModal} m=${fix} close=${()=>setFix(null)} send=${note=>{const m=fix;setFix(null);review(m,'fix',note)}}/>`}
+  </section>`;
+}
+
+function TeamCard({tc,say,copy}){
+  const blank={name:'',role:'',email:'',phone:''};
+  const [f,setF]=useState(blank),[busy,setBusy]=useState(false),[err,setErr]=useState('');
+  const add=async e=>{e.preventDefault();setErr('');if(!f.name.trim()){setErr('Add a name.');return}
+    setBusy(true);try{await tcApi('team-add',{},f);setF(blank);tc.refresh();say(`${f.name} added. Their private link is ready.`)}catch(x){setErr(x.message)}finally{setBusy(false)}};
+  const remove=async m=>{if(!window.confirm(`Remove ${m.name} from your team list? Their link stops working. Hours they already sent are kept.`))return;
+    try{await tcApi('team-remove',{},{id:m.id});tc.refresh();say(`${m.name} removed.`)}catch(x){say(x.message)}};
+  const relink=async m=>{if(!window.confirm(`Make a new link for ${m.name}? Their old link stops working.`))return;
+    try{await tcApi('team-relink',{},{id:m.id});tc.refresh();say(`New link ready for ${m.name}.`)}catch(x){say(x.message)}};
+  return html`<div class="hub-card hub-team" id="team">
+    <div class="hub-card-title"><div><span class="hub-eyebrow">Your team · ${tc.team.length} ${tc.team.length===1?'person':'people'}</span><h2>Who sends hours</h2></div></div>
+    ${tc.team.map(m=>html`<div class="hub-team-row" key=${m.id}>
+      <div><b>${m.name}</b><small>${[m.role,m.email,m.phone].filter(Boolean).join(' · ')||'No contact added'}</small></div>
+      <div class="hub-btns"><button type="button" class="hub-ghost" onClick=${()=>copy(m)}>Copy link</button><button type="button" class="hub-ghost" onClick=${()=>relink(m)}>New link</button><button type="button" class="hub-linkbtn" onClick=${()=>remove(m)}>Remove</button></div>
+    </div>`)}
+    <form class="hub-form hub-team-form" onSubmit=${add}>
+      <label>Name<input value=${f.name} onInput=${e=>setF({...f,name:e.target.value})} placeholder="Sam Rivera" autoComplete="off"/></label>
+      <label>Role<input value=${f.role} onInput=${e=>setF({...f,role:e.target.value})} placeholder="Coach"/></label>
+      <label>Email<input type="email" value=${f.email} onInput=${e=>setF({...f,email:e.target.value})} placeholder="sam@email.com"/></label>
+      <label>Mobile<input type="tel" value=${f.phone} onInput=${e=>setF({...f,phone:e.target.value})} placeholder="(555) 555-0123"/></label>
+      <button type="submit" class="hub-dark" disabled=${busy}>${busy?'Adding…':'Add person'}</button>
+    </form>
+    ${err&&html`<p class="hub-form-err" role="alert">${err}</p>`}
+    <p class="hub-sub">Email or mobile is used only for timecard reminders you approve.</p>
+  </div>`;
+}
+
+function RemindModal({ids,tc,card,weekText,owner,say,close}){
+  const people=tc.team.filter(m=>ids.includes(m.id));
+  const [msg,setMsg]=useState(()=>DEFAULT_MSG.split('{week}').join(weekText).split('{owner}').join(owner||''));
+  const [done,setDone]=useState({});
+  const mark=id=>setDone(p=>({...p,[id]:true}));
+  const text=m=>fillMsg(msg,m,weekText,owner||'');
+  const mail=m=>`mailto:${encodeURIComponent(m.email)}?subject=${encodeURIComponent('Your hours for '+weekText)}&body=${encodeURIComponent(text(m))}`;
+  const sms=m=>`sms:${m.phone.replace(/[^0-9+]/g,'')}?&body=${encodeURIComponent(text(m))}`;
+  const copy=m=>{try{navigator.clipboard.writeText(text(m)).then(()=>{mark(m.id);say('Message copied.')})}catch(e){}};
+  return html`<div class="hub-overlay" role="dialog" aria-modal="true" aria-labelledby="rm-title" onClick=${e=>{if(e.target===e.currentTarget)close()}}><div class="hub-modal">
+    <div class="hub-modal-head"><div><span class="hub-eyebrow">Nothing sends without you</span><h2 id="rm-title">Remind ${people.length===1?firstName(people[0].name):`${people.length} people`}<span class="dot">.</span></h2></div><button type="button" class="hub-x" aria-label="Close" onClick=${close}>×</button></div>
+    <div class="hub-modal-body hub-remind">
+      <label class="hub-remind-msg">The message<textarea rows="5" value=${msg} onInput=${e=>setMsg(e.target.value)}></textarea></label>
+      <p class="hub-sub">Each person gets their own private link. {first name} and {link} fill in for each one.</p>
+      ${people[0]&&html`<div class="hub-remind-preview"><span class="hub-eyebrow">What ${firstName(people[0].name)} gets</span><p>${text(people[0])}</p></div>`}
+      ${people.map(m=>html`<div class="hub-remind-row" key=${m.id}>
+        <div><b>${m.name}</b><small>${card(m.id).status==='fix'?'Asked to fix':'Not in yet'}${done[m.id]?' · ✓ Opened':''}</small></div>
+        <div class="hub-btns">
+          ${m.email?html`<a class="hub-dark" href=${mail(m)} onClick=${()=>mark(m.id)}>Email</a>`:null}
+          ${m.phone?html`<a class="hub-dark" href=${sms(m)} onClick=${()=>mark(m.id)}>Text</a>`:null}
+          <button type="button" class="hub-ghost" onClick=${()=>copy(m)}>Copy</button>
+        </div></div>`)}
+      <div class="hub-remind-note">Email and Text open your own email or messages app with the note ready. You press send. Automatic Thursday reminders are coming soon.</div>
+    </div>
+    <div class="hub-modal-actions"><button type="button" class="hub-primary" onClick=${close}>Done</button></div>
+  </div></div>`;
+}
+
+function FixModal({m,close,send}){
+  const [note,setNote]=useState('');
+  return html`<div class="hub-overlay" role="dialog" aria-modal="true" aria-labelledby="fx-title" onClick=${e=>{if(e.target===e.currentTarget)close()}}><div class="hub-modal">
+    <div class="hub-modal-head"><div><span class="hub-eyebrow">Ask to fix</span><h2 id="fx-title">What should ${firstName(m.name)} check?</h2></div><button type="button" class="hub-x" aria-label="Close" onClick=${close}>×</button></div>
+    <div class="hub-modal-body"><label class="hub-remind-msg">Note for ${firstName(m.name)} (they see this on their timecard)<textarea rows="3" value=${note} onInput=${e=>setNote(e.target.value)} placeholder="Tuesday looks long. Can you double-check it?"></textarea></label></div>
+    <div class="hub-modal-actions"><button type="button" class="hub-ghost" onClick=${close}>Cancel</button><button type="button" class="hub-primary" onClick=${()=>send(note)}>Send back</button></div>
+  </div></div>`;
+}
+
+// ---- Guided setup ----
+function setupSteps(s,tc){
+  return [
+    {id:'calendar',name:'Calendar',done:s.google.connected,status:s.google.connected?'LIVE':'',
+      what:s.google.connected?`Google Calendar · ${s.google.selected.length} calendar${s.google.selected.length===1?'':'s'} showing on Today`:'Connect Google Calendar so your real day shows on Today.',time:'About 1 minute',cta:s.google.connected?'Manage':'Connect calendar'},
+    {id:'email',name:'Email',done:s.conn.email.status!=='none',status:s.conn.email.status==='connected'?'LIVE':s.conn.email.status==='requested'?'SETTING UP':'',
+      what:s.conn.email.tool?`${s.conn.email.tool} · Reminders get drafted from your own address. Nothing sends without your OK.`:'So reminders come from your own address. Nothing sends without your OK.',time:'About 1 minute',cta:s.conn.email.status==='none'?'Set up email':'Change'},
+    {id:'quickbooks',name:'Payroll & accounting · QuickBooks',done:s.conn.payroll.status!=='none',status:s.conn.payroll.status!=='none'?'SETTING UP':'',
+      what:'Connect QuickBooks so approved timecards can go straight into payroll. We’ll set it up with you.',time:'About 1 minute',cta:s.conn.payroll.status==='none'?'Start':'See details'},
+    {id:'team',name:'Your team',done:tc.team.length>0,status:tc.team.length?`${tc.team.length} ADDED`:'',
+      what:tc.team.length?'Each person has a private link to send their hours.':'Add the people who fill out timecards. Each one gets a private link, no password needed.',time:'About 2 minutes',cta:tc.team.length?'Manage team':'Add people'}
+  ];
+}
+function Setup({s,go,openC,tc}){
+  const steps=setupSteps(s,tc),done=steps.filter(x=>x.done).length,next=steps.find(x=>!x.done);
+  const act=st=>st.id==='team'?(go('timecards'),setTimeout(()=>{const el=document.getElementById('team');el&&el.scrollIntoView({behavior:'smooth'})},120)):openC(st.id);
+  return html`<section class="hub-setup">
+    <div class="hub-setup-grid">
+      <div class="hub-setup-main">
+        <div class="hub-pagehead"><span class="hub-eyebrow">Setup · About 5 minutes in total</span><h1>Let’s set up your hub<span class="dot">.</span></h1>
+          <p>One step at a time. We guide you through each one, and you can stop anytime and pick up right where you left off.</p></div>
+        <div class="hub-setup-prog"><div><b>${done} of ${steps.length} done</b><span>${next?`Next: ${next.name.split(' · ').pop()}`:'All set'}</span></div>
+          <div class="hub-prog" role="progressbar" aria-valuenow=${done} aria-valuemin="0" aria-valuemax=${steps.length} aria-label="Setup progress"><i style=${{width:`${done/steps.length*100}%`}}></i></div></div>
+        <ol class="hub-steps">
+          ${steps.map((st,i)=>{const isNext=next&&next.id===st.id;return html`<li key=${st.id} class=${'hub-step'+(isNext?' next':'')+(st.done?' done':'')}>
+            <span class="hub-step-n" aria-hidden="true">${st.done?'✓':i+1}</span>
+            <div class="hub-step-t">${isNext&&html`<span class="hub-eyebrow">Up next · ${st.time}</span>`}<b>${st.name}</b><span>${st.what}</span></div>
+            ${st.status&&html`<span class=${'hub-tc-tag '+(st.status==='LIVE'||/ADDED/.test(st.status)?'hub-tc-ok':'hub-tc-sent')}><i aria-hidden="true"></i>${st.status}</span>`}
+            <button type="button" class=${isNext?'hub-primary':'hub-ghost'} onClick=${()=>act(st)}>${isNext&&st.id==='quickbooks'?'Start the guide':st.cta}</button>
+          </li>`})}
+          <li class="hub-step built"><span class="hub-step-n" aria-hidden="true">⌂</span>
+            <div class="hub-step-t"><b>Classes & scheduling</b><span>Built by CUEPA with your new website. Nothing for you to do here.</span></div>
+            <span class="hub-tc-tag hub-tc-late"><i aria-hidden="true"></i>BUILT BY CUEPA</span></li>
+        </ol>
+      </div>
+      <aside class="hub-setup-aside">
+        <div class="hub-card"><span class="hub-eyebrow">Need a hand?</span><h3>We can do it together.</h3><p class="hub-sub">Book a few minutes with Marcos and we’ll finish setup on a call.</p>
+          <button type="button" class="hub-dark" onClick=${()=>mailCUEPA('Hub setup call',['I’d like to finish my hub setup on a call.','','Times that work for me:'])}>Book a setup call</button></div>
+        <div class="hub-card hub-tc-dark"><span class="hub-eyebrow">Where things live</span>
+          <p><b>The hub</b><br/>Timecards, reminders and your approvals.</p><p><b>QuickBooks</b><br/>Payroll, invoices and bills, same as today.</p></div>
+        <p class="hub-sub">Never type a password into the hub. You always sign in on Google’s or Intuit’s own page.</p>
+      </aside>
+    </div>
+  </section>`;
+}
+
+function QuickBooksModal({s,up,close}){
+  const asked=s.conn.payroll.status!=='none';
+  const request=()=>{up(n=>{n.conn.payroll={status:'requested',tool:'QuickBooks'}},'Saved. Your email app opened so Marcos gets the details.',['QuickBooks setup requested','REQUESTED']);
+    mailCUEPA('Hub: connect QuickBooks',['Please set up the QuickBooks connection for our hub with me.','','QuickBooks plan (if you know it):','Payroll: QuickBooks Payroll / other:'])};
+  return html`<div class="hub-overlay" role="dialog" aria-modal="true" aria-labelledby="qb-title" onClick=${e=>{if(e.target===e.currentTarget)close()}}><div class="hub-modal">
+    <div class="hub-modal-head"><div><span class="hub-eyebrow">Step 3 of 4 · About 1 minute</span><h2 id="qb-title">Connect QuickBooks<span class="dot">.</span></h2></div><button type="button" class="hub-x" aria-label="Close" onClick=${close}>×</button></div>
+    <div class="hub-modal-body hub-qb">
+      <p>So approved hours can go straight into payroll. You keep running payroll, invoices and bills in QuickBooks, exactly like today.</p>
+      <ol class="hub-qb-steps">
+        <li><span aria-hidden="true">1</span><div><b>We finish the connection with Intuit</b><small>We’re working with Intuit on this now.</small></div></li>
+        <li><span aria-hidden="true">2</span><div><b>You sign in to QuickBooks once and click Connect</b><small>On Intuit’s own page. We do it together.</small></div></li>
+        <li><span aria-hidden="true">3</span><div><b>Approved hours go to payroll</b><small>Until then, download them from Timecards as a spreadsheet.</small></div></li>
+      </ol>
+      <div class="hub-tc-dark hub-qb-can"><span class="hub-eyebrow">What CUEPA can and can’t do</span>
+        <p><b>✓</b> Add the hours <b>you approved</b> as timesheets</p><p><b>✕</b> Run payroll, pay anyone, or send invoices. That stays with you.</p><p><b>✕</b> See your QuickBooks password</p></div>
+      ${asked&&html`<div class="hub-remind-note">✓ You asked us to set this up. Marcos will reach out to schedule it.</div>`}
+    </div>
+    <div class="hub-modal-actions"><button type="button" class="hub-ghost" onClick=${close}>Close</button>${asked?null:html`<button type="button" class="hub-primary" onClick=${()=>{request();close()}}>Set it up with me</button>`}</div>
+  </div></div>`;
+}
+
+function useGoogleCalendar(){
+  const [data,setData]=useState({loading:true,connected:false,selected:[],events:[],error:'',syncedAt:null});
+  const [period,setPeriod]=useState(0),[revision,setRevision]=useState(0);
+  const date=new Date();date.setHours(0,0,0,0);date.setDate(date.getDate()+period*7);
+  const start=date.toISOString();date.setDate(date.getDate()+7);const end=date.toISOString();
+  useEffect(()=>{
+    let stopped=false,inFlight=false;const controller=new AbortController();
+    const run=async()=>{
+      if(inFlight || document.hidden)return;inFlight=true;
+      setData(d=>({...d,loading:true,error:'',events:[],syncedAt:null}));
+      try{
+        const state=await googleApi('status',{},undefined,controller.signal);
+        const ev=state.connected&&state.selected.length?await googleApi('events',{start,end},undefined,controller.signal):{events:[],syncedAt:null};
+        if(!stopped)setData({...state,...ev,loading:false,error:''});
+      }catch(e){if(!stopped)setData(d=>({...d,loading:false,events:[],syncedAt:null,error:e.message}));}
+      finally{inFlight=false;}
+    };
+    run();const timer=setInterval(run,60000);const visible=()=>{if(!document.hidden)run()};document.addEventListener('visibilitychange',visible);
+    return()=>{stopped=true;controller.abort();clearInterval(timer);document.removeEventListener('visibilitychange',visible)};
+  },[start,end,revision]);
+  return {...data,start,end,period,setPeriod,refresh:()=>setRevision(n=>n+1)};
+}
+function GoogleSchedule({s,openC,compact=false}){
+  const g=s.google;useEffect(()=>{if(compact)g.setPeriod(0)},[compact]);const first=compact?new Date():new Date(g.start);first.setHours(0,0,0,0);
+  const days=Array.from({length:compact?1:7},(_,i)=>{const d=new Date(first);d.setDate(first.getDate()+i);return d});
+  return html`<div class="hub-card" style=${{padding:'24px'}}>
+    <div class="hub-card-title"><div><span class="hub-eyebrow">Google Calendar</span><h2>${compact?'Today, in one view.':'Your calendar'}</h2></div>
+    <button class="hub-ghost" onClick=${()=>openC('calendar')}>${g.connected?'Manage calendars':'Connect calendar'}</button></div>
+    <p class="hub-sub">Private to your CUEPA login in this workspace. Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}.</p>
+    ${!compact&&html`<div class="hub-btns"><button class="hub-ghost" onClick=${()=>g.setPeriod(g.period-1)}>← Previous week</button><button class="hub-ghost" onClick=${()=>g.setPeriod(0)}>Today</button><button class="hub-ghost" onClick=${()=>g.setPeriod(g.period+1)}>Next week →</button></div>`}
+    ${compact&&g.period!==0&&html`<button class="hub-ghost" onClick=${()=>g.setPeriod(0)}>Load this week</button>`}
+    ${g.error?html`<p role="alert" class="hub-warnnote">${g.error}</p>`:null}
+    ${g.loading?html`<p role="status">Loading calendar…</p>`:!g.connected?html`<p>Connect Google Calendar to see your events here.</p>`:!g.selected.length?html`<p>Google is connected. Choose calendars to display.</p>`:!g.error&&days.map(d=>{
+      const next=new Date(d);next.setDate(next.getDate()+1);
+      const events=g.events.filter(e=>e.start.date?e.start.date<localDate(next)&&(e.end?.date||e.start.date)>localDate(d):new Date(e.start.dateTime)<next&&new Date(e.end?.dateTime||e.start.dateTime)>d);
+      return html`<section key=${localDate(d)} style=${{marginTop:'20px'}}><h3>${d.toLocaleDateString([],{weekday:'long',month:'short',day:'numeric'})}</h3>
+      ${events.length?events.map(e=>html`<div class="hub-slot" key=${e.id}>
+        <time>${e.start.date?'All day':new Date(e.start.dateTime).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}</time>
+        <div class="hub-block hub-meeting"><b>${e.title}</b><small>${e.calendar}${e.location?' · '+e.location:''}</small></div>
+      </div>`):html`<p class="hub-sub">No events scheduled.</p>`}</section>`;
+    })}
+    <div class="hub-btns" style=${{marginTop:'20px'}}><button class="hub-ghost" disabled=${g.loading} onClick=${g.refresh}>Refresh</button>
+      <small role="status">${g.syncedAt?'Last updated '+new Date(g.syncedAt).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):''} · Refreshes every minute while open.</small></div>
+  </div>`;
+}
+function GoogleConnect({s,close,done}){
+  const [calendars,setCalendars]=useState([]),[ids,setIds]=useState([]),[busy,setBusy]=useState(false),[error,setError]=useState('');
+  const [ready,setReady]=useState(false);const g=s.google;
+  useEffect(()=>{
+    if(!g.connected)return;let stopped=false;const controller=new AbortController();setBusy(true);
+    googleApi('calendars',{},undefined,controller.signal).then(d=>{if(!stopped){setCalendars(d.calendars);setIds(d.selected.length?d.selected.map(c=>c.id):d.calendars.filter(c=>c.primary).map(c=>c.id));setReady(true)}}).catch(e=>{if(!stopped)setError(e.message)}).finally(()=>{if(!stopped)setBusy(false)});
+    return()=>{stopped=true;controller.abort()};
+  },[g.connected]);
+  const act=async(action,payload)=>{setBusy(true);setError('');try{await googleApi(action,{},payload);g.refresh();if(action==='select'&&done)done();else close()}catch(e){setError(e.message)}finally{setBusy(false)}};
+  return html`<div class="hub-overlay" role="dialog" aria-modal="true" aria-labelledby="google-title" onClick=${e=>{if(e.target===e.currentTarget&&!busy)close()}}><div class="hub-modal">
+    <div class="hub-modal-head"><h2 id="google-title">Connect Google Calendar</h2><button class="hub-x" aria-label="Close" onClick=${close}>×</button></div>
+    <div class="hub-modal-body"><p>Read-only access. CUEPA cannot create, edit or delete your Google events.</p><p>Your selected events are visible only to your CUEPA login in this workspace.</p>
+      ${error&&html`<p class="hub-warnnote" role="alert">${error}</p>`}
+      ${g.connected?html`<p>Choose up to 10 calendars. We checked your main one for you.</p>
+        ${busy&&html`<p role="status">Loading…</p>`}
+        <div class="hub-opts">${calendars.map(c=>html`<label class="hub-opt" key=${c.id}><input type="checkbox" checked=${ids.includes(c.id)} disabled=${busy||(!ids.includes(c.id)&&ids.length>=10)} onChange=${()=>setIds(old=>old.includes(c.id)?old.filter(x=>x!==c.id):[...old,c.id])}/>${c.name}${c.primary?' (primary)':''}</label>`)}</div>
+        ${ready&&!calendars.length&&html`<p>No readable calendars were found for this Google account.</p>`}
+        <p class="hub-sub">Disconnect removes this connection from CUEPA. You can also remove CUEPA access in your Google Account permissions.</p>`:html`<p>Google will ask you to choose an account and approve Calendar access. Then you can select calendars here.</p><div class="hub-remind-note">Heads up: Google may say it hasn’t verified CUEPA yet while we finish their review. Click <b>Advanced</b>, then <b>Go to CUEPA</b>. It’s safe, and CUEPA can only read your calendar.</div>`}
+      <p class="hub-sub">Outlook and Apple Calendar are not connected in this version.</p>
+    </div>
+    <div class="hub-modal-actions">
+      ${g.connected?html`<button class="hub-ghost" disabled=${busy} onClick=${()=>act('disconnect',{})}>Disconnect</button><a class="hub-ghost" href=${googleUrl('start')}>Reconnect Google</a><button class="hub-primary" disabled=${busy||!ready} onClick=${()=>act('select',{ids})}>Save calendars</button>`:html`<a class="hub-primary" href=${googleUrl('start')}>Continue with Google</a>`}
+    </div>
+  </div></div>`;
+}
+
+function App(){
+  const [base,setS]=useState(load);
+  const google=useGoogleCalendar();
+  const tc=useTimecards();
+  const s={...base,google,conn:{...base.conn,calendar:{status:google.connected?'connected':'none',tool:'Google Calendar'}}};
+  const [toast,setToast]=useState("");
+  const [modal,setModal]=useState(null);
+  const [conn,setConn]=useState(null);
+  useEffect(()=>{
+    const url=new URL(location.href), result=url.searchParams.get('google');
+    if(result){setToast(result==='connected'?'Google connected. Choose your calendars.':result==='cancelled'?'Google connection cancelled.':'Could not connect Google. Please try again.');setS(p=>({...p,view:'connect'}));if(result==='connected')setConn('calendar');url.searchParams.delete('google');history.replaceState(null,'',url.pathname+url.search+url.hash)}
+  },[]);
+  const timer=useRef(null);
+  const [lib,setLib]=useState(false);
+  const libRef=useRef(null);
+  const [look,setLook]=useState(()=>document.documentElement.classList.contains("light")?"light":"dark");
+  const flip=()=>{const n=look==="light"?"dark":"light";document.documentElement.classList.toggle("light",n==="light");try{localStorage.setItem("cuepa_look",n)}catch(e){}setLook(n)};
+  useEffect(()=>{if(!lib)return;const c=e=>{if(libRef.current&&!libRef.current.contains(e.target))setLib(false)};const k=e=>{if(e.key==="Escape")setLib(false)};document.addEventListener("mousedown",c);document.addEventListener("keydown",k);return()=>{document.removeEventListener("mousedown",c);document.removeEventListener("keydown",k)}},[lib]);
+  useEffect(()=>save(base),[base]);
+  useEffect(()=>{const h=(location.hash||"").slice(1);if(VIEWS.some(v=>v[0]===h))setS(p=>({...p,view:h}))},[]);
+  useEffect(()=>{if(!modal&&!conn)return;const k=e=>{if(e.key==="Escape"){setModal(null);setConn(null)}};document.addEventListener("keydown",k);return()=>document.removeEventListener("keydown",k)},[modal,conn]);
+  const say=m=>{setToast(m);clearTimeout(timer.current);timer.current=setTimeout(()=>setToast(""),3200)};
+  const up=(fn,msg,log)=>{setS(p=>{const n=clone(p);fn(n);if(log)n.feed.unshift([now(),log[0],log[1]]);return n});if(msg)say(msg)};
+  const go=v=>{setS(p=>({...p,view:v}));window.scrollTo({top:0,behavior:"smooth"})};
+
+  if(!s.signedIn) return html`<div class="hub-signin"><form onSubmit=${e=>{e.preventDefault();up(n=>{n.signedIn=true})}}>
+    <span style=${{display:"flex",gap:"10px",alignItems:"center",fontWeight:700,letterSpacing:".13em",fontSize:"13px"}}><span style=${{display:"inline-flex",gap:"3px"}}><i style=${{width:9,height:9,borderRadius:"50%",background:"#101516",display:"block"}}></i><i style=${{width:9,height:9,borderRadius:"50%",background:"#2dd4bf",display:"block"}}></i></span>CUEPA</span>
+    <h1>Welcome back<span class="dot">.</span></h1><p style=${{margin:0,color:"var(--h-muted)"}}>Sign in to the Cirques Experience workspace.</p>
+    <label style=${{display:"grid",gap:"6px",fontSize:"12px",fontWeight:700,color:"var(--h-muted)"}}>Email<input id="email" type="email" defaultValue="christian@cirquesexperience.org"/></label>
+    <button type="submit">Sign in</button><small style=${{color:"var(--h-muted)"}}>Sample sign-in · any entry works</small></form></div>`;
+
+  const needs=buildNeeds(s,up,go,setModal);
+  const open=needs.filter(n=>!n.done).length;
+  const notSet=setupSteps(s,tc).filter(x=>!x.done).length;
+  const live=CONNS.filter(c=>s.conn[c.id].status==="connected").length;
+  const counts={connect:notSet,today:open,timecards:tc.team.filter(m=>{const c=tc.cards[m.id];return !c||c.status!=="approved"}).length,vendors:s.vendors.filter(v=>v.status==="needs").length,meetings:s.meetings.reduce((a,m)=>a+m.actions.filter(x=>!x.d).length,0)};
+  const label=VIEWS.find(v=>v[0]===s.view)[1];
+  const V={today:Today,calendar:Calendar,timecards:Timecards,vendors:Vendors,meetings:Meetings,access:Access,connect:Setup}[s.view];
+  const draftsLeft=s.drafts.filter(d=>d.status==="draft");
+
+  return html`<div class="hub">
+    <header class="hub-bar"><div class="hub-bar-in">
+      <div class="hub-brand"><span class="hub-mark" aria-hidden="true"><i></i><i></i></span><span class="hub-wm">CUEPA</span><span class="hub-sep" aria-hidden="true"></span>${BLANK?html`<span class="hub-wsname">Cirques Experience</span>`:html`<span class="hub-cx" role="img" aria-label="Cirques Experience"><svg width="30" height="26" viewBox="0 0 60 52" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="4.5" stroke-linecap="round"><ellipse cx="24" cy="26" rx="15" ry="22"/><ellipse cx="36" cy="26" rx="15" ry="22"/><path d="M24 4 L36 4"/><path d="M24 48 L36 48"/><path d="M9 26 L21 26"/><path d="M39 26 L51 26"/><path d="M13 11 L25 11"/><path d="M35 41 L47 41"/></g></svg><span class="hub-cx-a">Cirques</span><span class="hub-cx-b">Experience</span></span>`}</div>
+      <div class="hub-tools">
+        <nav class="hub-lib" aria-label="Library" ref=${libRef}>
+          <button type="button" class="hub-libbtn" aria-expanded=${lib} aria-controls="hub-libmenu" onClick=${()=>setLib(!lib)}><span class="hub-libk">Library</span><span class="hub-libcur">${label}</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+          ${lib&&html`<div class="hub-libmenu" id="hub-libmenu">
+            ${VIEWS.map(([k,l])=>html`<button key=${k} type="button" aria-current=${s.view===k?"page":undefined} onClick=${()=>{setLib(false);go(k)}}><span>${l}</span>${counts[k]?html`<span class="hub-count">${counts[k]}</span>`:s.view===k?html`<span class="hub-cur"></span>`:null}</button>`)}
+            <div class="hub-libacct">
+              <div class="hub-user"><span class="hub-avatar" aria-hidden="true">CO</span><span><b style=${{color:"#101516"}}>Christian Ochsner</b><br/>Owner</span></div>
+              <div class="hub-acctlinks"><button class="hub-link" onClick=${()=>up(n=>{n.signedIn=false})}>Sign out</button><button class="hub-link" onClick=${()=>{setS(clone(SEED));say("Sample data reset.")}}>Reset sample data</button></div>
+            </div>
+          </div>`}
+        </nav>
+        <button type="button" class="hub-mode" aria-pressed=${look==="light"} onClick=${flip}>${look==="light"?"Dark mode":"Light mode"}</button>
+      </div>
+    </div></header>
+    <main class="hub-content">
+      <div class="hub-actions">
+        <span class="hub-crumb">app.makingcuepa.com / ${label.toLowerCase()}</span>
+        <div class="hub-top-right">
+          <span class="hub-badge"><i aria-hidden="true"></i>${live?`${live} of ${CONNS.length} connected`:BLANK?"Nothing connected yet":"Sample data · nothing connected"}</span>
+          <button type="button" class="hub-primary" disabled=${!draftsLeft.length} onClick=${()=>setModal(draftsLeft[0].id)}>${draftsLeft.length?`Review drafted reminders (${draftsLeft.length})`:BLANK&&!s.drafts.length?"No reminders yet":"All drafts reviewed"}</button>
+        </div>
+      </div>
+      <${V} key=${s.view} s=${s} up=${up} go=${go} needs=${needs} open=${open} setModal=${setModal} say=${say} openC=${setConn} tc=${tc}/>
+    </main>
+    ${modal&&html`<${Review} d=${s.drafts.find(x=>x.id===modal)} close=${()=>setModal(null)} up=${up}/>`}
+    ${conn&&html`<${conn==="calendar"?GoogleConnect:conn==="quickbooks"?QuickBooksModal:Connect} key=${conn} c=${CONNS.find(x=>x.id===conn)} s=${s} up=${up} close=${()=>setConn(null)} done=${()=>{setConn(null);go("today");say("Your calendar is in. Here’s your day.")}}/>`}
+    <div class=${"hub-toast"+(toast?" hub-show":"")} role="status" aria-live="polite">${toast}</div>
+  </div>`;
+}
+
+function buildNeeds(s,up,go,setModal){
+  if(BLANK) return [];
+  const rig=s.vendors.find(v=>v.id==="v1");
+  return [
+    {t:"Confirm the payroll submission date",d:"Payroll submits Thursday, Oct 15 at 9 AM, the morning after the parent advisory meeting.",
+     done:s.payroll!=="open",btns:[["Keep Thursday",()=>up(n=>{n.payroll="thu"},"Payroll stays on Thursday.",["You kept payroll on Thu Oct 15","CONFIRMED"]),true],["Move to Wednesday",()=>up(n=>{n.payroll="wed"},"Payroll moved to Wednesday, Oct 14.",["You moved payroll to Wed Oct 14","CHANGED"])]],
+     doneText:s.payroll==="wed"?"Handled ✓ Moved to Wednesday":"Handled ✓ Thursday confirmed"},
+    {t:"Assign someone to the rig inspection",d:"Summit Rigging needs a date before Oct 14. It came up at last week's check-in and no one has it yet.",
+     done:rig.status!=="needs",btns:[["I'll handle it",()=>up(n=>{const v=n.vendors.find(x=>x.id==="v1");v.status="open";v.owner="Christian"},"The rig inspection is yours.",["You took the rig inspection","ASSIGNED"]),true],["Give it to Ana",()=>up(n=>{const v=n.vendors.find(x=>x.id==="v1");v.status="open";v.owner="Ana V."},"Assigned to Ana.",["Rig inspection assigned to Ana","ASSIGNED"])]],
+     doneText:`Handled ✓ ${rig.owner||"Assigned"}`}
+  ];
+}
+
+function Today({s,up,go,needs,open,setModal,openC,tc}){
+  const steps=setupSteps(s,tc),setUp=steps.filter(x=>x.done).length;
+  return html`<section>
+    <div class="hub-hello">
+      <div><span class="hub-eyebrow">${BLANK?new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"}).replace(", "," · "):"Friday · October 9"}</span>
+        <h1>${BLANK?"Welcome. Let’s set up your hub":open?"Here’s what needs you":"You’re all caught up"}<span class="dot">.</span></h1>
+        <p>${BLANK?"Connect your calendar, your email and the tools you already use. As soon as they’re connected, this page shows your real day: what needs you, what’s coming up, and what we’ve prepared for you.":open?`${open===1?"One thing needs":`${["","One","Two","Three"][open]} things need`} a decision from you. Everything else is being tracked in one place instead of across separate systems.`:"Nothing needs a decision right now. Your day is below."}</p></div>
+      <div class="hub-status">${BLANK?"First step":"Next up"}<b>● ${BLANK?"Connect your calendar":"11:00 AM · Weekly ops check-in"}</b></div>
+    </div>
+    ${setUp<steps.length&&html`<div class="hub-notice">
+      <div style=${{flex:"1 1 320px"}}><span class="hub-notice-k">${setUp?"ALMOST THERE":BLANK?"LET'S GET YOU SET UP":"YOU'RE LOOKING AT SAMPLE DATA"}</span>
+        <p>Connect your calendar, your email and the tools you already use, and this page fills in with your real day. ${setUp} of ${steps.length} set up.</p>
+        <div class="hub-prog"><i style=${{width:`${setUp/steps.length*100}%`}}></i></div></div>
+      <div class="hub-btns">${s.conn.calendar.status==="none"
+        ?html`<button type="button" class="hub-primary" onClick=${()=>openC("calendar")}>Connect your calendar</button><button type="button" class="hub-ghost" onClick=${()=>go("connect")}>See setup steps</button>`
+        :html`<button type="button" class="hub-primary" onClick=${()=>go("connect")}>Continue setup</button>`}</div>
+    </div>`}
+    <div class="hub-grid">
+      <div class="hub-col hub-col-1">
+        <div class="hub-card hub-needs">
+          <div class="hub-card-title"><div><span class="hub-eyebrow">Ready for your decision</span><h2>What needs you today.</h2></div></div>
+          ${needs.map((n,i)=>html`<div class=${"hub-need"+(n.done?" done":"")} key=${i}>
+            <span class="hub-need-num" aria-hidden="true">${n.done?"✓":String(i+1).padStart(2,"0")}</span>
+            <div><b>${n.t}</b><p>${n.d}</p>
+              ${n.done?html`<div class="hub-done">${n.doneText}</div>`:html`<div class="hub-btns">${n.btns.map(([l,fn,p])=>html`<button key=${l} type="button" class=${"hub-pill"+(p?" hub-go":"")} onClick=${fn}>${l}</button>`)}</div>`}
+            </div></div>`)}
+          ${!needs.length&&html`<p class="hub-empty">Nothing needs a decision yet. Once your tools are connected, the things that need you show up here.</p>`}
+        </div>
+      </div>
+      <div class="hub-col hub-col-2"><${DayCard} s=${s} up=${up} go=${go} openC=${openC}/></div>
+      <div class="hub-col hub-col-3">
+        <div class="hub-card hub-invert">
+          <div class="hub-card-title"><div><span class="hub-eyebrow">Prepared for you</span><h3>Drafted reminders</h3></div><span class="hub-tag">NOT SENT</span></div>
+          <${Src} s=${s} id="email" openC=${openC} label="Connect your email" inline=${true}/>
+          ${!s.drafts.length&&html`<p class="hub-empty in">No reminders yet. When something needs a follow-up, we draft it here for you to approve.</p>`}
+          ${s.drafts.map(d=>html`<div class="hub-item" key=${d.id} style=${d.status==="aside"?{opacity:.45}:undefined}>
+            <span class="hub-when">${d.status==="approved"?"✓ SCHEDULED":d.status==="aside"?"SET ASIDE":d.when}</span>
+            <b>${d.title}</b><p>To ${d.to}.</p>
+            ${d.status==="draft"?html`<div class="hub-mini">
+              <button type="button" class="hub-send" onClick=${()=>setModal(d.id)}>Review & send</button>
+              <button type="button" onClick=${()=>up(n=>{n.drafts.find(x=>x.id===d.id).status="aside"},"Set aside. Nothing was sent.")}>Set aside</button></div>`
+            :d.status==="aside"?html`<div class="hub-mini"><button type="button" onClick=${()=>up(n=>{n.drafts.find(x=>x.id===d.id).status="draft"})}>Bring back</button></div>`:null}
+          </div>`)}
+        </div>
+        <div class="hub-card">
+          <div class="hub-card-title"><div><span class="hub-eyebrow">Activity</span><h3>What the hub did today</h3></div></div>
+          ${!s.feed.length&&html`<p class="hub-empty in">Nothing yet. Everything the hub prepares or flags for you is listed here.</p>`}<div>${s.feed.slice(0,5).map(([t,w,tag],i)=>html`<div class="hub-event" key=${i}><time>${t}</time><span>${w}</span><span class="hub-tag">${tag}</span></div>`)}</div>
+          <div class="hub-trustline"><i aria-hidden="true"></i><span>Preparing and flagging happen automatically. Sending and approving stay with a person.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function DayCard({s,openC}){return html`<${GoogleSchedule} s=${s} openC=${openC} compact=${true}/>`;}
+function Calendar({s,openC}){return html`<section><div class="hub-pagehead"><span class="hub-eyebrow">Calendar</span><h1>Your week<span class="dot">.</span></h1></div><${GoogleSchedule} s=${s} openC=${openC}/></section>`;}
+
+function Vendors({s,up,openC}){
+  const [f,setF]=useState({name:"",item:"",due:"",amount:""});
+  const st={needs:["NEEDS SOMEONE","hub-open"],open:["IN PROGRESS",""],paid:["PAID",""]};
+  const add=e=>{e.preventDefault();if(!f.name.trim())return;up(n=>{n.vendors.unshift({id:"v"+Date.now(),...f,amount:f.amount||"—",due:f.due||"—",status:"open"})},`${f.name} added.`,[`Vendor added: ${f.name}`,"ADDED"]);setF({name:"",item:"",due:"",amount:""})};
+  return html`<section>
+    <div class="hub-pagehead"><span class="hub-eyebrow">03 — Follow through</span><h1>Vendors and payments<span class="dot">.</span></h1>
+      <p>Bills, inspections and renewals in one list, with who is handling each one, so nothing depends on someone remembering it.</p></div>
+    <${Src} s=${s} id="books" openC=${openC} label="Connect accounting & bills" inline=${true}/>
+    <div class="hub-table">${s.vendors.map(v=>{const x=st[v.status];return html`<div class="hub-row" key=${v.id}>
+      <div><b>${v.name}</b><small>${v.item}${v.owner?` · ${v.owner}`:""}</small></div><span class="hub-meta">Due ${v.due} · ${v.amount}</span><span class=${"hub-state "+x[1]}>${x[0]}</span>
+      <span class="hub-rowact">${v.status==="needs"?html`<button class="hub-pill hub-go" onClick=${()=>up(n=>{const y=n.vendors.find(z=>z.id===v.id);y.status="open";y.owner="Christian"},"It's yours.",[`You took ${v.name}`,"ASSIGNED"])}>I'll handle it</button>`
+        :v.status==="open"?html`<button class="hub-pill" onClick=${()=>up(n=>{n.vendors.find(z=>z.id===v.id).status="paid"},`${v.name} marked paid.`,[`${v.name} marked paid`,"PAID"])}>Mark paid</button>`:null}</span>
+    </div>`})}
+      <form class="hub-form" onSubmit=${add}>
+        <label>Vendor<input id="vname" value=${f.name} onInput=${e=>setF({...f,name:e.target.value})} placeholder="Vendor name"/></label>
+        <label>What for<input id="vitem" value=${f.item} onInput=${e=>setF({...f,item:e.target.value})} placeholder="Silks restock"/></label>
+        <label>Due<input id="vdue" value=${f.due} onInput=${e=>setF({...f,due:e.target.value})} placeholder="Oct 30"/></label>
+        <label>Amount<input id="vamt" value=${f.amount} onInput=${e=>setF({...f,amount:e.target.value})} placeholder="$0"/></label>
+        <button type="submit" class="hub-primary">Add vendor</button>
+      </form></div>
+  </section>`;
+}
+
+function Meetings({s,up}){
+  return html`<section>
+    <div class="hub-pagehead"><span class="hub-eyebrow">04 — Decide</span><h1>Meetings and next steps<span class="dot">.</span></h1>
+      <p>Walk in with your notes from last time. Next steps stay attached to the meeting they came from, so nothing disappears into a notes document.</p></div>
+    ${!s.meetings.length&&html`<div class="hub-table"><p class="hub-empty row">No meetings yet. Once your calendar is connected, each meeting gets its notes and next steps here.</p></div>`}<div class="hub-meets">${s.meetings.map(m=>html`<${Meet} key=${m.id} m=${m} up=${up}/>`)}</div>
+  </section>`;
+}
+function Meet({m,up}){
+  const [draft,setDraft]=useState(m.notes||"");
+  return html`<div class="hub-card hub-meet">
+    <div class="hub-card-title" style=${{margin:0}}><div><span class="hub-eyebrow">${m.when}</span><h3>${m.title}</h3><small style=${{color:"var(--h-muted)"}}>With ${m.with}</small></div></div>
+    <div class="hub-last"><span class="hub-eyebrow">From last time</span><ul>${m.last.map((x,i)=>html`<li key=${i}>${x}</li>`)}</ul></div>
+    <div><span class="hub-eyebrow" style=${{marginBottom:"4px"}}>Next steps</span>${m.actions.map((a,i)=>html`<label key=${i} class=${"hub-check"+(a.d?" dim":"")} style=${{display:"flex"}}>
+      <input type="checkbox" id=${m.id+"-a"+i} checked=${a.d} onChange=${()=>up(n=>{const x=n.meetings.find(y=>y.id===m.id).actions[i];x.d=!x.d})}/><span>${a.t}</span></label>`)}</div>
+    <label>Notes for this meeting<textarea id=${"notes-"+m.id} value=${draft} onInput=${e=>setDraft(e.target.value)} placeholder="Type during the meeting. They show up here next time."></textarea></label>
+    <button type="button" class="hub-ghost" style=${{justifySelf:"start"}} onClick=${()=>up(n=>{n.meetings.find(y=>y.id===m.id).notes=draft},"Notes saved.")}>Save notes</button>
+  </div>`;
+}
+
+function Access({s,up,openC}){
+  return html`<section>
+    <div class="hub-pagehead"><span class="hub-eyebrow">Basic access controls</span><h1>Who sees what<span class="dot">.</span></h1>
+      <p>Payroll and vendor amounts stay visible only to the people you choose. Every setting here is reviewable and reversible.</p></div>
+    <${Src} s=${s} id="team" openC=${openC} label="Invite your team" inline=${true}/>
+    <div class="hub-table">${s.people.map(p=>html`<div class="hub-row" key=${p.id}>
+      <div><b>${p.name}</b><small>${p.role}</small></div><span class="hub-meta">Money details</span>
+      <span class="hub-state">${p.locked?"ALWAYS ON":p.fin?"ON":"OFF"}</span>
+      <span class="hub-rowact"><button class="hub-switch" role="switch" aria-checked=${p.fin} aria-label=${"Money details for "+p.name} disabled=${p.locked}
+        onClick=${()=>up(n=>{const x=n.people.find(y=>y.id===p.id);x.fin=!x.fin},`${p.name}: money details ${p.fin?"hidden":"shown"}.`)}></button></span>
+    </div>`)}</div>
+  </section>`;
+}
+
+function Src({s,id,openC,label,inline}){
+  const c=s.conn[id];
+  const cls="hub-src"+(inline?" inline":"")+(c.status==="connected"?" on":"");
+  if(id==="calendar")return html`<div class=${cls}><span>${s.google.error?'Calendar needs attention':s.google.connected?'Google Calendar connected':'Google Calendar not connected'}</span><button class="hub-linkbtn" onClick=${()=>openC('calendar')}>${s.google.connected?'Manage calendars':'Connect calendar'} →</button></div>`;
+  if(c.status==="connected")return html`<div class=${cls}><i class="hub-dot"></i><span>${id==="team"?"Your team has been invited":`Connected · ${c.tool} · synced just now`}</span></div>`;
+  if(c.status==="requested")return html`<div class=${cls}><i class="hub-dot"></i><span>${BLANK?"Requested":"Sample data"} · ${id==="team"?"Invites requested":`We'll connect ${c.tool} with you`}</span></div>`;
+  return html`<div class=${cls}><i class="hub-dot"></i><span>${BLANK?"Not connected yet":"Sample data"}</span><button type="button" class="hub-linkbtn" onClick=${()=>openC(id)}>${label} →</button></div>`;
+}
+
+function statusTag(st,c){
+  if(st.status==="connected")return html`<span class="hub-tag">✓ ${c.mode==="invite"?"INVITED":"CONNECTED"}</span>`;
+  if(st.status==="requested")return html`<span class="hub-tag hub-tag-warn">◌ WAITING ON CUEPA</span>`;
+  return html`<span class="hub-tag hub-tag-quiet">NOT SET UP</span>`;
+}
+function Connect({c,s,up,close}){
+  const cur=s.conn[c.id];
+  const [step,setStep]=useState(c.mode==="invite"?"invite":"pick");
+  const [tool,setTool]=useState(cur.tool&&c.tools.includes(cur.tool)?cur.tool:c.tools[0]);
+  const [cals,setCals]=useState({"Studio":true,"Class schedule":true,"Payroll deadlines":true,"Personal":false});
+  const [who,setWho]=useState("me");
+  const [f,setF]=useState({other:"",name:"",email:"",reach:"",note:"",role:"Program lead"});
+  const ref=useRef(null);
+  useEffect(()=>{ref.current&&ref.current.focus()},[]);
+  const provider=/Google|Gmail/.test(tool)?"Google":/Outlook|Microsoft/.test(tool)?"Microsoft":"Apple";
+  const SENT="Saved. Your email app opened with the details. Press send so Marcos gets them.";
+  const finishSelf=()=>{
+    const picked=c.id==="calendar"?Object.keys(cals).filter(k=>cals[k]):[];
+    mailCUEPA(`Cirques hub: ${c.name} (${tool})`,[`We use: ${tool}`,...(picked.length?[`Calendars to include: ${picked.join(", ")}`]:[]),"","Please connect this for our hub."]);
+    up(n=>{n.conn[c.id]={status:"requested",tool}},SENT,[`${c.name}: ${tool} noted`,"REQUESTED"]);close()};
+  const finishAssist=e=>{e.preventDefault();const t=tool==="Something else"?(f.other.trim()||"Another tool"):tool;
+    mailCUEPA(`Cirques hub: ${c.name} (${t})`,[`We use: ${t}`,`Who has the login: ${who==="me"?"Me":`${f.name||"(name)"} ${f.email?`<${f.email}>`:""}`}`,`Best way to reach me: ${f.reach||"(not given)"}`,...(f.note?["",`Notes: ${f.note}`]:[])]);
+    up(n=>{n.conn[c.id]={status:"requested",tool:t}},SENT,[`Setup requested: ${c.name} (${t})`,"REQUESTED"]);close()};
+  const invite=e=>{e.preventDefault();if(!f.name.trim()||!f.email.trim())return;
+    mailCUEPA("Cirques hub: please invite a team member",[`Name: ${f.name.trim()}`,`Email: ${f.email.trim()}`,`Role: ${f.role}`]);
+    up(n=>{n.people.push({id:"u"+Date.now(),name:f.name.trim(),role:`${f.role} · invite requested`,fin:false});n.conn.team={status:"requested",tool:"Invites"}},SENT,[`Invite requested for ${f.name.trim()}`,"REQUESTED"]);
+    setF({...f,name:"",email:""})};
+  const title={self:`Connect your ${c.name.toLowerCase()}`,assist:`Set up ${c.name.toLowerCase()}`,invite:"Invite your team"}[c.mode];
+  const total=c.id==="calendar"?3:2;
+  const stepNo={pick:1,signin:2,cals:3,details:2}[step];
+
+  let body,actions;
+  if(step==="pick"){
+    body=html`<span class="hub-eyebrow">Which one do you use?</span>
+      <div class="hub-opts">${c.tools.map(t=>html`<label class="hub-opt" key=${t}><input type="radio" name=${"tool-"+c.id} id=${"tool-"+c.id+"-"+t.replace(/\W/g,"")} checked=${tool===t} onChange=${()=>setTool(t)}/>${t}</label>`)}</div>`;
+    actions=html`<button type="button" class="hub-ghost" onClick=${close}>Cancel</button><button type="button" class="hub-primary" onClick=${()=>setStep(c.mode==="self"?"signin":"details")}>Next</button>`;
+  }else if(step==="signin"){
+    body=html`<div class="hub-fgrid" style=${{justifyItems:"start"}}>
+      <div class="hub-warnnote">Your live hub is still being set up, so this won't sign you in yet. Save your choice and we'll connect ${tool} with you.</div>
+      <p class="hub-sub" style=${{fontSize:"14px"}}>When it's live, you'll sign in on ${provider}'s own page and come right back here. CUEPA never sees your password, and you can disconnect at any time.</p>
+      <button type="button" class="hub-primary" style=${{fontSize:"14px",padding:"14px 22px"}} onClick=${()=>c.id==="calendar"?setStep("cals"):finishSelf()}>${c.id==="calendar"?"Next: choose calendars":"Save my choice"}</button>
+      <small class="hub-feeds">${c.id==="calendar"?"READ-ONLY: THE HUB SEES YOUR EVENTS BUT CAN'T CHANGE THEM.":"THE HUB DRAFTS EMAILS. IT NEVER SENDS WITHOUT YOUR OK."}</small></div>`;
+    actions=html`<button type="button" class="hub-ghost" onClick=${()=>setStep("pick")}>Back</button>`;
+  }else if(step==="cals"){
+    body=html`<span class="hub-eyebrow">Which calendars should show up in the hub?</span>
+      <div class="hub-opts">${Object.keys(cals).map(k=>html`<label class="hub-opt" key=${k}><input type="checkbox" id=${"cal-"+k.replace(/\W/g,"")} checked=${cals[k]} onChange=${()=>setCals({...cals,[k]:!cals[k]})}/>${k}</label>`)}</div>
+      <p class="hub-sub" style=${{marginTop:"12px"}}>Your personal calendar is off by default. Turn it on only if you want personal events next to work.</p>`;
+    actions=html`<button type="button" class="hub-ghost" onClick=${()=>setStep("signin")}>Back</button><button type="button" class="hub-primary" disabled=${!Object.values(cals).some(Boolean)} onClick=${finishSelf}>Save my choice</button>`;
+  }else if(step==="details"){
+    body=html`<form id="assist-form" class="hub-fgrid" onSubmit=${finishAssist}>
+      ${tool==="Something else"&&html`<label>What's it called?<input id="other-tool" value=${f.other} onInput=${e=>setF({...f,other:e.target.value})} placeholder="Name of the tool"/></label>`}
+      <div><span class="hub-eyebrow">Who has the login for ${tool==="Something else"?"it":tool}?</span>
+        <div class="hub-opts">${[["me","I do"],["other","Someone else on the team"]].map(([k,l])=>html`<label class="hub-opt" key=${k}><input type="radio" name="who" id=${"who-"+k} checked=${who===k} onChange=${()=>setWho(k)}/>${l}</label>`)}</div></div>
+      ${who==="other"&&html`<div class="hub-form2"><label>Their name<input id="who-name" value=${f.name} onInput=${e=>setF({...f,name:e.target.value})}/></label><label>Their email<input id="who-email" type="email" value=${f.email} onInput=${e=>setF({...f,email:e.target.value})}/></label></div>`}
+      <label>Best way to reach you<input id="reach" value=${f.reach} onInput=${e=>setF({...f,reach:e.target.value})} placeholder="Phone or email"/></label>
+      <label>Anything we should know? (optional)<textarea id="note" value=${f.note} onInput=${e=>setF({...f,note:e.target.value})} placeholder="For example: we only use it for payroll, not scheduling."></textarea></label>
+      <div class="hub-warnnote">We'll set this up with you on a short call. Please don't type passwords here.</div>
+    </form>`;
+    actions=html`<button type="button" class="hub-ghost" onClick=${()=>setStep("pick")}>Back</button><button type="submit" form="assist-form" class="hub-primary">Send to CUEPA</button>`;
+  }else{
+    body=html`<form id="invite-form" class="hub-fgrid" onSubmit=${invite}>
+      <div class="hub-form2"><label>Name<input id="inv-name" value=${f.name} onInput=${e=>setF({...f,name:e.target.value})} placeholder="Ana Vargas"/></label>
+        <label>Email<input id="inv-email" type="email" value=${f.email} onInput=${e=>setF({...f,email:e.target.value})} placeholder="ana@cirquesexperience.org"/></label></div>
+      <label>Role<select id="inv-role" value=${f.role} onChange=${e=>setF({...f,role:e.target.value})}>${["Program lead","Front desk","Instructor","Bookkeeper"].map(r=>html`<option key=${r}>${r}</option>`)}</select></label>
+      <p class="hub-sub">When your hub is live, they'll get an email to create their own login. You choose what they can see on the Access page.</p>
+      <button type="submit" class="hub-primary" style=${{justifySelf:"start"}}>Request invite</button>
+    </form>`;
+    actions=html`<button type="button" class="hub-ghost" onClick=${close}>Done</button>`;
+  }
+  return html`<div class="hub-overlay" role="dialog" aria-modal="true" aria-labelledby="hub-conn-title" onClick=${e=>{if(e.target===e.currentTarget)close()}}>
+    <div class="hub-modal">
+      <div class="hub-modal-head"><div><span class="hub-eyebrow">${MODE[c.mode]}${stepNo?` · Step ${stepNo} of ${c.mode==="assist"?2:total}`:""}</span><h2 id="hub-conn-title">${title}</h2></div>
+        <button type="button" class="hub-x" ref=${ref} aria-label="Close" onClick=${close}>×</button></div>
+      <div class="hub-modal-body">${body}</div>
+      <div class="hub-modal-actions">${actions}</div>
+    </div>
+  </div>`;
+}
+
+function Review({d,close,up}){
+  const ref=useRef(null);
+  useEffect(()=>{ref.current&&ref.current.focus()},[]);
+  return html`<div class="hub-overlay" role="dialog" aria-modal="true" aria-labelledby="hub-modal-title" onClick=${e=>{if(e.target===e.currentTarget)close()}}>
+    <div class="hub-modal">
+      <div class="hub-modal-head"><div><span class="hub-eyebrow">Nothing is sent without you</span><h2 id="hub-modal-title">${d.title}</h2></div>
+        <button type="button" class="hub-x" ref=${ref} aria-label="Close" onClick=${close}>×</button></div>
+      <div class="hub-modal-body">
+        <span class="hub-eyebrow">The message</span>
+        <p class="hub-quote">“${d.body}”</p>
+        <span class="hub-eyebrow">What happens</span>
+        <div class="hub-change"><b>SEND TO</b><span>${d.to}</span></div>
+        <div class="hub-change"><b>WHEN</b><span>${d.whenLong}</span></div>
+      </div>
+      <div class="hub-modal-actions">
+        <button type="button" class="hub-ghost" onClick=${()=>{up(n=>{n.drafts.find(x=>x.id===d.id).status="aside"},"Set aside. Nothing was sent.");close()}}>Set aside</button>
+        <button type="button" class="hub-primary" onClick=${()=>{up(n=>{n.drafts.find(x=>x.id===d.id).status="approved";if(d.id==="d1")n.timecards.forEach(t=>{if(t.status==="notin")t.status="reminded"})},"Approved. It sends on schedule.",[`You approved “${d.title}”`,"SCHEDULED"]);close()}}>Approve and schedule</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(html`<${App}/>`);
+</script>
+</body></html>

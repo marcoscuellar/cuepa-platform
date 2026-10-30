@@ -1,0 +1,13 @@
+{
+  "name": "cuepa-app",
+  "private": true,
+  "dependencies": {
+    "@vercel/blob": "^2.3.0"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

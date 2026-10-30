@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Your timecard · CUEPA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--ink:#0a0a0a;--muted:#5e5e5e;--line:#e4e4e4;--soft:#f4f4f4;--teal:#2dd4bf;--teal-text:#0b756a;--warn:#92570c;--warn-bg:#fbf2e3;
+  --shadow:0 1px 2px rgba(10,10,10,.06),0 12px 30px rgba(10,10,10,.07)}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:var(--ink);font:16px/1.5 'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:520px;margin:0 auto;padding:24px 16px calc(32px + env(safe-area-inset-bottom));display:grid;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.mark{display:inline-flex;gap:3px}.mark i{width:7px;height:16px;border-radius:2px;background:var(--ink);display:block}.mark i+i{background:var(--teal)}
+.eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{margin:0;font-size:32px;font-weight:800;letter-spacing:-.025em;line-height:1.05}
+h1 .dot{color:var(--teal)}
+.seg{display:flex;gap:4px;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg button{flex:1;font:inherit;font-size:14px;font-weight:600;border:0;background:none;color:var(--muted);border-radius:9px;min-height:40px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:4px 12px;box-shadow:var(--shadow)}
+.day{display:grid;grid-template-columns:52px 72px minmax(0,1fr);gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #ededed}
+.day:last-child{border-bottom:0}
+.day b{font-size:14px;line-height:1.2}.day b small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.day input,.day select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:10px;min-height:44px;width:100%}
+.day input{text-align:center;font-weight:700;padding:0 6px}
+.day select{padding:0 10px;font-size:15px}
+textarea{padding:12px;min-height:80px;resize:vertical}
+label.note{display:grid;gap:6px;font-size:14px;font-weight:600}
+.total{background:var(--ink);color:#fff;border-radius:16px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 12px 30px rgba(10,10,10,.2)}
+.total span{color:#d6d6d6;font-size:14px}.total b{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.go{font:inherit;font-size:16px;font-weight:700;color:var(--ink);background:var(--teal);border:0;border-radius:12px;min-height:52px;cursor:pointer}
+.go:disabled{opacity:.5;cursor:default}
+.msg{border-radius:14px;padding:14px 16px;font-size:15px}
+.msg.ok{background:#e6f6f2;color:#064e46}
+.msg.warn{background:var(--warn-bg);color:var(--warn)}
+.msg.err{background:#fde8e8;color:#8a1c1c}
+.fine{font-size:12.5px;color:var(--muted);text-align:center;margin:0}
+.fine a{color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><span class="mark" aria-hidden="true"><i></i><i></i></span><span id="biz">Your timecard</span></div>
+  <div style="display:grid;gap:8px">
+    <span class="eyebrow" id="wk">Loading…</span>
+    <h1 id="hi">Add your hours<span class="dot">.</span></h1>
+  </div>
+  <div class="seg" role="group" aria-label="Which week">
+    <button type="button" id="w0" aria-pressed="true">This week</button>
+    <button type="button" id="w1" aria-pressed="false">Last week</button>
+  </div>
+  <div id="state" class="msg" role="status" hidden></div>
+  <form id="f" hidden>
+    <div class="card" id="days"></div>
+    <label class="note" style="margin-top:16px">Anything to add? (optional)<textarea id="note" maxlength="300" placeholder="Example: covered an extra class on Tuesday"></textarea></label>
+    <div class="total" style="margin-top:16px"><span>Total this week</span><b id="tot">0 hrs</b></div>
+    <button type="submit" class="go" id="send" style="width:100%;margin-top:16px">Send my hours</button>
+  </form>
+  <p class="fine">No login needed. This link is just for you, so please don’t share it. Your manager reviews your hours before payroll. <a href="/privacy">Privacy</a></p>
+</div>
+<script>
+(function(){
+  var token = decodeURIComponent((location.pathname.match(/^\/t\/([^/]+)/)||[])[1]||'');
+  var WORK = ['Classes','Front desk','Event','Office','Cleaning & setup','Other'];
+  var $ = function(id){return document.getElementById(id)};
+  var weekOffset = 0, data = null, locked = false;
+  function monday(offset){var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7)-7*offset);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+  function fmt(date,opt){return new Date(date+'T12:00:00').toLocaleDateString('en-US',opt)}
+  function show(kind,text){var s=$('state');s.className='msg '+kind;s.textContent=text;s.hidden=!text}
+  function opt(v,sel){var o=document.createElement('option');o.value=v;o.textContent=v||'What did you do?';if(v===sel)o.selected=true;return o}
+  function sum(){var t=0;document.querySelectorAll('[data-h]').forEach(function(i){var n=parseFloat(i.value);if(n>0)t+=n});$('tot').textContent=(Math.round(t*100)/100)+' hrs'}
+  function render(){
+    var c=data.card, days=$('days'); days.innerHTML='';
+    $('biz').textContent=data.business;
+    $('hi').firstChild.nodeValue='Hi '+data.name.split(' ')[0]+', add your hours';
+    $('wk').textContent='Week of '+fmt(data.days[0],{month:'short',day:'numeric'})+' – '+fmt(data.days[6],{month:'short',day:'numeric'});
+    locked = c.status==='approved';
+    data.days.forEach(function(date,i){
+      var row=document.createElement('div');row.className='day';
+      var lab=document.createElement('b');lab.textContent=fmt(date,{weekday:'short'});var sm=document.createElement('small');sm.textContent=fmt(date,{month:'short',day:'numeric'});lab.appendChild(sm);
+      var id='h'+i, inp=document.createElement('input');inp.id=id;inp.type='number';inp.inputMode='decimal';inp.min='0';inp.max='24';inp.step='0.25';inp.placeholder='0';inp.setAttribute('data-h',date);inp.disabled=locked;
+      var lbl=document.createElement('label');lbl.className='sr';lbl.htmlFor=id;lbl.textContent='Hours on '+fmt(date,{weekday:'long'});
+      var sel=document.createElement('select');sel.setAttribute('data-w',date);sel.setAttribute('aria-label','What you did on '+fmt(date,{weekday:'long'}));sel.disabled=locked;
+      var cur=c.days&&c.days[date];if(cur){inp.value=cur.hours}
+      sel.appendChild(opt('',''));WORK.forEach(function(w){sel.appendChild(opt(w,cur&&cur.work))});
+      if(cur&&cur.work&&WORK.indexOf(cur.work)<0)sel.appendChild(opt(cur.work,cur.work));
+      inp.addEventListener('input',sum);
+      row.appendChild(lab);row.appendChild(lbl);row.appendChild(inp);row.appendChild(sel);days.appendChild(row);
+    });
+    $('note').value=c.note||'';$('note').disabled=locked;
+    $('send').hidden=locked;$('send').textContent=c.status==='sent'?'Update my hours':'Send my hours';
+    if(c.status==='approved')show('ok','Approved ✓ These hours are locked in for payroll.');
+    else if(c.status==='sent')show('ok','Sent ✓ You can still change them until they’re approved.');
+    else if(c.status==='fix')show('warn','Please take another look'+(c.fixNote?': '+c.fixNote:'.')+' Then send them again.');
+    else show('', '');
+    $('f').hidden=false;sum();
+  }
+  function load(){
+    show('', '');$('f').hidden=true;
+    fetch('/api/timecards?'+new URLSearchParams({action:'card',t:token,week:monday(weekOffset)}),{credentials:'omit'})
+      .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.error||'Could not load your timecard.');return d})})
+      .then(function(d){data=d;render()})
+      .catch(function(e){$('wk').textContent='Timecard';show('err',e.message)});
+  }
+  [0,1].forEach(function(n){$('w'+n).addEventListener('click',function(){weekOffset=n;$('w0').setAttribute('aria-pressed',n===0);$('w1').setAttribute('aria-pressed',n===1);load()})});
+  $('f').addEventListener('submit',function(e){
+    e.preventDefault();if(locked)return;
+    var days={};document.querySelectorAll('[data-h]').forEach(function(i){var d=i.getAttribute('data-h');days[d]={hours:i.value===''?'':Number(i.value),work:document.querySelector('[data-w="'+d+'"]').value}});
+    $('send').disabled=true;
+    fetch('/api/timecards?action=submit',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'omit',body:JSON.stringify({t:token,week:monday(weekOffset),days:days,note:$('note').value})})
+      .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.error||'Could not send your hours.');return d})})
+      .then(function(d){data.card=d.card;render();window.scrollTo({top:0,behavior:'smooth'})})
+      .catch(function(e){show('err',e.message)})
+      .finally(function(){$('send').disabled=false});
+  });
+  if(!token){show('err','This link is missing its code. Open the link from your reminder again.')}else load();
+})();
+</script>
+</body>
+</html>
