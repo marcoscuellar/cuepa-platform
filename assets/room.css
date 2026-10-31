@@ -66,13 +66,13 @@ nav a.on{background:var(--raised);color:var(--ink)}nav a i{width:7px;height:7px;
 .roomdate{font:500 13px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
 .roomtime{color:var(--teal);font-variant-numeric:tabular-nums}
 /* the never-ending ticker: dark teal, one line, loops; pauses on hover; still for reduced motion */
-.ticker{overflow:hidden;border-radius:12px;background:#0b3d38;color:#ffffff;height:44px;display:flex;align-items:center;box-shadow:var(--shadow);
+.ticker{overflow:hidden;height:44px;display:flex;align-items:center;color:var(--ink);
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
 .tickmove{display:flex;width:max-content;animation:tick 45s linear infinite}.dup{display:contents}
 .ticker:hover .tickmove,.ticker:focus-within .tickmove{animation-play-state:paused}
 @keyframes tick{to{transform:translateX(-50%)}}
-.tk{display:inline-flex;align-items:center;gap:8px;padding:0 22px;font-size:14px;white-space:nowrap}
-.tk b{font-weight:700}.tk .when{color:#b9e9e1}.tk+.tk{box-shadow:-1px 0 0 rgba(255,255,255,.18)}
+.tk{display:inline-flex;align-items:center;gap:8px;padding:0 20px;font-size:14px;white-space:nowrap}
+.tk b{font-weight:700}.tk .when{color:var(--mute)}.tk+.tk{box-shadow:-1px 0 0 var(--line)}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;flex:none}.dot.ok{background:#34d399}.dot.bad{background:#f87171}
 .ticknote{font-size:12px;color:var(--mute);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 @media (prefers-reduced-motion:reduce){.ticker{height:auto;padding:6px 0;-webkit-mask-image:none;mask-image:none}.tickmove{animation:none;flex-wrap:wrap;width:auto}.dup{display:none}}
