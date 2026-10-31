@@ -39,7 +39,7 @@
     },
     {
       "source": "/:ws((?!privacy$|terms$|timecard$)[a-z0-9-]+)",
-      "destination": "/api/today?ws=:ws"
+      "destination": "/api/room?ws=:ws"
     }
   ],
   "functions": {
