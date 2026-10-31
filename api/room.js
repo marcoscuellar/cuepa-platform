@@ -55,7 +55,6 @@ function page(ws, wsName, person) {
     <div class="roomhead">
       <div class="roomtop"><span class="roomlabel">The Room</span><span class="roomdate" id="date"></span></div>
       <section class="ticker" aria-label="What’s connected"><div class="tickmove" id="ticker"><span class="tk">Checking connections…</span></div></section>
-      <div class="ticknote" id="ticknote">Checks every 15 minutes · <span class="dot ok"></span> fresh · <span class="dot bad"></span> needs a look</div>
     </div>
     <section class="card brief" aria-labelledby="update">
       <h1 id="update">Checking your day…</h1>
