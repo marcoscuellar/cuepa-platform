@@ -2,6 +2,7 @@
    Rule: no made-up numbers. If something isn't connected, it says so; it never shows zero for unknown. */
 (function () {
   'use strict';
+  var model = window.CuepaRoomModel;
   var WS = document.body.dataset.ws, OWNER = document.body.dataset.owner || '';
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
@@ -20,7 +21,7 @@
   function toast(t) { var el = $('toast'); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(function () { el.hidden = true; }, 4200); }
   var log = []; function did(text) { log.unshift({ at: new Date(), text: text }); }
 
-  var S = { cal: null, events: [], tc: null, mail: null, inbox: [], needs: [], pick: null, panel: 'inbox', mailOpen: 0, day: null, drafts: {}, updated: null };
+  var S = { cal: null, events: [], tc: null, mail: null, inbox: [], needs: [], pick: null, panel: 'inbox', mailOpen: 0, day: null, drafts: {}, updated: null, meeting: null, notes: {}, followups: [], assistantMode: 'day' };
   var NOW = new Date(), WEEK0 = mondayOf(NOW), TODAY_I = (NOW.getDay() + 6) % 7;
 
   /* look + greeting */
@@ -57,7 +58,7 @@
   function loadMail() {
     return get('/api/gmail?action=status&ws=' + WS).then(function (st) {
       S.mail = { connected: st.connected, email: st.email };
-      if (!st.connected) return;
+      if (!st.connected) { S.inbox = []; return; }
       return get('/api/gmail?action=list&ws=' + WS).then(function (r) { S.inbox = r.messages || []; did('Inbox checked, ' + S.inbox.filter(function (m) { return m.unread; }).length + ' unread'); });
     }).catch(function (e) { S.mail = { connected: S.mail ? S.mail.connected : false, error: e.status === 503 ? 'unavailable' : e.message }; S.inbox = []; });
   }
@@ -78,6 +79,7 @@
   }
   function buildNeeds() {
     var n = [], tc = S.tc || { sent: [], late: [] };
+    if (tc.error) n.push({ id: 'timecards-unavailable', t: 'Timecards unavailable', d: 'The last check failed · status unknown', pill: '! Check', cta: 'Open Timecards', href: '/' + WS + '/hub#timecards', why: 'We could not check timecards. Missing and submitted counts are unknown until the source loads.', rows: [['Source', 'Timecards'], ['Status', 'Could not load']] });
     if (tc.late.length) {
       var withEmail = tc.late.filter(function (m) { return m.email; });
       S.drafts.remind = S.drafts.remind || ('Hi {first name}, a quick reminder to add your hours for ' + weekTxt() + '. It takes about a minute: {link}\n\nThank you!\n' + (first(OWNER) || ''));
@@ -90,7 +92,7 @@
       cta: 'Review and approve', href: '/' + WS + '/hub#timecards', why: 'These hours are waiting on you. Nothing reaches payroll until you approve.', rows: [['Approves', tc.sent.map(function (m) { return m.name; }).join(', ')], ['Then', 'Hours are ready for the payroll download']] });
     if (S.cal && S.cal.error !== 'unavailable' && (!S.cal.connected || S.cal.error)) n.push({ id: 'cal', t: S.cal.error === 'expired' ? 'Reconnect your calendar' : 'Connect your calendar', d: 'Your week stays empty until it’s connected', pill: '! Setup',
       cta: 'Reconnect', href: '/' + WS + '/hub#connect', why: 'The hub reads your calendar to show your week and flag deadlines. It never changes your calendar.', rows: [['Opens', 'Google sign-in, read-only']] });
-    if (S.mail && S.mail.error !== 'unavailable' && !S.mail.connected) n.push({ id: 'gmail', t: 'Connect your email', d: 'So your most important emails show here', pill: '→ Setup',
+    if (S.mail && S.mail.error !== 'unavailable' && (!S.mail.connected || S.mail.error)) n.push({ id: 'gmail', t: 'Connect your email', d: 'So your newest unread emails show here', pill: '→ Setup',
       cta: 'Connect Gmail', href: '/' + WS + '/inbox', why: 'With email connected, replies and reminders go out from your own address. Nothing sends without you.', rows: [['Opens', 'Google sign-in'], ['Allows', 'Read and send, only when you press Send']] });
     S.needs = n;
   }
@@ -99,7 +101,7 @@
   function render() {
     buildNeeds();
     var tc = S.tc || { team: [], sent: [], late: [] }, unread = S.inbox.filter(function (m) { return m.unread; });
-    var calOk = S.cal && S.cal.connected && !S.cal.error, mailOk = S.mail && S.mail.connected;
+    var calOk = model.calendarReady(S), mailOk = model.mailReady(S);
     var todays = calOk ? eventsOn(TODAY_I) : [];
     var meetings = todays.filter(function (e) { return kind(e) === 'mt'; });
 
@@ -107,31 +109,34 @@
 
     /* update line: only what's known, zero parts drop out */
     var parts = [];
-    if (mailOk && unread.length) parts.push('<em>' + plural(unread.length, 'email') + '</em> to answer');
+    if (mailOk && unread.length) parts.push('<em>' + plural(unread.length, 'unread email') + '</em>');
     if (calOk && meetings.length) parts.push('<em>' + plural(meetings.length, 'meeting') + '</em>');
     if (S.needs.length) parts.push('<em>' + plural(S.needs.length, 'thing') + '</em> that need' + (S.needs.length === 1 ? 's' : '') + ' you');
-    $('update').innerHTML = parts.length ? 'Today you have ' + (parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0]) + '.' : 'Nothing needs you right now. <em>The hub keeps watching.</em>';
+    $('update').innerHTML = parts.length ? 'Today you have ' + (parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0]) + '.' : (model.sourcesReady(S) ? 'No known decisions from your connected sources.' : 'Some sources are unavailable. Your day is not fully checked.');
 
     /* three boxes */
-    var mailNA = S.mail && S.mail.error === 'unavailable';
-    var b1 = mailNA ? '<div class="box"><small>▼ Emails need a reply</small><b>Not set up here</b><span>Shows on the live hub</span></div>' : mailOk ? '<button class="box lift" id="bMail"><small>▼ Emails need a reply</small><b>' + (unread.length ? plural(unread.length, 'unread email') : 'Inbox is clear') + '</b><span>' + (unread[0] ? 'Newest: ' + esc(fromName(unread[0].from)) : 'Nothing waiting') + '</span></button>'
-      : '<a class="box lift" href="/' + WS + '/inbox"><small>▼ Emails need a reply</small><b>Connect Gmail</b><span>Then your emails show here</span></a>';
+    var mailNA = S.mail && S.mail.error;
+    var b1 = mailNA ? '<div class="box"><small>Unread email</small><b>Unavailable</b><span>Unread count unknown</span></div>' : mailOk ? '<button class="box lift" id="bMail"><small>Unread email</small><b>' + (unread.length ? plural(unread.length, 'unread email') : 'No unread messages loaded') + '</b><span>' + (unread[0] ? 'Newest: ' + esc(fromName(unread[0].from)) : 'Nothing waiting') + '</span></button>'
+      : '<a class="box lift" href="/' + WS + '/inbox"><small>Unread email</small><b>Connect Gmail</b><span>Then your emails show here</span></a>';
     var top = S.needs[0];
-    var b2 = '<button class="box lift" id="bCrit"><small class="teal">▲ Critical · needs you</small><b>' + esc(top ? top.t : 'Nothing critical') + '</b><span>' + esc(top ? plural(S.needs.length, 'item') + ' need you' : 'All clear') + '</span></button>';
+    var b2 = '<button class="box lift" id="bCrit"><small class="teal">Needs your attention</small><b>' + esc(top ? top.t : 'No known decisions') + '</b><span>' + esc(top ? plural(S.needs.length, 'item') + ' to review' : model.sourcesReady(S) ? 'Connected sources checked' : 'Some sources unavailable') + '</span></button>';
     var rec = S.needs.filter(function (x) { return x.draft; })[0] || top;
-    var b3 = '<button class="box rec lift" id="bRec"><small>→ Recommended</small><b>' + esc(rec ? rec.cta : 'Nothing to do right now') + '</b><span>' + esc(rec ? 'Nothing happens until you approve' : 'You’re all set') + '</span></button>';
+    var b3 = '<button class="box rec lift" id="bRec"><small>→ Recommended</small><b>' + esc(rec ? rec.cta : model.sourcesReady(S) ? 'Review your day' : 'Check your connections') + '</b><span>' + esc(rec ? 'Nothing happens until you approve' : 'Based on available sources') + '</span></button>';
     $('boxes').innerHTML = b1 + b2 + b3;
     if ($('bMail')) $('bMail').onclick = function () { S.panel = 'inbox'; S.mailOpen = 0; renderPanel(); };
     $('bCrit').onclick = function () { if (top) pick(top.id); };
-    $('bRec').onclick = function () { if (rec) pick(rec.id); };
+    $('bRec').onclick = function () { if (rec) pick(rec.id); else location.href = '/' + WS + (model.sourcesReady(S) ? '/today' : '/hub#connect'); };
 
     $('needs').innerHTML = S.needs.length ? S.needs.map(function (x) {
       return '<button class="need lift' + (S.pick === x.id ? ' on' : '') + '" data-need="' + x.id + '"><span><b>' + esc(x.t) + '</b><span class="sub">' + esc(x.d) + '</span></span><span class="pill">' + esc(x.pill) + '</span></button>';
-    }).join('') : '<div class="empty">Nothing needs a decision right now.</div>';
+    }).join('') : '<div class="empty">No known decisions from the sources available.</div>';
 
+    $('health').textContent = model.healthText(S);
+    renderAgenda(calOk, todays);
     renderTrack(tc, unread, calOk, mailOk, todays);
     renderWeek(calOk);
-    renderPanel();
+    var editing = $('panel').contains(document.activeElement) && /^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName);
+    if (!editing) renderPanel();
   }
 
   /* the ticker: green = pulled within the last 20 minutes, red = needs a look */
@@ -146,10 +151,10 @@
       mailOk && fresh ? [1, 'Gmail', when, plural(unread.length, 'unread email')] : [0, 'Gmail', mailOk ? 'last ' + when : 'needs a look', mailOk ? 'older than 15 minutes' : mailWhy],
       [1, 'Next check', clock(new Date(at.getTime() + EVERY)), 'every 15 minutes']
     ];
-    var one = items.map(function (x) {
-      return '<span class="tk"><span class="dot ' + (x[0] ? 'ok' : 'bad') + '" aria-hidden="true"></span><b>' + (x[0] ? '✓ ' : '✕ ') + esc(x[1]) + '</b><span class="when">' + esc(x[2]) + '</span><span>· ' + esc(x[3]) + '</span></span>';
+    var one = items.slice(0, 3).map(function (x) {
+      return '<span class="tk" title="' + esc(x[2] + ' · ' + x[3]) + '"><span class="dot ' + (x[0] ? 'ok' : 'bad') + '" aria-hidden="true"></span><b>' + esc(x[1]) + '</b> ' + (x[0] ? 'Synced' : 'Unavailable') + '</span>';
     }).join('');
-    $('ticker').innerHTML = one + '<span class="dup" aria-hidden="true">' + one + '</span>';
+    $('ticker').innerHTML = one;
   }
 
   function renderTrack(tc, unread, calOk, mailOk, todays) {
@@ -159,9 +164,9 @@
       html += '<div class="metric"><div class="top"><b>Timecards in</b><span class="' + (ok ? 'teal' : '') + '">' + (ok ? '✓ On track' : '! Behind') + '</span></div>' +
         '<div class="bullet" role="img" aria-label="' + inN + ' of ' + tc.team.length + ' timecards in, goal all in"><span></span><span></span><span></span><i class="act" style="width:' + pct + '%"></i><i class="goal" style="left:calc(100% - 3px)"></i></div>' +
         '<div class="val">' + inN + ' of ' + tc.team.length + '</div></div>';
-    } else html += '<div class="metric"><div class="top"><b>Timecards in</b><span>◌</span></div><div class="val">No team added yet</div></div>';
-    html += '<div class="metric"><div class="top"><b>Unread email</b><span>' + (mailOk ? '' : '◌') + '</span></div><div class="val">' + (mailOk ? unread.length : 'Gmail not connected') + '</div></div>';
-    html += '<div class="metric"><div class="top"><b>On today’s calendar</b><span>' + (calOk ? '' : '◌') + '</span></div><div class="val">' + (calOk ? todays.length : 'Calendar not connected') + '</div></div>';
+    } else html += '<div class="metric"><div class="top"><b>Timecards in</b><span>◌</span></div><div class="val">' + (tc.error ? 'Unavailable — could not load' : 'No team added yet') + '</div></div>';
+    html += '<div class="metric"><div class="top"><b>Unread email</b><span>' + (mailOk ? '' : '◌') + '</span></div><div class="val">' + (mailOk ? unread.length + ' loaded' : S.mail && S.mail.error ? 'Gmail unavailable' : 'Gmail not connected') + '</div></div>';
+    html += '<div class="metric"><div class="top"><b>On today’s calendar</b><span>' + (calOk ? '' : '◌') + '</span></div><div class="val">' + (calOk ? todays.length : 'Calendar unavailable or not selected') + '</div></div>';
     $('track').innerHTML = html;
   }
 
@@ -193,18 +198,23 @@
   function renderPanel() {
     $('tabInbox').setAttribute('aria-pressed', S.panel === 'inbox');
     $('tabDetails').setAttribute('aria-pressed', S.panel === 'details');
-    var el = $('panel');
+    $('tabAssistant').setAttribute('aria-pressed', S.panel === 'assistant');
+    $('assistantPanel').hidden = S.panel !== 'assistant';
+    var el = $('panel'); el.hidden = S.panel === 'assistant';
+    if (S.panel === 'assistant') return;
+    if (S.panel === 'details' && S.meeting) { renderMeeting(); return; }
     if (S.panel === 'inbox') {
-      var mailOk = S.mail && S.mail.connected;
-      if (!mailOk && S.mail && S.mail.error === 'unavailable') { el.innerHTML = '<h2>Most important emails</h2><div class="empty">Email isn’t set up on this version of the hub. On app.makingcuepa.com your most important emails show here.</div>'; return; }
-      if (!mailOk) { el.innerHTML = '<h2>Most important emails</h2><div class="empty">Connect Gmail and your most important emails show up here. Nothing sends without you.</div><a class="btn" href="/' + WS + '/inbox">Connect Gmail →</a>'; return; }
-      var top = S.inbox.filter(function (m) { return m.unread; }).slice(0, 6);
-      el.innerHTML = '<div><h2>Most important emails</h2><div class="quiet">Newest unread first · top ' + top.length + '</div></div>' +
+      var mailOk = model.mailReady(S);
+      if (!mailOk && S.mail && S.mail.error === 'unavailable') { el.innerHTML = '<h2>Newest unread email</h2><div class="empty">Email isn’t set up on this version of the hub. On app.makingcuepa.com your newest unread emails show here.</div>'; return; }
+      if (S.mail && S.mail.error && S.mail.error !== 'unavailable') { el.innerHTML = '<h2>Newest unread email</h2><div class="empty">Gmail could not be checked. Unread messages are unknown until the connection recovers.</div><a class="btn" href="/' + WS + '/inbox">Open Inbox →</a>'; return; }
+      if (!mailOk) { el.innerHTML = '<h2>Newest unread email</h2><div class="empty">Connect Gmail and your newest unread emails show up here. Nothing sends without you.</div><a class="btn" href="/' + WS + '/inbox">Connect Gmail →</a>'; return; }
+      var top = S.inbox.filter(function (m) { return m.unread; }).sort(function (a, b) { return (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0); }).slice(0, 6);
+      el.innerHTML = '<div><h2>Newest unread email</h2><div class="quiet">Newest unread first · top ' + top.length + '</div></div>' +
         (top.length ? top.map(function (m, i) {
           var on = S.mailOpen === i;
           return '<div class="mail lift' + (on ? ' on' : '') + '"><button data-mail="' + i + '" aria-expanded="' + on + '"><span class="n">' + (i + 1) + '</span><span><span class="f"><b>' + esc(fromName(m.from)) + '</b><span>' + esc(m.date ? new Date(m.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '') + '</span></span><span class="s">' + esc(m.subject || '(no subject)') + '</span></span></button>' +
             (on ? '<div class="o">' + esc(m.snippet) + '<br><a class="btn" href="/' + WS + '/inbox">Reply in Inbox →</a></div>' : '') + '</div>';
-        }).join('') : '<div class="empty">No unread email. Nice.</div>') +
+        }).join('') : '<div class="empty">No unread messages in the loaded inbox.</div>') +
         '<a class="btn wide" href="/' + WS + '/inbox">See inbox <span aria-hidden="true">→</span></a>';
       return;
     }
@@ -213,7 +223,7 @@
     if (!x) { el.innerHTML = '<h2>Tap anything that needs you</h2><p class="quiet">You’ll see why it’s here, who it goes to, and what to decide.</p>' + act; return; }
     var draft = '';
     if (x.draft) {
-      var ready = S.mail && S.mail.connected && x.to.length;
+      var ready = model.mailReady(S) && x.to.length;
       draft = '<div class="draft"><label for="draftTxt">Draft · not sent. Each person gets their own name and link.</label><textarea id="draftTxt">' + esc(S.drafts[x.draft]) + '</textarea>' +
         (ready ? '<div><button class="btn go" id="sendDraft">Send ' + plural(x.to.length, 'reminder') + ' →</button></div><small>Nothing sends until you press the button.</small>'
           : '<small>' + (S.mail && S.mail.connected ? 'Add an email for each person on the Timecards page to send from here.' : 'Sends from your own email once Gmail is connected.') + '</small>') + '</div>';
@@ -221,11 +231,12 @@
     el.innerHTML = '<div><div class="eyebrow">Needs you</div><h2>' + esc(x.t) + '</h2></div><div class="why"><p>' + esc(x.why) + '</p></div>' +
       '<div class="rows">' + x.rows.map(function (r) { return '<div class="r"><span>' + esc(r[0]) + '</span><div>' + esc(r[1]) + '</div></div>'; }).join('') + '</div>' + draft +
       (x.href ? '<div><a class="btn go" href="' + esc(x.href) + '">' + esc(x.cta) + ' →</a></div>' : '') + act;
-    var ta = $('draftTxt'); if (ta) ta.oninput = function () { S.drafts[x.draft] = ta.value; };
+    var ta = $('draftTxt'); if (ta) ta.oninput = function () { S.drafts[x.draft] = ta.value; var send = $('sendDraft'); if (send) { delete send.dataset.sure; send.textContent = 'Send ' + plural(x.to.length, 'reminder') + ' →'; } };
     var sb = $('sendDraft'); if (sb) sb.onclick = function () { sendReminders(x, sb); };
   }
 
   function sendReminders(x, btn) {
+    if (!model.mailReady(S)) { toast('Gmail is unavailable. Nothing was sent.'); return; }
     if (btn.dataset.sure !== '1') { btn.dataset.sure = '1'; btn.textContent = 'Press again to send ' + plural(x.to.length, 'email'); return; }
     btn.disabled = true; var ok = 0, fail = 0;
     var chain = Promise.resolve();
@@ -239,11 +250,72 @@
     chain.then(function () { did('Sent ' + plural(ok, 'timecard reminder') + (fail ? ', ' + fail + ' failed' : '')); toast(ok ? 'Sent ' + plural(ok, 'reminder') + ' from ' + S.mail.email + '.' : 'Nothing was sent. Try again.'); render(); });
   }
 
-  function pick(id) { S.pick = id; S.panel = 'details'; render(); if (innerWidth < 1250) document.querySelector('.panel').scrollIntoView({ behavior: 'smooth' }); }
+  function pick(id) { S.meeting = null; S.pick = id; S.panel = 'details'; render(); if (innerWidth < 1100) document.querySelector('.panel').scrollIntoView({ behavior: 'auto' }); }
+
+
+  /* Context stays beside the work, with calendar facts separated from personal notes. */
+  function renderAgenda(ready, events) {
+    var target = $('agenda');
+    if (!ready) { target.innerHTML = '<div class="empty">Calendar unavailable or not selected. Connect a calendar to see your day.</div>'; return; }
+    target.innerHTML = (events.length ? events.slice(0, 5).map(function (event) {
+      return '<button class="agenda-row" data-meeting="' + esc(event.id) + '"><time>' + esc(isAllDay(event) ? 'All day' : clock(startOf(event))) + '</time><span><b>' + esc(event.title) + '</b><small>' + esc(event.location || event.calendar || 'Calendar event') + '</small></span><span aria-hidden="true">↗</span></button>';
+    }).join('') : '<div class="empty">No events on today’s connected calendars.</div>') +
+      (events.length > 5 ? '<a class="btn link" href="/' + WS + '/today">See all ' + events.length + ' events →</a>' : '') +
+      (S.followups.length ? '<div class="meeting-followups"><h3 class="eyebrow">Your follow-ups · this session</h3>' + S.followups.map(function (f) { return '<p><b>' + esc(f.title) + '</b><br>' + esc(f.text) + '</p>'; }).join('') + '</div>' : '');
+  }
+  function openMeeting(id) {
+    S.meeting = id; S.pick = null; S.panel = 'details'; renderPanel();
+    $('panel').focus({ preventScroll: true });
+    if (innerWidth < 1100) document.querySelector('.panel').scrollIntoView({ behavior: 'auto' });
+  }
+  function renderMeeting() {
+    var event = S.events.filter(function (e) { return e.id === S.meeting; })[0], el = $('panel');
+    if (!event || !model.calendarReady(S)) { el.innerHTML = '<h2>Meeting unavailable</h2><p class="quiet">The calendar changed or could not be refreshed. Check the source before preparing.</p>'; return; }
+    var note = S.notes[event.id] || { objective: '', notes: '', ready: false };
+    S.notes[event.id] = note;
+    el.innerHTML = '<div><div class="eyebrow">Meeting preparation</div><h2>' + esc(event.title) + '</h2><p class="quiet">' + esc(isAllDay(event) ? 'All day' : clock(startOf(event))) + ' · ' + esc(event.calendar || 'Calendar') + '</p></div>' +
+      '<div class="rows"><div class="r"><span>Who’s coming</span><div>' + esc(event.who && event.who.length ? event.who.join(', ') : 'No attendees listed') + '</div></div><div class="r"><span>Where</span><div>' + esc(event.location || 'No location listed') + '</div></div></div>' +
+      '<section class="prep-context"><h3 class="eyebrow">From the calendar</h3><p>' + esc(event.notes || 'No description provided. Add your own preparation below.') + '</p></section>' +
+      '<div class="draft"><label for="meetingObjective">What do you want to leave with?</label><textarea id="meetingObjective" rows="2" placeholder="The outcome you want from this conversation…">' + esc(note.objective) + '</textarea><label for="meetingNotes">Talking points, things to bring, and notes</label><textarea id="meetingNotes" rows="4" placeholder="Capture what you want to ask or follow up on…">' + esc(note.notes) + '</textarea><small>Private to this tab. Download your notes before reloading or leaving.</small></div>' +
+      '<div class="prep-actions"><button class="btn go" id="meetingReady">' + (note.ready ? '✓ Ready · undo' : 'I’m ready →') + '</button><button class="btn" id="downloadNotes">Download notes</button></div>' +
+      '<form class="draft" id="followupForm"><label for="meetingFollowup">Add a follow-up to your day</label><input id="meetingFollowup" maxlength="500" required placeholder="A specific next step…"><button class="btn" type="submit">Add follow-up</button></form>' +
+      '<a class="btn link" href="/' + WS + '/inbox">Check related conversations in Inbox →</a><small class="quiet">Email matching is not connected here. No messages are sent from meeting prep.</small>';
+    $('meetingObjective').oninput = function () { note.objective = this.value; };
+    $('meetingNotes').oninput = function () { note.notes = this.value; };
+    $('meetingReady').onclick = function () { note.ready = !note.ready; this.textContent = note.ready ? '✓ Ready · undo' : 'I’m ready →'; };
+    $('downloadNotes').onclick = function () {
+      var text = event.title + '\n\nDesired outcome\n' + note.objective + '\n\nNotes\n' + note.notes + '\n\nFollow-ups\n' + S.followups.filter(function (f) { return f.id === event.id; }).map(function (f) { return '• ' + f.text; }).join('\n');
+      var blob = new Blob([text], { type: 'text/plain;charset=utf-8' }), url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = 'meeting-notes.txt'; a.click(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    };
+    $('followupForm').onsubmit = function (e) { e.preventDefault(); var text = $('meetingFollowup').value.trim(); if (!text) return; S.followups.push({ id: event.id, title: event.title, text: text }); $('meetingFollowup').value = ''; renderAgenda(model.calendarReady(S), eventsOn(TODAY_I)); toast('Follow-up added for this session.'); };
+  }
+
+  /* Assistant is a local workspace guide until an AI service is explicitly configured. */
+  function assistantMessage(text, user) {
+    var item = document.createElement('div'); item.className = 'assistant-message' + (user ? ' from-user' : ''); item.textContent = text;
+    $('assistantMessages').appendChild(item); $('assistantMessages').scrollTop = $('assistantMessages').scrollHeight;
+  }
+  function setAssistantMode(mode) {
+    S.assistantMode = mode; $('modeDay').setAttribute('aria-pressed', mode === 'day'); $('modeIdeas').setAttribute('aria-pressed', mode === 'ideas');
+    $('assistantScope').textContent = mode === 'day' ? 'Workspace guide · uses the data already shown here. No AI model connected.' : 'Ideas worksheet · a guided thinking prompt, not an AI-generated strategy. Only uses what you type.';
+    document.querySelector('label[for="assistantInput"]').textContent = mode === 'day' ? 'Ask about your day' : 'What outcome are you exploring?';
+  }
+  $('modeDay').onclick = function () { setAssistantMode('day'); };
+  $('modeIdeas').onclick = function () { setAssistantMode('ideas'); };
+  $('assistantForm').onsubmit = function (e) {
+    e.preventDefault(); var question = $('assistantInput').value.trim(); if (!question) return;
+    $('assistantInput').value = ''; assistantMessage(question, true);
+    assistantMessage(model.assistantReply(question, S, eventsOn(TODAY_I), S.assistantMode));
+  };
+  document.querySelectorAll('[data-prompt]').forEach(function (button) { button.onclick = function () { setAssistantMode('day'); assistantMessage(button.dataset.prompt, true); assistantMessage(model.assistantReply(button.dataset.prompt, S, eventsOn(TODAY_I), 'day')); }; });
+  assistantMessage('A little clarity before your next step. Ask about your day, or switch to Ideas to work through an outcome.');
+  $('tabAssistant').onclick = function () { S.panel = 'assistant'; renderPanel(); $('assistantInput').focus(); };
+  $('agenda').addEventListener('click', function (e) { var button = e.target.closest('[data-meeting]'); if (button) openMeeting(button.dataset.meeting); });
 
   /* events */
   $('needs').addEventListener('click', function (e) { var b = e.target.closest('[data-need]'); if (b) pick(b.dataset.need); });
-  $('days').addEventListener('click', function (e) { var b = e.target.closest('[data-day]'); if (!b) return; var i = +b.dataset.day; S.day = S.day === i ? null : i; renderWeek(true); });
+  $('days').addEventListener('click', function (e) { var b = e.target.closest('[data-day]'); if (!b) return; var i = +b.dataset.day; S.day = S.day === i ? null : i; renderWeek(model.calendarReady(S)); });
   $('panel').addEventListener('click', function (e) { var b = e.target.closest('[data-mail]'); if (!b) return; var i = +b.dataset.mail; S.mailOpen = S.mailOpen === i ? -1 : i; renderPanel(); });
   $('tabInbox').onclick = function () { S.panel = 'inbox'; renderPanel(); };
   $('tabDetails').onclick = function () { S.panel = 'details'; renderPanel(); };
@@ -252,9 +324,10 @@
   setInterval(function () { loadAll().then(render); }, EVERY);
   Promise.all([loadCal(), loadTc(), loadMail()]).then(function () {
     var skipped = false; try { skipped = localStorage.getItem('cuepa_start_' + WS) === 'done'; } catch (e) { skipped = true; }
-    var calOk = S.cal && S.cal.connected && !S.cal.error, mailOk = S.mail && S.mail.connected;
+    var calOk = model.calendarReady(S), mailOk = model.mailReady(S);
     var unavailable = (S.cal && S.cal.error === 'unavailable') || (S.mail && S.mail.error === 'unavailable');
     if (!skipped && !unavailable && !calOk && !mailOk) { location.replace('/' + WS + '/start'); return; }
     S.updated = new Date(); render();
   });
 })();
+

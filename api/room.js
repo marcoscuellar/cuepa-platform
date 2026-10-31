@@ -1,4 +1,4 @@
-// /<ws> — The Room: the home page. Left rail · the day and what needs you · most important emails.
+// /<ws> — The Room: the home page. Left rail · the day and what needs you · newest unread emails.
 // Same sign-in rule as the hub. All data comes live from /api/google, /api/timecards and /api/gmail in the browser
 // (assets/room.js). Nothing here is sample data: anything not connected shows as waiting, never as zero.
 const { readSession, canSee } = require('./_session');
@@ -65,7 +65,11 @@ function page(ws, wsName, person) {
     <section class="needsec" aria-labelledby="needsH">
       <h2 id="needsH" class="h2 teal">Needs you <span class="soft">· only what’s off track</span></h2>
       <div id="needs" class="needs"></div>
-      <div class="ontrack"><b>✓ On track</b> · everything else stays quiet.</div>
+      <div class="ontrack" id="health" role="status">Checking connected sources…</div>
+    </section>
+    <section class="card agenda" aria-labelledby="agendaH">
+      <div class="weekhead"><h2 id="agendaH" class="h2">Your day <span class="soft">· prepare before you join</span></h2></div>
+      <div id="agenda"><p class="quiet">Checking your calendar…</p></div>
     </section>
     <section class="card week" aria-labelledby="weekH">
       <div class="weekhead"><h2 id="weekH" class="h2">Your week <span class="soft">· all calendars</span></h2>
@@ -75,18 +79,29 @@ function page(ws, wsName, person) {
     </section>
   </main>
 
-  <aside class="panel" aria-label="Inbox and details">
+  <aside class="panel" aria-label="Inbox, details, and assistant">
     <div class="roomhead">
       <div class="roomtop"><span class="roomdate" id="date"></span></div>
       <div class="switch" role="group" aria-label="Right panel">
-        <button id="tabInbox" aria-pressed="true">Inbox</button><button id="tabDetails" aria-pressed="false">Details</button>
+        <button id="tabInbox" aria-pressed="true">Inbox</button><button id="tabDetails" aria-pressed="false">Details</button><button id="tabAssistant" aria-pressed="false">Assistant</button>
       </div>
     </div>
-    <div id="panel"></div>
-    <div class="chimal"><span class="mark sm" aria-hidden="true"><i></i><i></i></span>CHIMAL checked this. Protect. Challenge. Verify. You decide.</div>
+    <div id="panel" tabindex="-1"></div>
+    <section id="assistantPanel" hidden aria-label="CUEPA assistant">
+      <div><h2>A little backup.</h2><p class="quiet">Review your day or give an idea a little structure.</p></div>
+      <div class="assistant-modes" role="group" aria-label="Assistant mode"><button id="modeDay" aria-pressed="true">My Day</button><button id="modeIdeas" aria-pressed="false">Ideas</button></div>
+      <p id="assistantScope" class="quiet">Workspace guide · uses the data already shown here. No AI model connected.</p>
+      <div id="assistantMessages" class="assistant-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+      <div class="assistant-prompts"><button data-prompt="What needs me?">What needs me?</button><button data-prompt="What is on my calendar?">My calendar</button></div>
+      <form id="assistantForm"><label for="assistantInput">Ask about your day</label><textarea id="assistantInput" rows="3" maxlength="2000" placeholder="What would help right now?"></textarea><button class="btn go" type="submit">Ask CUEPA →</button></form>
+      <small class="quiet">This conversation stays in this tab until you reload. Nothing is sent to an AI service.</small>
+    </section>
+    <div class="chimal"><span class="mark sm" aria-hidden="true"><i></i><i></i></span>Protect. Challenge. Verify. You decide.</div>
   </aside>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
+<script src="/assets/room-model.js"></script>
 <script src="/assets/room.js"></script>
 </body></html>`;
 }
+
