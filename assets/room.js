@@ -30,7 +30,8 @@
     try { localStorage.setItem('cuepa_look', dark ? 'dark' : 'light'); } catch (e) {}
   };
   var h = NOW.getHours();
-  $('date').textContent = NOW.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+  function tickClock() { var d = new Date(); $('date').innerHTML = esc(d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })) + '<span class="roomtime"> · ' + esc(clock(d)) + '</span>'; }
+  tickClock(); setInterval(tickClock, 20000);
   $('hi').innerHTML = esc(h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,') + '<b>' + esc((first(OWNER) || 'there') + '.') + '</b>';
 
   /* data */

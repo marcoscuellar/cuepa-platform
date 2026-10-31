@@ -64,6 +64,7 @@ nav a.on{background:var(--raised);color:var(--ink)}nav a i{width:7px;height:7px;
 .roomtop{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
 .roomlabel{font:700 13px 'IBM Plex Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}
 .roomdate{font:500 13px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.roomtime{color:var(--teal);font-variant-numeric:tabular-nums}
 /* the never-ending ticker: dark teal, one line, loops; pauses on hover; still for reduced motion */
 .ticker{overflow:hidden;border-radius:12px;background:#0b3d38;color:#ffffff;height:44px;display:flex;align-items:center;box-shadow:var(--shadow);
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
