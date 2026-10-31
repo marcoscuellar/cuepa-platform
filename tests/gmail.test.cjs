@@ -8,7 +8,7 @@ const g = require('../lib/gmail');
 test('redirect uri uses the app origin', () => {
   assert.equal(g.config().redirectUri, 'https://app.makingcuepa.com/api/gmail/callback');
   const u = new URL(g.authUrl('st'));
-  assert.match(u.searchParams.get('scope'), /gmail\.readonly.*gmail\.send/);
+  assert.match(u.searchParams.get('scope'), /gmail\.modify.*gmail\.send/);
   assert.equal(u.searchParams.get('access_type'), 'offline');
 });
 test('seal round-trips and is bound to its context', () => {
