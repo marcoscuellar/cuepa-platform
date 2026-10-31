@@ -1,3 +1,4 @@
+const workspaceUI = require('../lib/workspace-ui');
 // /api/gmail — connect Gmail, inbox page, read, send/reply, disconnect.
 // Only someone signed in to the workspace can use it (same rule as the hub).
 const crypto = require('node:crypto');
@@ -122,7 +123,7 @@ function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<'
 
 function page(ws, name) {
   const W = esc(ws), N = esc(name);
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  return workspaceUI.apply(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>Inbox · ${N} · CUEPA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
@@ -365,5 +366,6 @@ $('form').addEventListener('submit',async e=>{e.preventDefault();$('sendBtn').di
   }catch(err){$('err').textContent=err.message;}finally{$('sendBtn').disabled=false;}
 });
 init();
-</script></body></html>`;
+</script></body></html>`, ws, name, 'inbox');
 }
+

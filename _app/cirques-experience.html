@@ -898,11 +898,11 @@ function App(){
   const flip=()=>{const n=look==="light"?"dark":"light";document.documentElement.classList.toggle("light",n==="light");try{localStorage.setItem("cuepa_look",n)}catch(e){}setLook(n)};
   useEffect(()=>{if(!lib)return;const c=e=>{if(libRef.current&&!libRef.current.contains(e.target))setLib(false)};const k=e=>{if(e.key==="Escape")setLib(false)};document.addEventListener("mousedown",c);document.addEventListener("keydown",k);return()=>{document.removeEventListener("mousedown",c);document.removeEventListener("keydown",k)}},[lib]);
   useEffect(()=>save(base),[base]);
-  useEffect(()=>{const h=(location.hash||"").slice(1);if(VIEWS.some(v=>v[0]===h))setS(p=>({...p,view:h}))},[]);
+  useEffect(()=>{const sync=()=>{const h=(location.hash||"").slice(1);if(VIEWS.some(v=>v[0]===h))setS(p=>({...p,view:h}))};sync();window.addEventListener("hashchange",sync);return()=>window.removeEventListener("hashchange",sync)},[]);
   useEffect(()=>{if(!modal&&!conn)return;const k=e=>{if(e.key==="Escape"){setModal(null);setConn(null)}};document.addEventListener("keydown",k);return()=>document.removeEventListener("keydown",k)},[modal,conn]);
   const say=m=>{setToast(m);clearTimeout(timer.current);timer.current=setTimeout(()=>setToast(""),3200)};
   const up=(fn,msg,log)=>{setS(p=>{const n=clone(p);fn(n);if(log)n.feed.unshift([now(),log[0],log[1]]);return n});if(msg)say(msg)};
-  const go=v=>{setS(p=>({...p,view:v}));window.scrollTo({top:0,behavior:"smooth"})};
+  const go=v=>{setS(p=>({...p,view:v}));location.hash=v;window.scrollTo({top:0,behavior:"auto"})};
 
   if(!s.signedIn) return html`<div class="hub-signin"><form onSubmit=${e=>{e.preventDefault();up(n=>{n.signedIn=true})}}>
     <span style=${{display:"flex",gap:"10px",alignItems:"center",fontWeight:700,letterSpacing:".13em",fontSize:"13px"}}><span style=${{display:"inline-flex",gap:"3px"}}><i style=${{width:9,height:9,borderRadius:"50%",background:"#101516",display:"block"}}></i><i style=${{width:9,height:9,borderRadius:"50%",background:"#2dd4bf",display:"block"}}></i></span>CUEPA</span>
@@ -1191,3 +1191,4 @@ function Review({d,close,up}){
 ReactDOM.createRoot(document.getElementById("root")).render(html`<${App}/>`);
 </script>
 </body></html>
+

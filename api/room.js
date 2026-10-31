@@ -1,3 +1,4 @@
+const workspaceUI = require('../lib/workspace-ui');
 // /<ws> — The Room: the home page. Left rail · the day and what needs you · newest unread emails.
 // Same sign-in rule as the hub. All data comes live from /api/google, /api/timecards and /api/gmail in the browser
 // (assets/room.js). Nothing here is sample data: anything not connected shows as waiting, never as zero.
@@ -31,7 +32,7 @@ function page(ws, wsName, person) {
   const ini = esc(String(person || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?');
   const nav = [['The Room', '/' + W, true], ['Today', '/' + W + '/today'], ['Inbox', '/' + W + '/inbox'], ['Calendar', '/' + W + '/hub#calendar'], ['Timecards', '/' + W + '/hub#timecards'], ['More', '/' + W + '/hub#connect']]
     .map(([l, h, on]) => '<a href="' + h + '"' + (on ? ' class="on" aria-current="page"' : '') + '>' + (on ? '<i aria-hidden="true"></i>' : '') + l + '</a>').join('');
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  return workspaceUI.apply(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>The Room · ${N} · CUEPA</title>
 <script>try{if(localStorage.getItem("cuepa_look")==="dark")document.documentElement.dataset.look="dark"}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -98,6 +99,6 @@ function page(ws, wsName, person) {
 <div class="toast" id="toast" role="status" hidden></div>
 <script src="/assets/room-model.js"></script>
 <script src="/assets/room.js"></script>
-</body></html>`;
+</body></html>`, ws, wsName, 'room');
 }
 
