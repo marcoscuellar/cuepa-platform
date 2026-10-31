@@ -38,54 +38,35 @@ function page(ws, wsName, person) {
 <link rel="stylesheet" href="/assets/room.css">
 </head><body data-ws="${W}" data-owner="${P}">
 <a class="skip" href="#main">Skip to content</a>
-<div class="shell">
-  <aside class="rail" aria-label="Hub navigation and this week">
-    <div class="roomhead">
-      <a class="brand" href="/${W}" aria-label="CUEPA home"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b><span class="sep" aria-hidden="true"></span><span class="ws">${N}</span></a>
-      <p class="hello" id="hi">Hello.</p>
-    </div>
-    <nav aria-label="Hub">${nav}</nav>
-    <section class="track" aria-labelledby="trackH">
-      <h2 class="eyebrow" id="trackH">This week</h2>
-      <div id="track"><div class="quiet">Checking…</div></div>
-    </section>
-    <div class="me"><span class="av" aria-hidden="true">${ini}</span><div><b>${P}</b><small>Workspace owner</small></div>
-      <button class="look" id="look" aria-label="Switch light or dark look">◐</button></div>
-  </aside>
-
-  <main id="main" class="center">
-    <div class="roomhead">
-      <div class="roomtop"><span class="roomlabel">The Room</span></div>
-      <section class="ticker" aria-label="What’s connected"><div class="tickmove" id="ticker"><span class="tk">Checking connections…</span></div></section>
-    </div>
+<header class="global-header">
+  <a class="brand" href="/${W}" aria-label="CUEPA home"><b>CUEPA</b><span class="brand-dot" aria-hidden="true"></span><span class="ws">${N}</span></a>
+  <nav aria-label="Hub">${nav}</nav>
+  <div class="profile"><span class="av" aria-hidden="true">${ini}</span><span>${P}</span><button class="look" id="look" aria-label="Switch light or dark look">◐</button></div>
+</header>
+<main id="main" class="workspace">
+  <div class="page-heading"><div><p class="eyebrow">WORK, IN VIEW</p><h1 class="hello" id="hi">Hello.</h1><p class="quiet">Your priorities, conversations, and day. Together.</p></div><div class="page-meta"><div class="roomdate" id="date"></div><section class="ticker" aria-label="What’s connected"><div class="tickmove" id="ticker">Checking connections…</div></section></div></div>
     <section class="card brief" aria-labelledby="update">
       <h1 id="update">Checking your day…</h1>
       <div class="boxes" id="boxes"></div>
     </section>
+
+  <div class="shell">
+    <aside class="priorities-column" aria-label="Priorities and business overview">
     <section class="needsec" aria-labelledby="needsH">
       <h2 id="needsH" class="h2 teal">Needs you <span class="soft">· only what’s off track</span></h2>
       <div id="needs" class="needs"></div>
       <div class="ontrack" id="health" role="status">Checking connected sources…</div>
     </section>
-    <section class="card agenda" aria-labelledby="agendaH">
-      <div class="weekhead"><h2 id="agendaH" class="h2">Your day <span class="soft">· prepare before you join</span></h2></div>
-      <div id="agenda"><p class="quiet">Checking your calendar…</p></div>
+    <section class="track" aria-labelledby="trackH">
+      <h2 class="eyebrow" id="trackH">Business overview</h2>
+      <div id="track"><div class="quiet">Checking…</div></div>
     </section>
-    <section class="card week" aria-labelledby="weekH">
-      <div class="weekhead"><h2 id="weekH" class="h2">Your week <span class="soft">· all calendars</span></h2>
-        <div class="legend"><span>▪ Meeting</span><b>! Deadline</b><span class="teal">✦ Event or class</span></div></div>
-      <div class="weekscroll"><div class="days" id="days"></div></div>
-      <div id="dayOpen"></div>
-    </section>
-  </main>
 
-  <aside class="panel" aria-label="Inbox, details, and assistant">
-    <div class="roomhead">
-      <div class="roomtop"><span class="roomdate" id="date"></span></div>
-      <div class="switch" role="group" aria-label="Right panel">
+    </aside>
+    <section class="panel card" aria-label="Inbox, details, and assistant">
+      <div class="switch" role="group" aria-label="Workspace panel">
         <button id="tabInbox" aria-pressed="true">Inbox</button><button id="tabDetails" aria-pressed="false">Details</button><button id="tabAssistant" aria-pressed="false">Assistant</button>
       </div>
-    </div>
     <div id="panel" tabindex="-1"></div>
     <section id="assistantPanel" hidden aria-label="CUEPA assistant">
       <div><h2>A little backup.</h2><p class="quiet">Review your day or give an idea a little structure.</p></div>
@@ -96,9 +77,24 @@ function page(ws, wsName, person) {
       <form id="assistantForm"><label for="assistantInput">Ask about your day</label><textarea id="assistantInput" rows="3" maxlength="2000" placeholder="What would help right now?"></textarea><button class="btn go" type="submit">Ask CUEPA →</button></form>
       <small class="quiet">This conversation stays in this tab until you reload. Nothing is sent to an AI service.</small>
     </section>
-    <div class="chimal"><span class="mark sm" aria-hidden="true"><i></i><i></i></span>Protect. Challenge. Verify. You decide.</div>
-  </aside>
-</div>
+
+    </section>
+    <aside class="schedule-column" aria-label="Your calendar">
+    <section class="card agenda" aria-labelledby="agendaH">
+      <div class="weekhead"><h2 id="agendaH" class="h2">Your day <span class="soft">· prepare before you join</span></h2></div>
+      <div id="agenda"><p class="quiet">Checking your calendar…</p></div>
+    </section>
+    <section class="card week" aria-labelledby="weekH">
+      <div class="weekhead"><h2 id="weekH" class="h2">Your week <span class="soft">· all calendars</span></h2>
+        <div class="legend"><span>▪ Meeting</span><b>! Deadline</b><span class="teal">✦ Event or class</span></div></div>
+      <div class="weekscroll"><div class="days" id="days"></div></div>
+      <div id="dayOpen"></div>
+    </section>
+
+    </aside>
+  </div>
+  <footer class="workspace-footer">Protect. Challenge. Verify. You decide.</footer>
+</main>
 <div class="toast" id="toast" role="status" hidden></div>
 <script src="/assets/room-model.js"></script>
 <script src="/assets/room.js"></script>
