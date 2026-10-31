@@ -112,6 +112,7 @@ if(q.get('connect')==='ok')S.msg=['ok','Gmail connected.'];
 else if(q.get('connect')==='cancelled')S.msg=['warn','No problem, nothing was connected. You can try again or skip for now.'];
 else if(q.get('connect')==='scopes')S.msg=['warn','Google needs both boxes checked (read and send). Try again and tick both.'];
 else if(q.get('connect')==='failed')S.msg=['warn','Google didn’t finish the connection. Try again in a moment.'];
+else if(q.get('connect')==='unavailable')S.msg=['warn','Email can’t be connected on this version of the hub. Use app.makingcuepa.com, or skip for now.'];
 if(q.get('google')==='cancelled')S.msg=['warn','No problem, nothing was connected. You can try again or skip for now.'];
 else if(q.get('google')==='failed')S.msg=['warn','Google didn’t finish the connection. Try again in a moment.'];
 if(q.has('connect')||q.has('google'))history.replaceState(null,'',location.pathname);

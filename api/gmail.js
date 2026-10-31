@@ -72,6 +72,9 @@ module.exports = async (req, res) => {
     if (!allowed(s, ws)) return json(res, 403, { ok: false, error: 'Sign in to use email.' });
 
     if (action === 'start') {
+      const backTo = url.searchParams.get('back') === 'start' ? 'start' : 'inbox';
+      // Not set up here (for example a preview build without the Google settings): send people back to a page, never raw JSON.
+      try { g.config(); } catch (e) { return go(res, `/${ws}/${backTo}?connect=unavailable`); }
       const state = crypto.randomBytes(24).toString('base64url');
       const back = url.searchParams.get('back') === 'start' ? 'start' : 'inbox'; // where Google sends them afterwards
       res.setHeader('Set-Cookie', flowCookie(g.seal({ state, ws, back, exp: Date.now() + 600000 }, 'gmail-flow')));
@@ -307,6 +310,7 @@ if(p==='ok')banner('Email connected. Your inbox is below.',true);
 if(p==='cancelled')banner('Connection cancelled. Nothing was changed.');
 if(p==='scopes')banner('Please allow both "read and manage" and "send" on the Google screen, then connect again.');
 if(p==='failed')banner('Google could not connect. Try again, or contact CUEPA.');
+if(p==='unavailable')banner('Email can’t be connected on this version of the hub. Use app.makingcuepa.com, or contact CUEPA.');
 if(p)history.replaceState(null,'',location.pathname);
 async function init(){
   let st;try{st=await api('status');}catch(e){$('app').hidden=false;$('list').innerHTML='<div class="empty">'+esc(e.message)+'</div>';return;}

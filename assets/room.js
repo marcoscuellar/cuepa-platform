@@ -42,7 +42,7 @@
       return get('/api/google?' + new URLSearchParams({ action: 'events', ws: WS, start: WEEK0.toISOString(), end: end.toISOString() })).then(function (r) {
         S.events = r.events || []; did('Calendar synced, ' + plural(S.events.length, 'event') + ' this week');
       });
-    }).catch(function (e) { S.cal = { connected: S.cal ? S.cal.connected : false, error: (e.status === 401 || e.status === 400 || e.status === 409) ? 'expired' : 'down' }; S.events = []; });
+    }).catch(function (e) { S.cal = { connected: S.cal ? S.cal.connected : false, error: e.status === 503 ? 'unavailable' : (e.status === 401 || e.status === 400 || e.status === 409) ? 'expired' : 'down' }; S.events = []; });
   }
   function loadTc() {
     return get('/api/timecards?' + new URLSearchParams({ action: 'week', ws: WS, week: ymd(WEEK0) })).then(function (r) {
@@ -58,7 +58,7 @@
       S.mail = { connected: st.connected, email: st.email };
       if (!st.connected) return;
       return get('/api/gmail?action=list&ws=' + WS).then(function (r) { S.inbox = r.messages || []; did('Inbox checked, ' + S.inbox.filter(function (m) { return m.unread; }).length + ' unread'); });
-    }).catch(function (e) { S.mail = { connected: S.mail ? S.mail.connected : false, error: e.message }; S.inbox = []; });
+    }).catch(function (e) { S.mail = { connected: S.mail ? S.mail.connected : false, error: e.status === 503 ? 'unavailable' : e.message }; S.inbox = []; });
   }
 
   /* calendar helpers */
@@ -87,9 +87,9 @@
     }
     if (tc.sent.length) n.push({ id: 'approve', t: 'Approve ' + plural(tc.sent.length, 'timecard'), d: tc.sent.map(function (m) { return first(m.name); }).join(', ') + ' sent hours · Owner: you', pill: '→ Ready',
       cta: 'Review and approve', href: '/' + WS + '/hub#timecards', why: 'These hours are waiting on you. Nothing reaches payroll until you approve.', rows: [['Approves', tc.sent.map(function (m) { return m.name; }).join(', ')], ['Then', 'Hours are ready for the payroll download']] });
-    if (S.cal && (!S.cal.connected || S.cal.error)) n.push({ id: 'cal', t: S.cal.error === 'expired' ? 'Reconnect your calendar' : 'Connect your calendar', d: 'Your week stays empty until it’s connected', pill: '! Setup',
+    if (S.cal && S.cal.error !== 'unavailable' && (!S.cal.connected || S.cal.error)) n.push({ id: 'cal', t: S.cal.error === 'expired' ? 'Reconnect your calendar' : 'Connect your calendar', d: 'Your week stays empty until it’s connected', pill: '! Setup',
       cta: 'Reconnect', href: '/' + WS + '/hub#connect', why: 'The hub reads your calendar to show your week and flag deadlines. It never changes your calendar.', rows: [['Opens', 'Google sign-in, read-only']] });
-    if (S.mail && !S.mail.connected) n.push({ id: 'gmail', t: 'Connect your email', d: 'So your most important emails show here', pill: '→ Setup',
+    if (S.mail && S.mail.error !== 'unavailable' && !S.mail.connected) n.push({ id: 'gmail', t: 'Connect your email', d: 'So your most important emails show here', pill: '→ Setup',
       cta: 'Connect Gmail', href: '/' + WS + '/inbox', why: 'With email connected, replies and reminders go out from your own address. Nothing sends without you.', rows: [['Opens', 'Google sign-in'], ['Allows', 'Read and send, only when you press Send']] });
     S.needs = n;
   }
@@ -103,9 +103,9 @@
     var meetings = todays.filter(function (e) { return kind(e) === 'mt'; });
 
     $('sources').innerHTML = '<span class="eyebrow">The Room</span>' +
-      '<span><b>Calendar</b> ' + (calOk ? '<span class="ok">✓ Synced</span>' : '<span class="wait">' + (S.cal && S.cal.error === 'expired' ? '! Needs reconnect' : '◌ Not connected') + '</span>') + '</span>' +
+      '<span><b>Calendar</b> ' + (calOk ? '<span class="ok">✓ Synced</span>' : '<span class="wait">' + (S.cal && S.cal.error === 'expired' ? '! Needs reconnect' : S.cal && S.cal.error === 'unavailable' ? '◌ Not set up here' : '◌ Not connected') + '</span>') + '</span>' +
       '<span><b>Timecards</b> ' + (tc.error ? '<span class="wait">! Unavailable</span>' : '<span class="ok">✓ Synced</span>') + '</span>' +
-      '<span><b>Gmail</b> ' + (mailOk ? '<span class="ok">✓ Synced</span>' : '<span class="wait">◌ Waiting on sign-in</span>') + '</span>' +
+      '<span><b>Gmail</b> ' + (mailOk ? '<span class="ok">✓ Synced</span>' : '<span class="wait">' + (S.mail && S.mail.error === 'unavailable' ? '◌ Not set up here' : '◌ Waiting on sign-in') + '</span>') + '</span>' +
       '<span>Updated ' + clock(S.updated || new Date()) + '</span>';
 
     /* update line: only what's known, zero parts drop out */
@@ -116,7 +116,8 @@
     $('update').innerHTML = parts.length ? 'Today you have ' + (parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0]) + '.' : 'Nothing needs you right now. <em>The hub keeps watching.</em>';
 
     /* three boxes */
-    var b1 = mailOk ? '<button class="box lift" id="bMail"><small>▼ Emails need a reply</small><b>' + (unread.length ? plural(unread.length, 'unread email') : 'Inbox is clear') + '</b><span>' + (unread[0] ? 'Newest: ' + esc(fromName(unread[0].from)) : 'Nothing waiting') + '</span></button>'
+    var mailNA = S.mail && S.mail.error === 'unavailable';
+    var b1 = mailNA ? '<div class="box"><small>▼ Emails need a reply</small><b>Not set up here</b><span>Shows on the live hub</span></div>' : mailOk ? '<button class="box lift" id="bMail"><small>▼ Emails need a reply</small><b>' + (unread.length ? plural(unread.length, 'unread email') : 'Inbox is clear') + '</b><span>' + (unread[0] ? 'Newest: ' + esc(fromName(unread[0].from)) : 'Nothing waiting') + '</span></button>'
       : '<a class="box lift" href="/' + WS + '/inbox"><small>▼ Emails need a reply</small><b>Connect Gmail</b><span>Then your emails show here</span></a>';
     var top = S.needs[0];
     var b2 = '<button class="box lift" id="bCrit"><small class="teal">▲ Critical · needs you</small><b>' + esc(top ? top.t : 'Nothing critical') + '</b><span>' + esc(top ? plural(S.needs.length, 'item') + ' need you' : 'All clear') + '</span></button>';
@@ -158,7 +159,7 @@
         (evs.length > 3 ? '<span class="more">+' + (evs.length - 3) + ' more</span>' : '') + '</div>';
     }
     $('days').innerHTML = html;
-    if (!calOk) { $('dayOpen').innerHTML = '<div class="empty" style="margin-top:12px">' + (S.cal && S.cal.error === 'expired' ? 'Your calendar connection expired. ' : 'No calendar connected yet. ') + '<a href="/' + WS + '/hub#connect">Connect it</a> and your week fills in here.</div>'; return; }
+    if (!calOk) { $('dayOpen').innerHTML = '<div class="empty" style="margin-top:12px">' + (S.cal && S.cal.error === 'unavailable' ? 'The calendar isn’t set up on this version of the hub. On app.makingcuepa.com your week fills in here.' : (S.cal && S.cal.error === 'expired' ? 'Your calendar connection expired. ' : 'No calendar connected yet. ') + '<a href="/' + WS + '/hub#connect">Connect it</a> and your week fills in here.') + '</div>'; return; }
     if (S.day == null) { $('dayOpen').innerHTML = ''; return; }
     var d = new Date(WEEK0); d.setDate(d.getDate() + S.day);
     var list = eventsOn(S.day);
@@ -180,6 +181,7 @@
     var el = $('panel');
     if (S.panel === 'inbox') {
       var mailOk = S.mail && S.mail.connected;
+      if (!mailOk && S.mail && S.mail.error === 'unavailable') { el.innerHTML = '<h2>Most important emails</h2><div class="empty">Email isn’t set up on this version of the hub. On app.makingcuepa.com your most important emails show here.</div>'; return; }
       if (!mailOk) { el.innerHTML = '<h2>Most important emails</h2><div class="empty">Connect Gmail and your most important emails show up here. Nothing sends without you.</div><a class="btn" href="/' + WS + '/inbox">Connect Gmail →</a>'; return; }
       var top = S.inbox.filter(function (m) { return m.unread; }).slice(0, 6);
       el.innerHTML = '<div><h2>Most important emails</h2><div class="quiet">Newest unread first · top ' + top.length + '</div></div>' +
@@ -234,7 +236,8 @@
   Promise.all([loadCal(), loadTc(), loadMail()]).then(function () {
     var skipped = false; try { skipped = localStorage.getItem('cuepa_start_' + WS) === 'done'; } catch (e) { skipped = true; }
     var calOk = S.cal && S.cal.connected && !S.cal.error, mailOk = S.mail && S.mail.connected;
-    if (!skipped && !calOk && !mailOk) { location.replace('/' + WS + '/start'); return; }
+    var unavailable = (S.cal && S.cal.error === 'unavailable') || (S.mail && S.mail.error === 'unavailable');
+    if (!skipped && !unavailable && !calOk && !mailOk) { location.replace('/' + WS + '/start'); return; }
     S.updated = new Date(); render();
   });
 })();
