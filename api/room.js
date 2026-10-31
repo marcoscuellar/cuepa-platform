@@ -40,8 +40,10 @@ function page(ws, wsName, person) {
 <a class="skip" href="#main">Skip to content</a>
 <div class="shell">
   <aside class="rail" aria-label="Hub navigation and this week">
-    <a class="brand" href="/${W}" aria-label="CUEPA home"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b><span class="sep" aria-hidden="true"></span><span class="ws">${N}</span></a>
-    <p class="hello" id="hi">Hello.</p>
+    <div class="roomhead">
+      <a class="brand" href="/${W}" aria-label="CUEPA home"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b><span class="sep" aria-hidden="true"></span><span class="ws">${N}</span></a>
+      <p class="hello" id="hi">Hello.</p>
+    </div>
     <nav aria-label="Hub">${nav}</nav>
     <section class="track" aria-labelledby="trackH">
       <h2 class="eyebrow" id="trackH">This week</h2>

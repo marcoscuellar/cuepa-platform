@@ -34,12 +34,12 @@ a{color:inherit}button{font:inherit;color:inherit;cursor:pointer;border:0;backgr
 
 .shell{display:grid;grid-template-columns:300px minmax(0,1fr) 400px;min-height:100vh}
 /* rail */
-.rail{padding:20px;display:flex;flex-direction:column;gap:20px;box-shadow:var(--rail);position:sticky;top:0;height:100vh;overflow:auto}
-.brand{display:flex;align-items:center;gap:10px;min-height:44px;text-decoration:none}
+.rail{padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--rail);position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;height:20px;text-decoration:none}
 .brand b{font-weight:700;font-size:16px;letter-spacing:.4px}
 .brand .sep{width:1px;height:20px;background:var(--field)}
 .brand .ws{font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hello{margin:0;padding:2px 12px 0;font:400 18px/1.25 Inter,sans-serif;color:var(--ink)}.hello b{display:block;font:800 20px/1.2 Archivo,Inter,sans-serif;letter-spacing:-.02em}
+.hello{margin:0;height:44px;padding:0 12px;display:flex;flex-direction:column;justify-content:center;font:400 17px/1.1 Inter,sans-serif;color:var(--ink)}.hello b{display:block;font:800 19px/1.15 Archivo,Inter,sans-serif;letter-spacing:-.02em}
 nav{display:flex;flex-direction:column;gap:2px}
 nav a{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 12px;border-radius:10px;text-decoration:none;font:500 13px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
 nav a:hover{background:var(--raised);color:var(--ink)}
