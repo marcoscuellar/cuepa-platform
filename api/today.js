@@ -137,7 +137,7 @@ nav a.on .ct{background:var(--turq);color:#04201d}
 .blk{position:absolute;top:0;bottom:0;border-radius:10px;padding:8px 10px;min-width:0;background:var(--meet);overflow:hidden;font-size:12.5px}
 .blk b{display:block;font-size:13px;line-height:1.25}.blk small{color:var(--mute)}
 .blk.dl{background:var(--abg)}.blk.pe{background:var(--evt)}
-.blk,.ev{cursor:pointer;border:0;text-align:left;font:inherit;color:inherit;width:100%}.blk:hover,.ev:hover{box-shadow:0 0 0 2px var(--turq)}
+.blk,.ev{cursor:pointer;border:0;border-left:4px solid transparent;text-align:left;font:inherit;color:inherit;width:100%}.blk:hover,.ev:hover{box-shadow:0 0 0 2px var(--turq)}
 .evd{position:fixed;inset:0;z-index:30;background:rgba(10,10,10,.35);display:flex;align-items:center;justify-content:center;padding:16px}
 .evc{background:var(--card);color:var(--ink);border-radius:16px;box-shadow:var(--shadow);width:min(460px,100%);padding:22px;display:grid;gap:12px}
 .evc h3{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em}.evc .r{display:grid;grid-template-columns:70px 1fr;gap:8px;font-size:14.5px}.evc .r span{color:var(--mute)}.evc .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
@@ -328,11 +328,11 @@ function renderDay(){
   const cur=new Date();const nowH=cur.getHours()+cur.getMinutes()/60;
   const next=timed.find(e=>e.s>cur);
   const nowTxt='<div class="nowtxt"><b>Now '+clock(cur)+'</b> · '+(next?'Next: '+esc(next.title)+' at '+clock(next.s)+'.':'Nothing else on the calendar today.')+'</div>';
-  const ad=allDay.length?'<div class="evs" style="margin:6px 0">'+allDay.map(e=>'<button type="button" class="ev '+kind(e)+'" data-ev="'+esc(e.id)+'"><div><b>'+esc(e.title)+'</b><small>All day · '+esc(e.calendar)+'</small></div><span class="k">'+KLAB[kind(e)].toUpperCase()+'</span></button>').join('')+'</div>':'';
+  const ad=allDay.length?'<div class="evs" style="margin:6px 0">'+allDay.map(e=>'<button type="button" class="ev '+kind(e)+'" data-ev="'+esc(e.id)+'" style="'+tint(e)+'"><div><b>'+esc(e.title)+'</b><small>All day · '+esc(e.calendar)+'</small></div><span class="k">'+KLAB[kind(e)].toUpperCase()+'</span></button>').join('')+'</div>':'';
   if(S.view==='line'){
     const start=8,end=18,span=end-start;
     const blocks=timed.filter(e=>e.s.getHours()<end&&(e.e2||e.s).getHours()>=start).map(e=>{const a=Math.max(start,e.s.getHours()+e.s.getMinutes()/60),b=Math.min(end,e.e2?e.e2.getHours()+e.e2.getMinutes()/60:a+.5);const l=(a-start)/span*100,w=Math.max((b-a)/span*100,9);
-      return '<button type="button" class="blk '+(e.k==='mt'?'':e.k)+'" data-ev="'+esc(e.id)+'" style="left:'+l+'%;width:calc('+w+'% - 4px)" title="'+esc(e.title)+'"><span class="lab" style="font-size:9.5px">'+KLAB[e.k]+'</span><b>'+esc(e.title)+'</b><small>'+clock(e.s)+'</small></button>';}).join('');
+      return '<button type="button" class="blk '+(e.k==='mt'?'':e.k)+'" data-ev="'+esc(e.id)+'" style="left:'+l+'%;width:calc('+w+'% - 4px)'+tint(e)+'" title="'+esc(e.title)+'"><span class="lab" style="font-size:9.5px">'+KLAB[e.k]+'</span><b>'+esc(e.title)+'</b><small>'+clock(e.s)+'</small></button>';}).join('');
     const nowL=nowH>=start&&nowH<=end?'<div class="nowbar" style="left:'+((nowH-start)/span*100)+'%"></div>':'';
     body.innerHTML=ad+'<div class="strip"><div class="ticks">'+Array.from({length:10},(_,i)=>{const hh=start+i;return '<span>'+(hh%12||12)+(hh<12?' AM':' PM')+'</span>'}).join('')+'</div><div class="lane">'+blocks+nowL+'</div></div>'+nowTxt;return;
   }
@@ -341,7 +341,7 @@ function renderDay(){
   hours.sort((a,b)=>a-b).forEach(hh=>{
     const evs=timed.filter(e=>e.s.getHours()===hh);
     const isNow=cur.getHours()===hh;
-    rows+='<div class="slot"><time>'+(hh%12||12)+':00 '+(hh<12?'AM':'PM')+'</time><div class="evs">'+(isNow?'<div class="nowline">NOW · '+clock(cur)+'</div>':'')+evs.map(e=>'<button type="button" class="ev '+(e.k==='mt'?'':e.k)+'" data-ev="'+esc(e.id)+'"><div><b>'+esc(e.title)+'</b><small>'+clock(e.s)+(e.e2?' – '+clock(e.e2):'')+' · '+esc(e.calendar)+'</small></div><span class="k">'+KLAB[e.k].toUpperCase()+'</span></button>').join('')+'</div></div>';
+    rows+='<div class="slot"><time>'+(hh%12||12)+':00 '+(hh<12?'AM':'PM')+'</time><div class="evs">'+(isNow?'<div class="nowline">NOW · '+clock(cur)+'</div>':'')+evs.map(e=>'<button type="button" class="ev '+(e.k==='mt'?'':e.k)+'" data-ev="'+esc(e.id)+'" style="'+tint(e)+'"><div><b>'+esc(e.title)+'</b><small>'+clock(e.s)+(e.e2?' – '+clock(e.e2):'')+' · '+esc(e.calendar)+'</small></div><span class="k">'+KLAB[e.k].toUpperCase()+'</span></button>').join('')+'</div></div>';
   });
   body.innerHTML=ad+'<div class="slots">'+rows+'</div>'+(timed.length||allDay.length?'':'<div class="empty" style="margin-top:8px">Nothing on your calendar today.</div>');
 }
@@ -370,6 +370,8 @@ async function sendReminders(x,btn){
 }
 $('needs').addEventListener('click',e=>{const b=e.target.closest('[data-sel]');const card=e.target.closest('.need');if(e.target.closest('a'))return;const i=b?+b.dataset.sel:card?+card.dataset.i:null;if(i==null)return;S.sel=i;render();if(innerWidth<1250)$('why').scrollIntoView({behavior:'smooth'});});
 $('needs').addEventListener('keydown',e=>{const c=e.target.closest('.need');if(c&&(e.key==='Enter'||e.key===' ')&&e.target===c){e.preventDefault();S.sel=+c.dataset.i;render();}});
+// Google's color on the event: a solid edge plus a soft wash, so it reads without relying on color alone (the label still says MEETING / DEADLINE / EVENT).
+function tint(e){const c=/^#[0-9a-f]{6}$/i.test(e.color||'')?e.color:'';return c?';border-left-color:'+c+';background:'+c+'1f':'';}
 function showEvent(id){const e=S.events.find(x=>x.id===id);if(!e)return;const s=tOf(e.start),e2=tOf(e.end);
   const whenTxt=s?(s.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+' · '+clock(s)+(e2?' – '+clock(e2):'')):'All day';
   const d=document.createElement('div');d.className='evd';d.innerHTML='<div class="evc" role="dialog" aria-modal="true" aria-labelledby="evt"><div class="lab">'+KLAB[kind(e)]+' · '+esc(e.calendar)+'</div><h3 id="evt">'+esc(e.title)+'</h3><div class="r"><span>When</span><div>'+esc(whenTxt)+'</div></div>'+(e.location?'<div class="r"><span>Where</span><div>'+esc(e.location)+'</div></div>':'')+(e.who&&e.who.length?'<div class="r"><span>Who</span><div>'+esc(e.who.join(', '))+'</div></div>':'')+(e.notes?'<div class="r"><span>Notes</span><div style="white-space:pre-wrap">'+esc(e.notes)+'</div></div>':'')+'<div class="acts">'+(e.link?'<a class="btn dark" href="'+esc(e.link)+'" target="_blank" rel="noopener">Open in Google Calendar ↗</a>':'')+'<button class="btn" id="evClose">Close</button></div><div style="font-size:12.5px;color:var(--mute)">Reading only. The hub never changes your calendar.</div></div>';
