@@ -61,7 +61,7 @@ nav a.on{background:var(--raised);color:var(--ink)}nav a i{width:7px;height:7px;
 /* center */
 .center{padding:20px 28px 40px;display:flex;flex-direction:column;gap:14px;min-width:0}
 .roomhead{display:flex;flex-direction:column;gap:6px}
-.roomtop{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.roomtop{min-height:20px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
 .roomlabel{font:700 13px 'IBM Plex Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--teal)}
 .roomdate{font:500 13px 'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
 .roomtime{color:var(--teal);font-variant-numeric:tabular-nums}
@@ -119,8 +119,8 @@ nav a.on{background:var(--raised);color:var(--ink)}nav a i{width:7px;height:7px;
 
 /* right panel */
 .panel{padding:20px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--side);min-width:0}
-.switch{display:flex;padding:4px;border-radius:12px;background:var(--raised)}
-.switch button{flex:1;min-height:40px;border-radius:9px;font-size:14px;font-weight:600;color:var(--mute)}
+.switch{display:flex;height:44px;padding:4px;border-radius:12px;background:var(--raised)}
+.switch button{flex:1;min-height:36px;border-radius:9px;font-size:14px;font-weight:600;color:var(--mute)}
 .switch button[aria-pressed="true"]{background:var(--card);box-shadow:var(--shadow);color:var(--ink)}
 .panel h2{margin:0 0 4px;font:800 22px Archivo,Inter,sans-serif;letter-spacing:-.02em}
 .mail{border-radius:14px;background:var(--card);box-shadow:var(--shadow);overflow:hidden}

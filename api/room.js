@@ -53,7 +53,7 @@ function page(ws, wsName, person) {
 
   <main id="main" class="center">
     <div class="roomhead">
-      <div class="roomtop"><span class="roomlabel">The Room</span><span class="roomdate" id="date"></span></div>
+      <div class="roomtop"><span class="roomlabel">The Room</span></div>
       <section class="ticker" aria-label="What’s connected"><div class="tickmove" id="ticker"><span class="tk">Checking connections…</span></div></section>
     </div>
     <section class="card brief" aria-labelledby="update">
@@ -74,8 +74,11 @@ function page(ws, wsName, person) {
   </main>
 
   <aside class="panel" aria-label="Inbox and details">
-    <div class="switch" role="group" aria-label="Right panel">
-      <button id="tabInbox" aria-pressed="true">Inbox</button><button id="tabDetails" aria-pressed="false">Details</button>
+    <div class="roomhead">
+      <div class="roomtop"><span class="roomdate" id="date"></span></div>
+      <div class="switch" role="group" aria-label="Right panel">
+        <button id="tabInbox" aria-pressed="true">Inbox</button><button id="tabDetails" aria-pressed="false">Details</button>
+      </div>
     </div>
     <div id="panel"></div>
     <div class="chimal"><span class="mark sm" aria-hidden="true"><i></i><i></i></span>CHIMAL checked this. Protect. Challenge. Verify. You decide.</div>
