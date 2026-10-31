@@ -41,7 +41,7 @@ function page(ws, wsName, person) {
 <div class="shell">
   <aside class="rail" aria-label="Hub navigation and this week">
     <a class="brand" href="/${W}" aria-label="CUEPA home"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b><span class="sep" aria-hidden="true"></span><span class="ws">${N}</span></a>
-    <div class="hello"><div class="eyebrow" id="date"></div><p id="hi">Hello.</p></div>
+    <p class="hello" id="hi">Hello.</p>
     <nav aria-label="Hub">${nav}</nav>
     <section class="track" aria-labelledby="trackH">
       <h2 class="eyebrow" id="trackH">This week</h2>
@@ -52,7 +52,11 @@ function page(ws, wsName, person) {
   </aside>
 
   <main id="main" class="center">
-    <div class="sources" id="sources"><span class="eyebrow">The Room</span><span class="quiet">Checking connections…</span></div>
+    <div class="roomhead">
+      <div class="roomtop"><span class="roomlabel">The Room</span><span class="roomdate" id="date"></span></div>
+      <section class="ticker" aria-label="What’s connected"><div class="tickmove" id="ticker"><span class="tk">Checking connections…</span></div></section>
+      <div class="ticknote" id="ticknote">Checks every 15 minutes · <span class="dot ok"></span> fresh · <span class="dot bad"></span> needs a look</div>
+    </div>
     <section class="card brief" aria-labelledby="update">
       <h1 id="update">Checking your day…</h1>
       <div class="boxes" id="boxes"></div>

@@ -31,7 +31,7 @@
   };
   var h = NOW.getHours();
   $('date').textContent = NOW.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
-  $('hi').innerHTML = esc(h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,') + '<br>' + esc((first(OWNER) || 'there') + '.');
+  $('hi').innerHTML = esc(h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,') + '<b>' + esc((first(OWNER) || 'there') + '.') + '</b>';
 
   /* data */
   function loadCal() {
@@ -102,11 +102,7 @@
     var todays = calOk ? eventsOn(TODAY_I) : [];
     var meetings = todays.filter(function (e) { return kind(e) === 'mt'; });
 
-    $('sources').innerHTML = '<span class="eyebrow">The Room</span>' +
-      '<span><b>Calendar</b> ' + (calOk ? '<span class="ok">✓ Synced</span>' : '<span class="wait">' + (S.cal && S.cal.error === 'expired' ? '! Needs reconnect' : S.cal && S.cal.error === 'unavailable' ? '◌ Not set up here' : '◌ Not connected') + '</span>') + '</span>' +
-      '<span><b>Timecards</b> ' + (tc.error ? '<span class="wait">! Unavailable</span>' : '<span class="ok">✓ Synced</span>') + '</span>' +
-      '<span><b>Gmail</b> ' + (mailOk ? '<span class="ok">✓ Synced</span>' : '<span class="wait">' + (S.mail && S.mail.error === 'unavailable' ? '◌ Not set up here' : '◌ Waiting on sign-in') + '</span>') + '</span>' +
-      '<span>Updated ' + clock(S.updated || new Date()) + '</span>';
+    renderTicker(tc, unread, calOk, mailOk);
 
     /* update line: only what's known, zero parts drop out */
     var parts = [];
@@ -135,6 +131,24 @@
     renderTrack(tc, unread, calOk, mailOk, todays);
     renderWeek(calOk);
     renderPanel();
+  }
+
+  /* the ticker: green = pulled within the last 20 minutes, red = needs a look */
+  var EVERY = 15 * 60 * 1000;
+  function renderTicker(tc, unread, calOk, mailOk) {
+    var at = S.updated || new Date(), fresh = (new Date() - at) < 20 * 60 * 1000, when = 'pulled ' + clock(at);
+    var calWhy = S.cal && S.cal.error === 'unavailable' ? 'not set up here' : S.cal && S.cal.error === 'expired' ? 'connection expired, reconnect' : S.cal && S.cal.error ? 'couldn’t reach Google' : 'not connected';
+    var mailWhy = S.mail && S.mail.error === 'unavailable' ? 'not set up here' : S.mail && S.mail.error ? 'couldn’t reach Gmail' : 'waiting on sign-in';
+    var items = [
+      calOk && fresh ? [1, 'Calendar', when, plural(S.events.length, 'event') + ' this week'] : [0, 'Calendar', calOk ? 'last ' + when : 'needs a look', calOk ? 'older than 15 minutes' : calWhy],
+      !tc.error && fresh ? [1, 'Timecards', when, tc.team.length ? (tc.team.length - tc.late.length) + ' of ' + tc.team.length + ' in' : 'no team added yet'] : [0, 'Timecards', 'needs a look', tc.error ? 'couldn’t load' : 'older than 15 minutes'],
+      mailOk && fresh ? [1, 'Gmail', when, plural(unread.length, 'unread email')] : [0, 'Gmail', mailOk ? 'last ' + when : 'needs a look', mailOk ? 'older than 15 minutes' : mailWhy],
+      [1, 'Next check', clock(new Date(at.getTime() + EVERY)), 'every 15 minutes']
+    ];
+    var one = items.map(function (x) {
+      return '<span class="tk"><span class="dot ' + (x[0] ? 'ok' : 'bad') + '" aria-hidden="true"></span><b>' + (x[0] ? '✓ ' : '✕ ') + esc(x[1]) + '</b><span class="when">' + esc(x[2]) + '</span><span>· ' + esc(x[3]) + '</span></span>';
+    }).join('');
+    $('ticker').innerHTML = one + '<span class="dup" aria-hidden="true">' + one + '</span>';
   }
 
   function renderTrack(tc, unread, calOk, mailOk, todays) {
@@ -233,6 +247,8 @@
   $('tabInbox').onclick = function () { S.panel = 'inbox'; renderPanel(); };
   $('tabDetails').onclick = function () { S.panel = 'details'; renderPanel(); };
 
+  function loadAll() { return Promise.all([loadCal(), loadTc(), loadMail()]).then(function () { S.updated = new Date(); }); }
+  setInterval(function () { loadAll().then(render); }, EVERY);
   Promise.all([loadCal(), loadTc(), loadMail()]).then(function () {
     var skipped = false; try { skipped = localStorage.getItem('cuepa_start_' + WS) === 'done'; } catch (e) { skipped = true; }
     var calOk = S.cal && S.cal.connected && !S.cal.error, mailOk = S.mail && S.mail.connected;
