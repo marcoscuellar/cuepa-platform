@@ -412,3 +412,28 @@ body[data-workspace-page="today"] .safe i{display:none!important}
 .fc-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:8px;padding:3px 9px;white-space:nowrap;line-height:1.3}
 .fc-chip i{width:7px;height:7px;border-radius:50%;flex:none}
 body[data-workspace-page="room"] .rm-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+
+/* ---------- Today: no number boxes, one surface (Nov 1, Marcos) ----------
+   What needs you · Today in one view · Why this is here sit on ONE white card with one shadow.
+   Thin rules mark where the panels meet. No islands. */
+body[data-workspace-page="today"] .side{display:none!important}
+body[data-workspace-page="today"] .main{display:block!important}
+body[data-workspace-page="today"] .center{gap:28px!important}
+body[data-workspace-page="today"] .surface{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(300px,.9fr)!important;gap:0!important;align-items:stretch!important;background:#fff;border-radius:var(--x-r);box-shadow:var(--x-sh)}
+body[data-workspace-page="today"] .surface>*{min-width:0}
+body[data-workspace-page="today"] .surface .needcol{padding:var(--x-pad) 0 var(--x-pad)}
+body[data-workspace-page="today"] .surface .needcol>.colhead{padding:0 var(--x-pad)}
+body[data-workspace-page="today"] .surface .day,body[data-workspace-page="today"] .surface .why{background:transparent!important;box-shadow:inset 1px 0 0 var(--x-rule)!important;border:0!important;border-radius:0!important;height:auto!important}
+body[data-workspace-page="today"] .surface .needs{gap:0}
+body[data-workspace-page="today"] .surface .need.on{border-radius:var(--x-rs)!important;margin:0 8px!important}
+/* one-line view: the day runs across the top, decisions + why below, still one card */
+body[data-workspace-page="today"] .surface.line{grid-template-columns:minmax(0,1fr) minmax(300px,.8fr)!important}
+body[data-workspace-page="today"] .surface.line .day{grid-column:1/-1;box-shadow:inset 0 -1px 0 var(--x-rule)!important}
+@media(max-width:1250px){
+  body[data-workspace-page="today"] .surface{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)!important}
+  body[data-workspace-page="today"] .surface .why{grid-column:1/-1;box-shadow:inset 0 1px 0 var(--x-rule)!important}
+}
+@media(max-width:980px){
+  body[data-workspace-page="today"] .surface,body[data-workspace-page="today"] .surface.line{grid-template-columns:minmax(0,1fr)!important}
+  body[data-workspace-page="today"] .surface .day,body[data-workspace-page="today"] .surface .why{grid-column:auto;box-shadow:inset 0 1px 0 var(--x-rule)!important}
+}
