@@ -25,7 +25,7 @@ async function boot(failed=false) {
  await new Promise(resolve=>setImmediate(resolve));
  return {el,calls};
 }
-test('live client renders agenda, opens prep, retains notes, and answers locally',async()=>{
+test('live client renders agenda, opens prep, retains notes, without losing the selected context',async()=>{
  const {el,calls}=await boot();
  assert.match(el('agenda').innerHTML,/Planning &lt;meeting&gt;/);
  el('agenda').listeners.click({target:{closest:()=>({dataset:{meeting:'meeting-1'}})}});
@@ -35,10 +35,7 @@ test('live client renders agenda, opens prep, retains notes, and answers locally
  assert.match(el('panel').innerHTML,/Bring budget/);
  el('meetingFollowup').value='Confirm costs';el('followupForm').onsubmit({preventDefault(){}});
  assert.match(el('agenda').innerHTML,/Confirm costs/);
- el('tabAssistant').onclick();el('assistantInput').value='My calendar';
- const before=calls.length;el('assistantForm').onsubmit({preventDefault(){}});
- assert.equal(calls.length,before);
- assert.match(el('assistantMessages').children.at(-1).textContent,/Planning <meeting>/);
+
 });
 test('failed sources show unknown state throughout the rendered client',async()=>{
  const {el}=await boot(true);

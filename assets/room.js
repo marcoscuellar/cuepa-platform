@@ -198,10 +198,7 @@
   function renderPanel() {
     $('tabInbox').setAttribute('aria-pressed', S.panel === 'inbox');
     $('tabDetails').setAttribute('aria-pressed', S.panel === 'details');
-    $('tabAssistant').setAttribute('aria-pressed', S.panel === 'assistant');
-    $('assistantPanel').hidden = S.panel !== 'assistant';
-    var el = $('panel'); el.hidden = S.panel === 'assistant';
-    if (S.panel === 'assistant') return;
+    var el = $('panel');
     if (S.panel === 'details' && S.meeting) { renderMeeting(); return; }
     if (S.panel === 'inbox') {
       var mailOk = model.mailReady(S);
@@ -291,26 +288,6 @@
     $('followupForm').onsubmit = function (e) { e.preventDefault(); var text = $('meetingFollowup').value.trim(); if (!text) return; S.followups.push({ id: event.id, title: event.title, text: text }); $('meetingFollowup').value = ''; renderAgenda(model.calendarReady(S), eventsOn(TODAY_I)); toast('Follow-up added for this session.'); };
   }
 
-  /* Assistant is a local workspace guide until an AI service is explicitly configured. */
-  function assistantMessage(text, user) {
-    var item = document.createElement('div'); item.className = 'assistant-message' + (user ? ' from-user' : ''); item.textContent = text;
-    $('assistantMessages').appendChild(item); $('assistantMessages').scrollTop = $('assistantMessages').scrollHeight;
-  }
-  function setAssistantMode(mode) {
-    S.assistantMode = mode; $('modeDay').setAttribute('aria-pressed', mode === 'day'); $('modeIdeas').setAttribute('aria-pressed', mode === 'ideas');
-    $('assistantScope').textContent = mode === 'day' ? 'Workspace guide · uses the data already shown here. No AI model connected.' : 'Ideas worksheet · a guided thinking prompt, not an AI-generated strategy. Only uses what you type.';
-    document.querySelector('label[for="assistantInput"]').textContent = mode === 'day' ? 'Ask about your day' : 'What outcome are you exploring?';
-  }
-  $('modeDay').onclick = function () { setAssistantMode('day'); };
-  $('modeIdeas').onclick = function () { setAssistantMode('ideas'); };
-  $('assistantForm').onsubmit = function (e) {
-    e.preventDefault(); var question = $('assistantInput').value.trim(); if (!question) return;
-    $('assistantInput').value = ''; assistantMessage(question, true);
-    assistantMessage(model.assistantReply(question, S, eventsOn(TODAY_I), S.assistantMode));
-  };
-  document.querySelectorAll('[data-prompt]').forEach(function (button) { button.onclick = function () { setAssistantMode('day'); assistantMessage(button.dataset.prompt, true); assistantMessage(model.assistantReply(button.dataset.prompt, S, eventsOn(TODAY_I), 'day')); }; });
-  assistantMessage('A little clarity before your next step. Ask about your day, or switch to Ideas to work through an outcome.');
-  $('tabAssistant').onclick = function () { S.panel = 'assistant'; renderPanel(); $('assistantInput').focus(); };
   $('agenda').addEventListener('click', function (e) { var button = e.target.closest('[data-meeting]'); if (button) openMeeting(button.dataset.meeting); });
 
   /* events */

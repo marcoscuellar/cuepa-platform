@@ -1,0 +1,15 @@
+(function(){
+ const dock=document.getElementById('cuepa-ai');if(!dock)return;
+ const ws=dock.dataset.ws,box=dock.querySelector('section'),toggle=dock.querySelector('[data-toggle]'),form=dock.querySelector('form'),input=dock.querySelector('textarea'),log=dock.querySelector('[role="log"]'),status=dock.querySelector('[role="status"]'),submit=form.querySelector('button');
+ let history=[],key='',ready=false,busy=false;
+ function persist(){if(key)try{sessionStorage.setItem(key,JSON.stringify({history,open:!box.hidden}));}catch{status.textContent='Chat works, but this browser cannot keep it across pages.';}}
+ function message(role,text){const el=document.createElement('p');el.className=role;el.textContent=text;log.appendChild(el);log.scrollTop=log.scrollHeight;}
+ function show(open){box.hidden=!open;toggle.setAttribute('aria-expanded',String(open));persist();if(open)input.focus({preventScroll:true});}
+ toggle.onclick=()=>show(box.hidden);dock.querySelector('[data-close]').onclick=()=>show(false);
+ dock.addEventListener('keydown',e=>{if(e.key==='Escape'){show(false);toggle.focus();}});
+ dock.querySelector('[data-clear]').onclick=()=>{if(busy)return;history=[];log.replaceChildren();persist();status.textContent=ready?'Ready · messages you type are sent to Anthropic.':'AI is not configured.';};
+ async function init(){try{const r=await fetch('/api/assistant?ws='+encodeURIComponent(ws),{credentials:'same-origin'}),data=await r.json();if(!r.ok)throw Error(data.error);ready=data.ready;key='cuepa_ai_'+data.scope;try{const saved=JSON.parse(sessionStorage.getItem(key)||'null');if(saved&&Array.isArray(saved.history)){history=saved.history.filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string').slice(-18);history.forEach(m=>message(m.role,m.content));box.hidden=!saved.open;toggle.setAttribute('aria-expanded',String(saved.open));}}catch{}status.textContent=ready?'Ready · messages you type are sent to Anthropic.':data.error;}catch(e){status.textContent=e.message||'Could not check AI connection.';}submit.disabled=!ready;}
+ form.onsubmit=async e=>{e.preventDefault();const text=input.value.trim();if(!text||busy||!ready)return;busy=true;submit.disabled=true;const next=history.concat({role:'user',content:text}).slice(-19);message('user',text);input.value='';status.textContent='Thinking…';try{const r=await fetch('/api/assistant?ws='+encodeURIComponent(ws),{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:next})}),data=await r.json();if(!r.ok)throw Error(data.error||'AI unavailable.');history=next.concat({role:'assistant',content:data.reply}).slice(-18);message('assistant',data.reply);persist();status.textContent='Ready · check important details before acting.';}catch(e){log.lastElementChild?.remove();input.value=text;status.textContent=e.message;}finally{busy=false;submit.disabled=!ready;}};
+ document.querySelectorAll('a[href="/api/auth?action=logout"]').forEach(a=>a.addEventListener('click',()=>{try{Object.keys(sessionStorage).filter(k=>k.startsWith('cuepa_ai_')).forEach(k=>sessionStorage.removeItem(k));}catch{}}));
+ init();
+}());
