@@ -35,3 +35,23 @@ test('body text prefers plain, falls back to html', () => {
   assert.equal(g.bodyText({ mimeType: 'multipart/alternative', parts: [{ mimeType: 'text/html', body: { data: enc('<p>H</p>') } }, { mimeType: 'text/plain', body: { data: enc('Plain') } }] }), 'Plain');
   assert.equal(g.bodyText({ mimeType: 'text/html', body: { data: enc('<style>x</style><p>Hi &amp; bye</p><br>ok') } }), 'Hi & bye\n\nok');
 });
+test('cc is included, validated, and counted toward the recipient limit', () => {
+  const raw = Buffer.from(g.buildRaw({ to: 'a@b.co', cc: 'Cy <cy@d.org>, ed@e.net', subject: 's', body: 'x' }), 'base64url').toString();
+  assert.match(raw, /\r\nCc: cy@d\.org, ed@e\.net\r\n/);
+  assert.ok(!/\r\nCc:/.test(Buffer.from(g.buildRaw({ to: 'a@b.co', cc: '  ', body: 'x' }), 'base64url').toString()));
+  assert.throws(() => g.buildRaw({ to: 'a@b.co', cc: 'bad', body: 'x' }), /doesn't look like/);
+  const many = Array.from({ length: 15 }, (_, i) => `p${i}@x.co`).join(',');
+  assert.throws(() => g.buildRaw({ to: many, cc: many, body: 'x' }), /20 people/);
+});
+test('body text respects the part charset', () => {
+  const latin = Buffer.from([0x43, 0x61, 0x66, 0xe9]).toString('base64url'); // "Café" in ISO-8859-1
+  assert.equal(g.bodyText({ mimeType: 'text/plain', headers: [{ name: 'Content-Type', value: 'text/plain; charset="ISO-8859-1"' }], body: { data: latin } }), 'Café');
+});
+test('folders include Sent so people can review what went out', async () => {
+  const realFetch = global.fetch;
+  global.fetch = async () => ({ ok: true, status: 200, json: async () => ({ labels: [{ id: 'Label_1', name: 'Clients', type: 'user' }, { id: 'SENT', name: 'SENT', type: 'system' }] }) });
+  try {
+    const l = await g.listLabels('tok');
+    assert.deepEqual(l.map(x => x.id), ['INBOX', 'SENT', 'Label_1', 'TRASH']);
+  } finally { global.fetch = realFetch; }
+});
