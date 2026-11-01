@@ -22,6 +22,9 @@ const NOTE_NEW = '${' + GMAIL + '?html`<div class="hub-warnnote" style=${{backgr
 const BTN_OLD = 'onClick=${()=>c.id==="calendar"?setStep("cals"):finishSelf()}>${c.id==="calendar"?"Next: choose calendars":"Save my choice"}</button>';
 const BTN_NEW = 'onClick=${()=>c.id==="calendar"?setStep("cals"):' + GMAIL + '?location.assign("/"+(window.CUEPA_CONTEXT?.ws||"")+"/inbox"):finishSelf()}>${c.id==="calendar"?"Next: choose calendars":' + GMAIL + '?"Connect Gmail →":"Save my choice"}</button>';
 
+// The top-right sample badge + 'Review drafted reminders' button from the prototype.
+const TOP_OLD = "        <div class=\"hub-top-right\">\n          <span class=\"hub-badge\"><i aria-hidden=\"true\"></i>${live?`${live} of ${CONNS.length} connected`:BLANK?\"Nothing connected yet\":\"Sample data \u00b7 nothing connected\"}</span>\n          <button type=\"button\" class=\"hub-primary\" disabled=${!draftsLeft.length} onClick=${()=>setModal(draftsLeft[0].id)}>${draftsLeft.length?`Review drafted reminders (${draftsLeft.length})`:BLANK&&!s.drafts.length?\"No reminders yet\":\"All drafts reviewed\"}</button>\n        </div>";
+
 module.exports = (req, res) => {
   const ws = new URL(req.url, "http://x").searchParams.get("ws") || "";
   const conf = WORKSPACES[ws];
@@ -45,6 +48,8 @@ module.exports = (req, res) => {
     .replace('aria-hidden="true">CO</span>', `aria-hidden="true">${initials(session.name)}</span>`);
   html = patch(html, NOTE_OLD, NOTE_NEW);
   html = patch(html, BTN_OLD, BTN_NEW);
+  // No sample-data badge or sample reminders in a real client's hub: real data only.
+  html = patch(html, TOP_OLD, '');
 
   if (conf.blank) {
     const first = name.split(" ")[0] || "You";

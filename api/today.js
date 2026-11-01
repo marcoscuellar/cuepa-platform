@@ -275,7 +275,7 @@ const tOf=x=>x&&x.dateTime?new Date(x.dateTime):null;
 function buildNeeds(){
   const n=[];const tc=S.tc||{sent:[],late:[]};const weekTxt=(tc.days&&tc.days.length)?new Date(tc.days[0]+'T12:00').toLocaleDateString(undefined,{month:'short',day:'numeric'})+' – '+new Date(tc.days[6]+'T12:00').toLocaleDateString(undefined,{month:'short',day:'numeric'}):'this week';
   if(S.cal&&(!S.cal.connected||S.cal.error)) n.push({id:'cal',chip:['w','Calendar'],title:S.cal.error==='expired'?'Reconnect your calendar':'Connect your calendar',text:S.cal.error==='expired'?'Google stopped sharing your calendar, so today\\'s view is empty. Reconnecting takes about a minute.':'Your day view is empty until a calendar is connected.',
-    why:'The hub reads your calendar to build today\\'s view and to flag deadlines. '+(S.cal.error==='expired'?'The last connection expired, which is why nothing shows today.':'No calendar is connected yet.'),checked:['Calendar connection'],ifyou:[['Opens','Google sign-in, read-only'],['Changes','Nothing on your calendar']],btn:['Reconnect','/'+WS+'/hub#connect']});
+    why:'The hub reads your calendar to build today\\'s view and to flag deadlines. '+(S.cal.error==='expired'?'The last connection expired, which is why nothing shows today.':'No calendar is connected yet.'),checked:['Calendar connection'],ifyou:[['Opens','Google sign-in, read-only'],['Changes','Nothing on your calendar']],btn:['Reconnect','/api/google?action=start&ws='+WS]});
   if(tc.sent.length) n.push({id:'approve',chip:['t','Timecards'],title:'Approve '+tc.sent.length+' timecard'+(tc.sent.length>1?'s':'')+' for this week',text:tc.sent.map(m=>first(m.name)).join(', ')+' sent hours for '+weekTxt+'. Approved hours go into the payroll spreadsheet.',
     why:'These hours were sent from staff timecard links and are waiting on you. Nothing reaches payroll until you approve.',checked:['Timecards, this week','Staff timecard links'],ifyou:[['Approves',tc.sent.map(m=>m.name).join(', ')],['Then','Hours are ready for the payroll download']],btn:['Review & approve','/'+WS+'/hub#timecards']});
   const withEmail=tc.late.filter(m=>m.email);
@@ -304,7 +304,7 @@ function renderDay(){
   $('cols').classList.toggle('line',S.view==='line');$('vList').setAttribute('aria-pressed',S.view==='list');$('vLine').setAttribute('aria-pressed',S.view==='line');
   const body=$('dayBody');
   if(!S.cal){body.innerHTML='<div class="empty">Loading your calendar…</div>';return;}
-  if(!S.cal.connected||S.cal.error){body.innerHTML='<div class="empty">'+(S.cal.error==='expired'?'Your calendar connection expired. ':'No calendar connected yet. ')+'<a href="/'+WS+'#connect">Reconnect it</a> and today fills in here.</div>';return;}
+  if(!S.cal.connected||S.cal.error){body.innerHTML='<div class="empty">'+(S.cal.error==='expired'?'Your calendar connection expired. ':'No calendar connected yet. ')+'<a href="/api/google?action=start&ws='+WS+'">Reconnect it</a> and today fills in here.</div>';return;}
   const timed=S.events.map(e=>({...e,s:tOf(e.start),e2:tOf(e.end),k:kind(e)})).filter(e=>e.s).sort((a,b)=>a.s-b.s);
   const allDay=S.events.filter(e=>!tOf(e.start));
   const cur=new Date();const nowH=cur.getHours()+cur.getMinutes()/60;
