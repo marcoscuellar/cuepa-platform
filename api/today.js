@@ -176,10 +176,9 @@ nav a.on .ct{background:var(--turq);color:#04201d}
 </style></head><body>
 <div class="shell">
   <aside class="side">
-    <a class="brand" href="/${W}"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b></a>
+    <a class="brand" href="/${W}/today"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b></a>
     <div class="wsbox"><div class="lab">Workspace</div><b>${N}</b></div>
     <nav aria-label="Hub">
-      <a href="/${W}">The Room</a>
       <a class="on" href="/${W}/today" aria-current="page">Today<span class="ct" id="nNeeds" hidden></span></a>
       <a href="/${W}/inbox">Inbox<span class="ct" id="nUnread" hidden></span></a>
       <a href="/${W}/hub#calendar">Calendar</a>
@@ -189,13 +188,6 @@ nav a.on .ct{background:var(--turq);color:#04201d}
       <a href="/${W}/hub#connect">Setup</a>
       <a href="/${W}/hub#access">Access</a>
     </nav>
-    <div class="tiles">
-      <div class="lab t" style="padding:4px 4px 0">This period</div>
-      <div class="tile"><span>Timecards in</span><div><b id="tTc">–</b><small id="tTcS"></small></div></div>
-      <div class="tile"><span>Unread email</span><div><b id="tMail">–</b><small id="tMailS"></small></div></div>
-      <div class="tile"><span>On today's calendar</span><div><b id="tCal">–</b><small id="tCalS"></small></div></div>
-      <div class="tile"><span>Drafts waiting</span><div><b id="tDr">–</b><small>Not sent</small></div></div>
-    </div>
     <div class="me"><span class="av" aria-hidden="true">${ini}</span><div><b>${P}</b><small>Workspace owner</small></div>
       <button class="look" id="look" title="Switch light / dark" aria-label="Switch light or dark look">◐</button></div>
   </aside>
@@ -213,13 +205,8 @@ nav a.on .ct{background:var(--turq);color:#04201d}
         <h1 id="hi">Good morning.</h1>
         <p id="sub">Checking your calendar, timecards and email…</p>
       </div>
-      <div class="stats">
-        <div class="stat"><b id="sNeeds">–</b><span>need you</span></div>
-        <div class="stat"><b id="sDrafts">–</b><span>drafts, not sent</span></div>
-        <div class="stat"><b id="sMail">–</b><span>unread emails</span></div>
-      </div>
-      <div class="cols" id="cols">
-        <section>
+      <div class="cols surface" id="cols">
+        <section class="needcol">
           <div class="colhead"><h2>What needs you</h2><span class="lab">Your decision</span></div>
           <div class="needs" id="needs"><div class="empty">Loading…</div></div>
         </section>
@@ -230,10 +217,9 @@ nav a.on .ct{background:var(--turq);color:#04201d}
           <div id="dayBody"><div class="empty">Loading your calendar…</div></div>
           <div class="dayacts"><a class="btn" href="/${W}/hub#calendar">Open the full calendar</a><button class="btn" id="resync">↻ Resync</button></div>
         </section>
+        <aside class="why" id="why"><div class="empty">Pick something on the left to see why it's here.</div></aside>
       </div>
     </main>
-
-    <aside class="why" id="why"><div class="empty">Pick something on the left to see why it's here.</div></aside>
   </div>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -307,13 +293,7 @@ function buildNeeds(){
 
 function render(){
   buildNeeds();const tc=S.tc||{team:[],sent:[],late:[],approved:[]};const unread=S.inbox.filter(m=>m.unread).length;
-  const drafts=S.needs.some(x=>x.draft)?1:0;
-  $('sNeeds').textContent=S.needs.length;$('sDrafts').textContent=drafts;$('sMail').textContent=S.mail&&S.mail.connected?unread:'–';
   const setCt=(id,v)=>{$(id).textContent=v;$(id).hidden=!v;};setCt('nNeeds',S.needs.length);setCt('nUnread',unread);setCt('nTc',tc.sent.length+tc.late.length);
-  $('tTc').textContent=tc.team.length?(tc.team.length-tc.late.length)+' of '+tc.team.length:'–';$('tTcS').textContent=tc.late.length?tc.late.length+' missing':'';$('tTcS').className=tc.late.length?'w':'';
-  $('tMail').textContent=S.mail&&S.mail.connected?unread:'–';$('tMailS').textContent=S.mail&&S.mail.connected?'':'Not connected';
-  $('tCal').textContent=S.cal&&S.cal.connected&&!S.cal.error?S.events.length:'–';$('tCalS').textContent=S.cal&&S.cal.error?'Needs reconnect':'';$('tCalS').className=S.cal&&S.cal.error?'w':'';
-  $('tDr').textContent=drafts;
   const calOk=S.cal&&S.cal.connected&&!S.cal.error, mailOk=S.mail&&S.mail.connected;
   $('connDot').className=calOk&&mailOk?'':'off';$('connTxt').textContent=(calOk?'Calendar connected':'Calendar needs attention')+' · '+(mailOk?'Gmail connected':'Gmail not connected');
   $('sub').textContent=S.needs.length?(S.needs.length===1?'One thing needs you today.':['','','Two','Three','Four','Five'][S.needs.length]+' things need you today.')+' Everything else is tracked or already prepared, and nothing is sent without you.':'Nothing needs you right now. The hub keeps watching and nothing is sent without you.';

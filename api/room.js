@@ -8,6 +8,8 @@ const WORKSPACES = require('../lib/workspaces');
 function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function go(res, to) { res.statusCode = 302; res.setHeader('Location', to); res.setHeader('Cache-Control', 'no-store'); res.end(); }
 
+const ROOM_IS_HOME = false;
+
 module.exports = (req, res) => {
   const u = new URL(req.url, 'http://x');
   const ws = u.searchParams.get('ws') || '';
@@ -19,6 +21,9 @@ module.exports = (req, res) => {
   let s = null; try { s = readSession(req); } catch (e) { s = null; }
   if (!canSee(s, ws)) return go(res, '/?next=/' + ws);
   if (s.temp) return go(res, '/?setpw=1&next=/' + ws);
+  // For now Today is the home page. The Room comes back once there's more real data to show.
+  // Marcos can still preview it at /<ws>?room=1.
+  if (!ROOM_IS_HOME && u.searchParams.get('room') !== '1') return go(res, '/' + ws + '/today');
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'private, no-store');
