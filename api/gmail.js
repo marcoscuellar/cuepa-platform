@@ -251,7 +251,7 @@ dialog textarea{min-height:220px;resize:vertical}
     <h1>Bring your inbox into your hub.</h1>
     <ul><li>Read your email right here</li><li>Reply and send from your own address</li><li>Sort into folders and delete, synced with Gmail</li><li>CUEPA never sees your password</li></ul>
     <a class="btn go" href="/api/gmail?action=start&ws=${encodeURIComponent(ws)}">Connect Gmail →</a>
-    <p>Google will ask you to allow reading and sending. If it says the app isn't verified yet, tap <b>Advanced</b>, then <b>Go to CUEPA</b>. You can disconnect anytime.</p>
+    <p>Google will ask you to allow reading and sending. If Google shows a warning you aren't sure about, stop and contact CUEPA before continuing. You can disconnect anytime.</p>
   </div></section>
 
   <div id="app" hidden>
@@ -280,10 +280,11 @@ dialog textarea{min-height:220px;resize:vertical}
 <dialog id="dlg"><form id="form">
 <div class="lab" id="dlgLab">New email</div><h3 id="dlgTitle">Write an email</h3>
 <input id="to" autocomplete="email" placeholder="To" aria-label="To" required>
+<input id="cc" autocomplete="email" placeholder="Cc (optional)" aria-label="Cc">
 <input id="subject" placeholder="Subject" aria-label="Subject">
 <textarea id="msg" placeholder="Write your message" aria-label="Message" required></textarea>
 <p class="err" id="err"></p>
-<div class="dacts"><span class="lab" id="fromLab"></span><button type="button" id="cancel">Cancel</button><button class="dark" id="sendBtn">Send</button></div>
+<div class="dacts"><span class="lab" id="fromLab"></span><button type="button" id="cancel">Cancel</button><button class="dark" id="sendBtn" title="Send (Ctrl or ⌘ + Enter)">Send</button></div>
 </form></dialog>
 <script>
 const WS=${JSON.stringify(ws)};
@@ -298,14 +299,18 @@ let msgs=[],query='',me='',labels=[],folder='INBOX';
 const post=(a,b)=>fetch('/api/gmail?action='+a+'&ws='+encodeURIComponent(WS),{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'Something went wrong.');return j;});
 const labelName=id=>{const l=labels.find(x=>x.id===id);return l?l.name:'';};
 function toast(text,undo){const old=document.querySelector('.toast');if(old)old.remove();const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.innerHTML='<span>'+esc(text)+'</span>'+(undo?'<button type="button">Undo</button>':'');document.body.appendChild(t);if(undo)t.querySelector('button').onclick=async()=>{t.remove();try{await undo();}catch(e){banner(e.message);}load();};setTimeout(()=>t.remove(),7000);}
-async function loadLabels(){try{labels=(await api('labels')).labels;}catch(e){labels=[{id:'INBOX',name:'Inbox'},{id:'TRASH',name:'Trash'}];}renderFolders();}
+async function loadLabels(){try{labels=(await api('labels')).labels;}catch(e){labels=[{id:'INBOX',name:'Inbox'},{id:'SENT',name:'Sent'},{id:'TRASH',name:'Trash'}];}renderFolders();}
 function renderFolders(){$('folders').innerHTML=labels.map(l=>'<button type="button" data-f="'+esc(l.id)+'"'+(l.id===folder?' class="on" aria-current="true"':'')+'>'+esc(l.name)+'</button>').join('')+'<button type="button" class="add" data-add="1">＋ New folder</button>';}
 $('folders').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.add){const name=prompt('Name the new folder');if(!name)return;try{const r=await post('label-create',{name});labels.splice(labels.length-1,0,r.label);folder=r.label.id;renderFolders();load();}catch(err){banner(err.message);}return;}folder=b.dataset.f;query='';$('q').value='';renderFolders();load();});
 function moveSelect(i){return '<select aria-label="Move to folder" data-move="'+i+'"><option value="">Move to…</option>'+labels.filter(l=>l.id!==folder&&l.id!=='TRASH').map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name)+'</option>').join('')+'</select>';}
 async function doMove(i,label){const m=msgs[i];if(!m||!label)return;const from=folder;try{await post('move',{id:m.id,label});msgs.splice(i,1);load(false);toast('Moved to '+labelName(label)+'.',()=>post('move',{id:m.id,label:from==='INBOX'?'INBOX':from}));}catch(e){banner(e.message);}}
 async function doTrash(i){const m=msgs[i];if(!m)return;try{await post('trash',{id:m.id});msgs.splice(i,1);load(false);if(document.querySelector('.row.on')===null){$('view').innerHTML='<div class="empty">Pick an email to read it here.</div>';}toast('Deleted. It sits in Gmail’s Trash for 30 days.',()=>post('untrash',{id:m.id}));}catch(e){banner(e.message);}}
+const needsReconnect=msg=>/connect your email again|not connected yet/i.test(String(msg||''));
+const RECONNECT='/api/gmail?action=start&ws='+encodeURIComponent(WS);
+function errBox(msg){return '<div class="empty">'+esc(msg)+(needsReconnect(msg)?'<div style="margin-top:14px"><a class="btn go" href="'+RECONNECT+'">Reconnect Gmail →</a></div>':'')+'</div>';}
+const isMe=a=>me&&String(a||'').toLowerCase().includes(me.toLowerCase());
 $('today').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
-function banner(text,ok){const b=$('banner');b.className='banner '+(ok?'ok':'bad');b.textContent=text;b.hidden=false;}
+function banner(text,ok){const b=$('banner');b.className='banner '+(ok?'ok':'bad');b.textContent=text;if(!ok&&needsReconnect(text)){const a=document.createElement('a');a.href=RECONNECT;a.textContent=' Reconnect Gmail →';a.style.fontWeight='700';a.style.color='inherit';b.appendChild(a);}b.hidden=false;}
 const p=new URLSearchParams(location.search).get('connect');
 if(p==='ok')banner('Email connected. Your inbox is below.',true);
 if(p==='cancelled')banner('Connection cancelled. Nothing was changed.');
@@ -314,7 +319,7 @@ if(p==='failed')banner('Google could not connect. Try again, or contact CUEPA.')
 if(p==='unavailable')banner('Email can’t be connected on this version of the hub. Use app.makingcuepa.com, or contact CUEPA.');
 if(p)history.replaceState(null,'',location.pathname);
 async function init(){
-  let st;try{st=await api('status');}catch(e){$('app').hidden=false;$('list').innerHTML='<div class="empty">'+esc(e.message)+'</div>';return;}
+  let st;try{st=await api('status');}catch(e){$('app').hidden=false;$('list').innerHTML=errBox(e.message);return;}
   if(!st.connected){$('connect').hidden=false;return;}
   me=st.email||'';$('av').textContent=(me[0]||'·').toUpperCase();$('fromLab').textContent='From '+me;
   $('app').hidden=false;await loadLabels();load();
@@ -328,25 +333,31 @@ function renderList(){
   const fname=labelName(folder)||'Inbox';
   $('qtitle').textContent=query?'Results':fname;$('qlab').textContent=query?('Search · '+query):(folder==='TRASH'?'Deleted · kept 30 days':'Latest first');
   renderTop();
-  $('list').innerHTML=msgs.length?msgs.map((m,i)=>'<div class="row'+(m.unread?' unread':'')+'" role="button" tabindex="0" data-i="'+i+'"><span class="dot" aria-hidden="true"></span><div class="t"><div class="f">'+esc(nameOf(m.from))+(query&&m.labels&&m.labels.length?m.labels.filter(l=>l!==folder).map(l=>labelName(l)?'<span class="tag">'+esc(labelName(l))+'</span>':'').join(''):'')+'</div><div class="s">'+esc(m.subject||'(no subject)')+'</div><div class="m">'+esc(m.snippet)+'</div></div><div class="acts">'+(folder==='TRASH'?'<button data-act="restore" data-i="'+i+'">Restore</button>':moveSelect(i)+'<button data-act="reply" data-i="'+i+'">Reply</button><button class="del" data-act="trash" data-i="'+i+'" aria-label="Delete">Delete</button>')+'<span class="when">'+esc(when(m.date))+'</span></div></div>').join(''):'<div class="empty">'+(query?'Nothing found.':folder==='TRASH'?'Trash is empty.':fname==='Inbox'?'Your inbox is empty.':'Nothing in '+esc(fname)+' yet.')+'</div>';
+  $('list').innerHTML=msgs.length?msgs.map((m,i)=>'<div class="row'+(m.unread?' unread':'')+'" role="button" tabindex="0" data-i="'+i+'"><span class="dot" aria-hidden="true"></span><div class="t"><div class="f">'+(folder==='SENT'||isMe(m.from)&&m.to?'To: '+esc(nameOf(m.to)):esc(nameOf(m.from)))+(query&&m.labels&&m.labels.length?m.labels.filter(l=>l!==folder).map(l=>labelName(l)?'<span class="tag">'+esc(labelName(l))+'</span>':'').join(''):'')+'</div><div class="s">'+esc(m.subject||'(no subject)')+'</div><div class="m">'+esc(m.snippet)+'</div></div><div class="acts">'+(folder==='TRASH'?'<button data-act="restore" data-i="'+i+'">Restore</button>':moveSelect(i)+'<button data-act="reply" data-i="'+i+'">Reply</button><button class="del" data-act="trash" data-i="'+i+'" aria-label="Delete">Delete</button>')+'<span class="when">'+esc(when(m.date))+'</span></div></div>').join(''):'<div class="empty">'+(query?'Nothing found.':folder==='TRASH'?'Trash is empty.':fname==='Inbox'?'Your inbox is empty.':'Nothing in '+esc(fname)+' yet.')+'</div>';
 }
 async function load(fetchNew=true){
   if(!fetchNew){renderList();return;}
   $('list').innerHTML='<div class="empty">Loading…</div>';
   try{const r=await api('list',(query?'&q='+encodeURIComponent(query):'')+(query?'':'&label='+encodeURIComponent(folder)));msgs=r.messages;renderList();
-  }catch(e){$('list').innerHTML='<div class="empty">'+esc(e.message)+'</div>';}
+  }catch(e){$('list').innerHTML=errBox(e.message);}
 }
 async function open(i,thenReply){const m0=msgs[i];if(!m0)return;
   document.querySelectorAll('.row.on').forEach(x=>x.classList.remove('on'));const row=document.querySelector('.row[data-i="'+i+'"]');if(row){row.classList.add('on');row.classList.remove('unread');}
-  if(m0.unread){m0.unread=false;renderTop();}
+  if(m0.unread){m0.unread=false;renderTop();post('read-state',{id:m0.id,unread:false}).catch(()=>{});}
   document.body.classList.add('shell-reading');$('view').innerHTML='<div class="empty">Opening…</div>';
   try{const {message:m}=await api('read','&id='+encodeURIComponent(m0.id));
-    $('view').innerHTML='<h3>'+esc(m.subject||'(no subject)')+'</h3><div class="meta"><span>From</span><div>'+esc(m.from)+'</div><span>To</span><div>'+esc(m.to)+'</div><span>Date</span><div class="mono">'+esc(new Date(m.date).toLocaleString())+'</div></div><div class="fx"><button class="go" id="reply">Reply</button>'+(folder==='TRASH'?'':'<select id="sideMove" aria-label="Move to folder"><option value="">Move to…</option>'+labels.filter(l=>l.id!==folder&&l.id!=='TRASH').map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name)+'</option>').join('')+'</select><button class="del" id="sideDel">Delete</button>')+'</div><div class="body">'+esc(m.body||m.snippet)+'</div><div class="note">Replies go out from '+esc(me)+'. Nothing sends until you press Send.</div>';
-    const rep=()=>compose({to:addrOf(m.from),subject:/^re:/i.test(m.subject)?m.subject:'Re: '+m.subject,threadId:m.threadId,inReplyTo:m.messageId,references:m.references});
-    $('reply').onclick=rep;if(thenReply)rep();
+    $('view').innerHTML='<h3>'+esc(m.subject||'(no subject)')+'</h3><div class="meta"><span>From</span><div>'+esc(m.from)+'</div><span>To</span><div>'+esc(m.to)+'</div><span>Date</span><div class="mono">'+esc(new Date(m.date).toLocaleString())+'</div></div><div class="fx"><button class="go" id="reply">Reply</button><button id="replyAll" style="background:#1d2323;border-color:#2a3232;color:#fff">Reply all</button>'+(folder==='TRASH'?'':'<select id="sideMove" aria-label="Move to folder"><option value="">Move to…</option>'+labels.filter(l=>l.id!==folder&&l.id!=='TRASH').map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name)+'</option>').join('')+'</select><button class="del" id="sideDel">Delete</button>')+'</div><div class="body">'+esc(m.body||m.snippet)+'</div><div class="note">Replies go out from '+esc(me)+'. Nothing sends until you press Send.</div>';
+    const list=v=>String(v||'').split(',').map(x=>addrOf(x)).filter(Boolean);
+    const mine=isMe(m.from);
+    const primary=mine?list(m.to):list(m.replyTo||m.from);
+    const subj=/^re:/i.test(m.subject||'')?m.subject:'Re: '+(m.subject||'');
+    const base={subject:subj,threadId:m.threadId,inReplyTo:m.messageId,references:m.references};
+    const rep=()=>compose({...base,to:primary.join(', ')});
+    const repAll=()=>{const seen=new Set(primary.map(a=>a.toLowerCase()));const cc=[...list(m.to),...list(m.cc)].filter(a=>{const k=a.toLowerCase();if(seen.has(k)||isMe(a))return false;seen.add(k);return true;});compose({...base,to:primary.join(', '),cc:cc.join(', ')});};
+    $('reply').onclick=rep;$('replyAll').onclick=repAll;if(thenReply)rep();
     const sm=$('sideMove');if(sm)sm.onchange=()=>{if(sm.value){doMove(i,sm.value);document.body.classList.remove('shell-reading');$('view').innerHTML='<div class="empty">Pick an email to read it here.</div>';}};
     const sd=$('sideDel');if(sd)sd.onclick=()=>{doTrash(i);document.body.classList.remove('shell-reading');$('view').innerHTML='<div class="empty">Pick an email to read it here.</div>';};
-  }catch(err){$('view').innerHTML='<div class="empty">'+esc(err.message)+'</div>';}
+  }catch(err){$('view').innerHTML=errBox(err.message);}
 }
 $('list').addEventListener('click',e=>{if(e.target.closest('select'))return;const a=e.target.closest('[data-act]');if(a){e.stopPropagation();const i=+a.dataset.i;if(a.dataset.act==='trash')return doTrash(i);if(a.dataset.act==='restore'){const m=msgs[i];return post('untrash',{id:m.id}).then(()=>{msgs.splice(i,1);load(false);toast('Back in your inbox.');}).catch(err=>banner(err.message));}return open(i,true);}const r=e.target.closest('.row');if(r)open(+r.dataset.i);});
 $('list').addEventListener('change',e=>{const s=e.target.closest('select[data-move]');if(s&&s.value)doMove(+s.dataset.move,s.value);});
@@ -356,13 +367,14 @@ $('sform').addEventListener('submit',e=>{e.preventDefault();query=$('q').value.t
 document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('q').focus();}});
 $('refresh').onclick=()=>load();
 let draft={};
-function compose(d){draft=d||{};$('dlgLab').textContent=d&&d.threadId?'Reply':'New email';$('dlgTitle').textContent=d&&d.threadId?(d.subject||'Reply'):'Write an email';$('to').value=draft.to||'';$('subject').value=draft.subject||'';$('msg').value='';$('err').textContent='';$('dlg').showModal();(draft.to?$('msg'):$('to')).focus();}
+function compose(d){draft=d||{};$('dlgLab').textContent=d&&d.threadId?'Reply':'New email';$('dlgTitle').textContent=d&&d.threadId?(d.subject||'Reply'):'Write an email';$('to').value=draft.to||'';$('cc').value=draft.cc||'';$('subject').value=draft.subject||'';$('msg').value='';$('err').textContent='';$('dlg').showModal();(draft.to?$('msg'):$('to')).focus();}
 $('new').onclick=()=>compose();
 $('cancel').onclick=()=>$('dlg').close();
+$('msg').addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();$('form').requestSubmit();}});
 $('form').addEventListener('submit',async e=>{e.preventDefault();$('sendBtn').disabled=true;$('err').textContent='';
-  try{const r=await fetch('/api/gmail?action=send&ws='+encodeURIComponent(WS),{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:$('to').value,subject:$('subject').value,body:$('msg').value,threadId:draft.threadId,inReplyTo:draft.inReplyTo,references:draft.references})});
+  try{const r=await fetch('/api/gmail?action=send&ws='+encodeURIComponent(WS),{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:$('to').value,cc:$('cc').value,subject:$('subject').value,body:$('msg').value,threadId:draft.threadId,inReplyTo:draft.inReplyTo,references:draft.references})});
     const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'Could not send.');
-    $('dlg').close();banner('Sent from '+me+'.',true);
+    $('dlg').close();banner('Sent from '+me+'. You can review it in the Sent folder.',true);if(folder==='SENT'||folder==='INBOX')load();
   }catch(err){$('err').textContent=err.message;}finally{$('sendBtn').disabled=false;}
 });
 init();
