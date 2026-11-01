@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap');
 /* Approved palette across The Room, Today, Inbox, Calendar, Timecards, and setup.
    Container edges use shadows. Keyboard focus remains visible. */
 :root,:root[data-look="dark"],html.light{color-scheme:light;--bg:#FFFFFF;--side:#FFFFFF;--card:#FFFFFF;--raised:#FFFFFF;--soft:#FFFFFF;--ink:#000000;--ink2:#000000;--dim:#000000;--mute:#595959;--muted:#595959;--line:transparent;--field:transparent;--teal:#0F766E;--turq:#0F766E;--accent:#0F766E;--tint:#edf7f5;--tbg:#edf7f5;--tline:transparent;--amber:#000000;--abg:#FFFFFF;--aline:transparent;--red:#000000;--rbg:#FFFFFF;--meet:#FFFFFF;--evt:#edf7f5;--evtline:#0F766E;--why:#FFFFFF;--shadow:0 3px 18px rgba(0,0,0,.08);--lift:0 6px 24px rgba(0,0,0,.12)}
@@ -340,3 +341,74 @@ body[data-workspace-page="room"] .cal #agenda .empty{margin-top:12px}
 body[data-workspace-page="room"] .need,body[data-workspace-page="room"] .agenda-row{width:calc(100% + 2 * var(--x-pad))!important;max-width:none!important;box-sizing:border-box!important}
 body[data-workspace-page="room"] .panel{height:auto!important;max-height:none!important}
 body[data-workspace-page="room"] .panel{min-height:0!important}
+
+
+/* ==========================================================================
+   CUEPA direction v3 (Nov 1, 2026) — set by Marcos from the Setup card.
+   Soft rounded cards with a big gentle shadow · mono teal eyebrows in caps ·
+   heavy tight headlines with a teal punctuation mark · white fields that lift ·
+   three button levels: teal (main, with →), black (secondary), underlined text.
+   Spacing, alignment and accessibility rules above stay in force.
+   ========================================================================== */
+:root{--x-r:20px;--x-rs:12px;--x-mute:#595959;
+  --x-sh:0 1px 2px rgba(0,0,0,.04),0 16px 48px rgba(0,0,0,.08);
+  --x-sh-sm:0 1px 2px rgba(0,0,0,.06),0 2px 9px rgba(0,0,0,.08);
+  --x-field:0 2px 9px rgba(0,0,0,.10);
+  --shadow:var(--x-sh)}
+/* eyebrows: mono, caps, tracked */
+body .eyebrow,body .lab,body .hub-eyebrow,body .ib-eyebrow,body .x-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace!important;font-size:11px!important;font-weight:600!important;letter-spacing:.12em!important;text-transform:uppercase!important;color:var(--x-mute)!important}
+body .eyebrow,body .lab.t,body .hub-eyebrow,body .ib-eyebrow,body .x-eyebrow{color:var(--x-teal)!important}
+body[data-workspace-page="room"] .page-heading .eyebrow{display:block!important;margin:0 0 8px}
+body[data-workspace-page="today"] .hello .lab{display:block!important;margin-bottom:8px}
+.hub .hub-pagehead>.hub-eyebrow{display:block!important}
+.hub .hub-eyebrow{margin-bottom:8px}
+/* headlines: heavy and tight, teal punctuation */
+body[data-workspace-page="room"] .hello,body[data-workspace-page="room"] .hello b,body[data-workspace-page="today"] .hello h1,.hub h1,body[data-workspace-page="start"] h1{font-weight:800!important;letter-spacing:-.035em!important;line-height:1.05!important}
+body[data-workspace-page="room"] .hello{font-size:38px!important}
+body[data-workspace-page="today"] .hello h1{font-size:38px!important}
+.hub h1{font-size:40px!important}
+body[data-workspace-page="start"] h1{font-size:38px!important}
+.hub h1 .dot,body[data-workspace-page="start"] h1 .dot,.x-dot{display:inline!important;color:var(--x-teal)!important}
+body[data-workspace-page="room"] .brief h1{font-weight:700!important;letter-spacing:-.025em!important}
+.hub h2,body[data-workspace-page="room"] .h2,body[data-workspace-page="room"] .panel h2,body[data-workspace-page="today"] .colhead h2,body[data-workspace-page="today"] .dayhead h2{font-weight:700!important;letter-spacing:-.02em!important}
+body[data-workspace-page="today"] .why>h2,body[data-workspace-page="today"] .why h2:first-of-type{font-weight:800!important;letter-spacing:-.03em!important}
+/* buttons: teal main, black secondary, soft grey quiet */
+.btn,button.btn,.hub .hub-primary,.hub .hub-ghost,.hub .hub-dark,body[data-workspace-page="room"] .rm-acts .btn{border-radius:var(--x-rs)!important;font-weight:600!important;box-shadow:none!important}
+.btn.dark,button.dark,.hub button.hub-dark,.hub a.hub-dark,body[data-workspace-page="today"] .btn.dark,body[data-workspace-page="start"] .btn.dark{background:#000!important;color:#fff!important;box-shadow:none!important}
+.btn.dark:hover,.hub .hub-dark:hover{background:var(--x-teal)!important}
+body[data-workspace-page="room"] .btn,body[data-workspace-page="today"] .btn,.hub .hub-ghost,.hub .hub-actions .hub-primary{background:#F3F4F3!important;color:#000!important}
+body[data-workspace-page="room"] .btn:hover,body[data-workspace-page="today"] .btn:hover,.hub .hub-ghost:hover{background:#E8EAE9!important}
+body[data-workspace-page="room"] .btn.go,body[data-workspace-page="today"] .btn.go,.go,.hub .hub-primary:not(.hub-actions .hub-primary){background:var(--x-teal)!important;color:#fff!important}
+body[data-workspace-page="room"] .btn.wide{background:transparent!important}
+/* fields: white, lifted */
+.hub input,.hub select,.hub textarea,body[data-workspace-page="start"] .form input{background:#fff!important;box-shadow:var(--x-field)!important;border-radius:var(--x-rs)!important;border:0!important}
+body[data-workspace-page="today"] .search{background:#fff!important;box-shadow:var(--x-field)!important;border-radius:var(--x-rs)!important}
+/* cards breathe a little more on this direction */
+:root{--x-pad:28px}
+@media(max-width:650px){:root{--x-pad:20px}}
+/* tags */
+.pill,.hub .hub-tc-tag,.hub .hub-state,.chip{border-radius:6px!important}
+/* Today: the decision on each card is the main action, so it's teal; "See why" stays quiet */
+body[data-workspace-page="today"] .need .btn.dark,body[data-workspace-page="today"] .need button.dark{background:var(--x-teal)!important;color:#fff!important}
+@media(max-width:650px){body[data-workspace-page="room"] .hello,body[data-workspace-page="room"] .hello b,body[data-workspace-page="today"] .hello h1,.hub h1,body[data-workspace-page="start"] h1{font-size:30px!important}body[data-workspace-page="room"] .hello{overflow-wrap:anywhere}}
+@media(max-width:380px){body[data-workspace-page="room"] .hello,body[data-workspace-page="room"] .hello b{font-size:26px!important}}
+
+/* ---------- No side lines, no teal glows: emphasis = deep black drop shadow (Nov 1, Marcos) ---------- */
+:root{--x-deep:0 2px 6px rgba(0,0,0,.08),0 18px 48px rgba(0,0,0,.18)}
+/* the Room summary card: deep shadow only */
+body[data-workspace-page="room"] .brief{box-shadow:var(--x-deep)!important;padding-left:var(--x-pad)!important}
+/* selected / highlighted items lift off the page instead of getting a side line */
+body[data-workspace-page="today"] .need.on{background:#fff!important;box-shadow:var(--x-deep)!important;border-radius:var(--x-r)!important;position:relative;z-index:1}
+.hub .hub-step.next{background:#fff!important;box-shadow:var(--x-deep)!important;position:relative;z-index:1}
+body[data-workspace-page="room"] .mail.on,body[data-workspace-page="room"] .rm-row.on{background:#fff!important;box-shadow:var(--x-deep)!important;border-radius:14px;position:relative;z-index:1}
+/* Today calendar blocks: no coloured side bars, no teal hover ring */
+body[data-workspace-page="today"] .blk,body[data-workspace-page="today"] .ev{border-left:0!important;border-radius:10px!important}
+body[data-workspace-page="today"] .blk:hover,body[data-workspace-page="today"] .ev:hover{box-shadow:0 2px 6px rgba(0,0,0,.08),0 8px 20px rgba(0,0,0,.12)!important}
+body[data-workspace-page="today"] .safe i{display:none!important}
+.hub .hub-trustline i{box-shadow:none!important}
+.hub .hub-eyebrow{color:var(--x-teal)!important}
+
+/* folder colours (email) — tints with dark text, name always shown */
+.fc-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:8px;padding:3px 9px;white-space:nowrap;line-height:1.3}
+.fc-chip i{width:7px;height:7px;border-radius:50%;flex:none}
+body[data-workspace-page="room"] .rm-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}

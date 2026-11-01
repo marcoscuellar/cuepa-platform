@@ -254,7 +254,7 @@ const log=[];function did(text,state){log.unshift({at:new Date(),text,state});}
 $('look').onclick=()=>{const dark=document.documentElement.dataset.look!=='dark';if(dark)document.documentElement.dataset.look='dark';else delete document.documentElement.dataset.look;try{localStorage.setItem('cuepa_look',dark?'dark':'light')}catch(e){}};
 /* header */
 const now=new Date();const h=now.getHours();
-$('date').textContent=now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+$('date').textContent='Your day'; // the date is the headline below
 $('hi').textContent=now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'}); // The Room greets; Today is about the date
 $('sform').addEventListener('submit',e=>{e.preventDefault();const q=$('q').value.trim();location.href='/'+WS+'/inbox'+(q?'?q='+encodeURIComponent(q):'');});
 document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('q').focus();}});

@@ -128,27 +128,29 @@ function page(ws, name) {
   const N = esc(name);
   return workspaceUI.apply(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>Inbox · ${N} · CUEPA</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
-:root{--ink:#000;--grey:#595959;--fill:#F5F6F6;--teal:#0F766E;--tint:#EDF7F5;--sh:0 1px 2px rgba(0,0,0,.06),0 6px 24px rgba(0,0,0,.07);--sh-sm:0 1px 2px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.06)}
+:root{--ink:#000;--grey:#595959;--fill:#F5F6F6;--teal:#0F766E;--tint:#EDF7F5;--sh:0 1px 2px rgba(0,0,0,.04),0 16px 48px rgba(0,0,0,.08);--sh-sm:0 1px 2px rgba(0,0,0,.08),0 2px 8px rgba(0,0,0,.06)}
 *{box-sizing:border-box}[hidden]{display:none!important}
 body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01"}
 .ib{max-width:1440px;margin:0 auto;padding:32px 40px 48px;display:grid;gap:20px}
 /* buttons */
-.ib button,.ib-dlg button,.ib-btn{font:600 14px/1 Inter,Arial,sans-serif;border:0;border-radius:6px;height:40px;padding:0 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap;transition:background .15s,box-shadow .15s}
-.ib-primary{background:var(--teal)!important;color:#fff!important;box-shadow:0 1px 2px rgba(0,0,0,.12),0 4px 14px rgba(0,0,0,.10)}
+.ib button,.ib-dlg button,.ib-btn{font:600 14.5px/1 Inter,Arial,sans-serif;border:0;border-radius:12px;height:44px;padding:0 18px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap;transition:background .15s,box-shadow .15s}
+.ib-primary{background:var(--teal)!important;color:#fff!important;box-shadow:none}
 .ib-primary:hover{background:#0c645d!important}
-.ib-quiet{background:#fff;color:var(--ink);box-shadow:var(--sh-sm)}
-.ib-quiet:hover{background:var(--fill)}
+.ib-quiet{background:#F3F4F3;color:var(--ink);box-shadow:none}
+.ib-quiet:hover{background:#E8EAE9}
 .ib-text{background:transparent;color:var(--grey);padding:0 10px!important}
 .ib-text:hover{background:var(--fill);color:var(--ink)}
-.ib-select{font:600 14px Inter,Arial,sans-serif;height:40px;border:0;border-radius:6px;padding:0 34px 0 14px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23000' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 13px center;-webkit-appearance:none;appearance:none;color:var(--ink);box-shadow:var(--sh-sm)!important;cursor:pointer}
+.ib-select{font:600 14px Inter,Arial,sans-serif;height:44px;border:0;border-radius:12px;padding:0 34px 0 14px;background:#F3F4F3 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23000' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 13px center;-webkit-appearance:none;appearance:none;color:var(--ink);box-shadow:none!important;cursor:pointer}
 /* toolbar */
 .ib-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:24px}
 .ib-title{display:flex;align-items:baseline;gap:14px;min-width:0}
-.ib-title h1{margin:0;font-size:30px;font-weight:700;letter-spacing:-.025em;line-height:1.1}
+.ib-title h1{margin:0;font-size:38px;font-weight:800;letter-spacing:-.035em;line-height:1.05}
+.ib-title h1 .dot{color:var(--teal)}
+.ib-eyebrow{display:block;font:600 11px 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
 .ib-count{color:var(--grey);font-size:15px;white-space:nowrap}
-.ib-search{justify-self:end;display:flex;align-items:center;gap:10px;background:var(--fill);border-radius:6px;padding:0 14px;height:40px;width:min(380px,100%)}
+.ib-search{justify-self:end;display:flex;align-items:center;gap:10px;background:#fff;box-shadow:0 2px 9px rgba(0,0,0,.10);border-radius:12px;padding:0 14px;height:46px;width:min(380px,100%)}
 .ib-search svg{width:16px;height:16px;stroke:var(--grey);fill:none;stroke-width:2;flex:none}
 .ib-search input{flex:1;min-width:0;height:100%;border:0;background:transparent!important;box-shadow:none!important;font:15px Inter,Arial,sans-serif;color:var(--ink);outline:none;padding:0}
 .ib-search kbd{font:500 12px Inter,Arial,sans-serif;color:var(--grey)}
@@ -159,22 +161,23 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-tabs button[aria-current="true"]{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--teal);border-radius:0;background:transparent}
 .ib-tabs .add{margin-left:auto}
 /* banner + toast */
-.ib-banner{padding:12px 16px;border-radius:6px;font-size:14px;font-weight:500;box-shadow:var(--sh-sm)}
+.ib-banner{padding:14px 18px;border-radius:14px;font-size:14px;font-weight:500;box-shadow:var(--sh-sm)}
 .ib-banner.ok{background:var(--tint);color:#0b4f49;box-shadow:none}
 .ib-banner.bad{background:#fff;color:var(--ink)}
 .ib-banner a{color:var(--teal);font-weight:600;margin-left:6px}
-.ib-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#000;color:#fff;border-radius:6px;padding:10px 10px 10px 18px;display:flex;gap:14px;align-items:center;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:14px}
+.ib-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#000;color:#fff;border-radius:14px;padding:10px 10px 10px 18px;display:flex;gap:14px;align-items:center;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:14px}
 .ib-toast button{height:34px!important;background:#fff!important;color:#000!important;padding:0 14px!important}
 /* panes */
 .ib-panes{display:grid;grid-template-columns:minmax(340px,5fr) minmax(0,7fr);gap:24px;align-items:stretch;height:max(560px,calc(100dvh - 300px))}
-.ib-pane{background:#fff;border-radius:8px;box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.ib-pane{background:#fff;border-radius:20px;box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;min-height:0}
 .ib-listhead{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 12px 24px;color:var(--grey);font-size:13px}
 .ib-list{overflow:auto;padding:0;flex:1;box-shadow:inset 0 1px 0 #EFEFEF}
 .ib-row{display:grid;grid-template-columns:8px 36px minmax(0,1fr);gap:12px;align-items:start;padding:14px 24px 14px 4px;border-radius:0;cursor:pointer;position:relative}
 .ib-row+.ib-row::before{content:"";position:absolute;top:0;left:72px;right:24px;height:1px;background:#EFEFEF}
 .ib-row:hover{background:var(--fill)}
 .ib-row:hover::before,.ib-row:hover+.ib-row::before,.ib-row.on::before,.ib-row.on+.ib-row::before{background:transparent}
-.ib-row.on{background:var(--tint);box-shadow:inset 3px 0 0 var(--teal)}
+.ib-row.on{background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08),0 18px 48px rgba(0,0,0,.18);border-radius:14px;z-index:1}
+.ib-row.on::before,.ib-row.on+.ib-row::before{background:transparent!important}
 .ib-dot{width:8px;height:8px;border-radius:50%;margin-top:14px}
 .ib-row.unread .ib-dot{background:var(--teal)}
 .ib-av{width:36px;height:36px;border-radius:50%;background:#F0F0F0;color:#000;display:grid;place-items:center;font:600 14px Inter,Arial,sans-serif;flex:none}
@@ -185,14 +188,24 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-subj{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
 .ib-row.unread .ib-subj{font-weight:600}
 .ib-snip{color:var(--grey);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.ib-tag{font-size:11.5px;font-weight:500;color:var(--teal);background:var(--tint);border-radius:4px;padding:1px 7px;margin-left:8px}
+.ib-tag{display:none}
+.fc-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:8px;padding:3px 9px;white-space:nowrap;line-height:1.3}
+.fc-chip i{width:7px;height:7px;border-radius:50%;flex:none}
+.ib-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.ib-tabs button i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.ib-actions .ib-expand{margin-left:auto}
+body.focus .ib-panes{grid-template-columns:1fr}
+body.focus .ib-panes>.ib-pane:first-child{display:none}
+body.focus .ib-read{max-width:900px;margin:0 auto;padding:48px 56px 64px}
+body.focus .ib-body{font-size:17px;line-height:1.75}
+@media (max-width:900px){.ib-expand{display:none!important}}
 .ib-none{color:var(--grey);text-align:center;padding:64px 24px;font-size:14.5px}
 .ib-none .ib-btn{margin-top:16px}
 /* reader — the hero */
 .ib-reader{overflow:auto}
 .ib-read{padding:36px 44px 44px;display:grid;gap:24px;max-width:860px}
 .ib-back{display:none!important}
-.ib-subject{margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.2;text-wrap:balance}
+.ib-subject{margin:0;font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.2;text-wrap:balance}
 .ib-from{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:14px;align-items:center}
 .ib-from .ib-av{width:44px;height:44px;background:#000;color:#fff;font-size:16px}
 .ib-from b{font-weight:600}
@@ -200,28 +213,28 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-to{color:var(--grey);font-size:13.5px;margin-top:2px;overflow-wrap:anywhere}
 .ib-from time{color:var(--grey);font-size:13.5px;white-space:nowrap;align-self:start;padding-top:2px}
 .ib-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.ib-actions .ib-del{margin-left:auto}
+.ib-actions .ib-del{margin-left:0}
 .ib-body{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.7;max-width:66ch;padding-top:4px}
 .ib-note{margin:0;color:var(--grey);font-size:13px}
 .ib-reader .ib-none{display:grid;place-items:center;height:100%;padding:24px}
 /* connect */
-.ib-connect{max-width:520px;margin:48px auto;background:#fff;border-radius:8px;box-shadow:var(--sh);padding:40px;display:grid;gap:20px}
-.ib-connect h1{margin:0;font-size:30px;font-weight:700;letter-spacing:-.025em;line-height:1.15}
+.ib-connect{max-width:560px;margin:48px auto;background:#fff;border-radius:24px;box-shadow:var(--sh);padding:40px;display:grid;gap:20px}
+.ib-connect h1{margin:0;font-size:38px;font-weight:800;letter-spacing:-.035em;line-height:1.15}
 .ib-connect ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
 .ib-connect li{display:grid;grid-template-columns:22px 1fr;gap:8px}
 .ib-connect li::before{content:"✓";color:var(--teal);font-weight:700}
 .ib-connect p{margin:0;color:var(--grey);font-size:13.5px}
-.ib-connect .ib-btn{height:48px;font-size:15px}
+.ib-connect .ib-btn{height:50px;font-size:15px}
 /* compose */
-.ib-dlg{border:0;border-radius:8px;padding:0;width:min(640px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.28)}
+.ib-dlg{border:0;border-radius:24px;padding:0;width:min(640px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.28)}
 .ib-dlg::backdrop{background:rgba(0,0,0,.4)}
 .ib-dlg form{display:grid;gap:12px;padding:28px}
-.ib-dlg h2{margin:0 0 6px;font-size:22px;font-weight:700;letter-spacing:-.02em}
-.ib-field{display:grid;grid-template-columns:72px minmax(0,1fr);align-items:center;background:var(--fill);border-radius:6px;padding:0 14px}
+.ib-dlg h2{margin:0 0 6px;font-size:26px;font-weight:800;letter-spacing:-.03em}
+.ib-field{display:grid;grid-template-columns:72px minmax(0,1fr);align-items:center;background:#fff;box-shadow:0 2px 9px rgba(0,0,0,.10);border-radius:12px;padding:0 14px}
 .ib-field label{color:var(--grey);font-size:14px}
 .ib-field input{border:0;background:transparent!important;box-shadow:none!important;font:15px Inter,Arial,sans-serif;color:var(--ink);padding:12px 0;outline:none;min-width:0}
 .ib-field:focus-within{box-shadow:inset 0 0 0 2px var(--teal)}
-.ib-dlg textarea{border:0;background:var(--fill);box-shadow:none!important;border-radius:6px;padding:14px;font:16px/1.6 Inter,Arial,sans-serif;color:var(--ink);min-height:240px;resize:vertical;outline:none;width:100%}
+.ib-dlg textarea{border:0;background:#fff;box-shadow:0 2px 9px rgba(0,0,0,.10)!important;border-radius:12px;padding:14px;font:16px/1.6 Inter,Arial,sans-serif;color:var(--ink);min-height:240px;resize:vertical;outline:none;width:100%}
 .ib-dlg textarea:focus{box-shadow:inset 0 0 0 2px var(--teal)!important}
 .ib-dlg textarea:focus-visible,.ib-field input:focus-visible{outline:none!important}
 .ib-err{color:var(--ink);font-weight:600;font-size:13.5px;min-height:1.2em;margin:0}
@@ -248,15 +261,15 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
   <div id="banner" class="ib-banner" role="status" hidden></div>
 
   <section id="connect" class="ib-connect" hidden>
-    <h1>Bring your email into CUEPA</h1>
+    <span class="ib-eyebrow">Email · about 1 minute</span><h1>Bring your email into CUEPA<span class="dot" style="color:var(--teal)">.</span></h1>
     <ul><li>Read your email right here</li><li>Reply and send from your own address</li><li>Sort into folders and delete, synced with Gmail</li><li>CUEPA never sees your password</li></ul>
-    <a class="ib-btn ib-primary" href="/api/gmail?action=start&ws=${encodeURIComponent(ws)}">Connect Gmail</a>
+    <a class="ib-btn ib-primary" href="/api/gmail?action=start&ws=${encodeURIComponent(ws)}">Connect Gmail →</a>
     <p>Google will ask you to allow reading and sending. If Google shows a warning you aren't sure about, stop and contact CUEPA before continuing. You can disconnect anytime.</p>
   </section>
 
   <div id="app" hidden style="display:grid;gap:20px">
     <div class="ib-top">
-      <div class="ib-title"><h1 id="qtitle">Inbox</h1><span class="ib-count" id="count"></span></div>
+      <div class="ib-title-wrap"><span class="ib-eyebrow">Your email</span><div class="ib-title"><h1><span id="qtitle">Inbox</span><span class="dot">.</span></h1><span class="ib-count" id="count"></span></div></div>
       <form class="ib-search" id="sform" role="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" placeholder="Search your email" aria-label="Search your email"><kbd>⌘K</kbd></form>
       <button class="ib-primary" id="new" type="button">New email</button>
     </div>
@@ -280,6 +293,7 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
   <p class="ib-err" id="err" role="alert"></p>
   <div class="ib-dacts"><span class="ib-from-lab" id="fromLab"></span><button type="button" class="ib-quiet" id="cancel">Cancel</button><button class="ib-primary" id="sendBtn" title="Send (Ctrl or ⌘ + Enter)">Send</button></div>
 </form></dialog>
+<script src="/assets/folder-colors.js"></script>
 <script>
 const WS=${JSON.stringify(ws)};
 const $=id=>document.getElementById(id);
@@ -312,10 +326,11 @@ if(p==='failed')banner('Google could not connect. Try again, or contact CUEPA.')
 if(p==='unavailable')banner('Email can’t be connected on this version of the hub. Use app.makingcuepa.com, or contact CUEPA.');
 if(p||OPEN_ID)history.replaceState(null,'',location.pathname);
 
-async function loadLabels(){try{labels=(await api('labels')).labels;}catch(e){labels=[{id:'INBOX',name:'Inbox'},{id:'SENT',name:'Sent'},{id:'TRASH',name:'Trash'}];}renderFolders();}
-function renderFolders(){$('folders').innerHTML=labels.map(l=>'<button type="button" data-f="'+esc(l.id)+'"'+(l.id===folder&&!query?' aria-current="true"':'')+'>'+esc(l.name)+'</button>').join('')+'<button type="button" class="add" data-add="1">New folder</button>';}
+async function loadLabels(){try{labels=(await api('labels')).labels;}catch(e){labels=[{id:'INBOX',name:'Inbox'},{id:'SENT',name:'Sent'},{id:'TRASH',name:'Trash'}];}CuepaFolders.assign(labels);renderFolders();}
+const isUserFolder=l=>!/^(INBOX|SENT|TRASH|SPAM|STARRED|IMPORTANT|UNREAD|DRAFT)$/.test(l.id);
+function renderFolders(){$('folders').innerHTML=labels.map(l=>'<button type="button" data-f="'+esc(l.id)+'"'+(l.id===folder&&!query?' aria-current="true"':'')+'>'+(isUserFolder(l)?'<i style="background:'+CuepaFolders.colorFor(l).dot+'" aria-hidden="true"></i>':'')+esc(l.name)+'</button>').join('')+'<button type="button" class="add" data-add="1">New folder</button>';}
 $('folders').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.add){const name=prompt('Name the new folder');if(!name)return;try{const r=await post('label-create',{name});labels.splice(labels.length-1,0,r.label);folder=r.label.id;query='';$('q').value='';renderFolders();load();}catch(err){banner(err.message);}return;}
+  if(b.dataset.add){const name=prompt('Name the new folder');if(!name)return;try{const r=await post('label-create',{name});labels.splice(labels.length-1,0,r.label);CuepaFolders.assign(labels);folder=r.label.id;query='';$('q').value='';renderFolders();load();}catch(err){banner(err.message);}return;}
   folder=b.dataset.f;query='';$('q').value='';renderFolders();closeReader();load();});
 
 function renderTop(){
@@ -329,8 +344,8 @@ function renderList(){
   renderTop();
   const fname=labelName(folder)||'Inbox';
   if(!msgs.length){$('list').innerHTML='<div class="ib-none">'+(query?'No emails match that search.':folder==='TRASH'?'Trash is empty.':folder==='SENT'?'Nothing sent yet.':fname==='Inbox'?'Your inbox is empty.':'Nothing in '+esc(fname)+' yet.')+'</div>';return;}
-  $('list').innerHTML=msgs.map((m,i)=>{const who=rowWho(m);const tags=query&&m.labels?m.labels.filter(l=>labelName(l)&&l!=='INBOX').map(l=>'<span class="ib-tag">'+esc(labelName(l))+'</span>').join(''):'';
-    return '<div class="ib-row'+(m.unread?' unread':'')+(i===current?' on':'')+'" role="button" tabindex="0" data-i="'+i+'"><span class="ib-dot" aria-hidden="true"></span><span class="ib-av" aria-hidden="true">'+esc(initial(who))+'</span><div style="min-width:0"><div class="ib-r1"><span class="ib-name">'+(who===m.to&&who!==m.from?'To ':'')+esc(nameOf(who))+tags+'</span><time>'+esc(when(m.date))+'</time></div><div class="ib-subj">'+esc(m.subject||'(no subject)')+'</div><div class="ib-snip">'+esc(m.snippet)+'</div></div></div>';}).join('');
+  $('list').innerHTML=msgs.map((m,i)=>{const who=rowWho(m);const fs=CuepaFolders.foldersOf(m,labels,folder);const tags=fs.length?'<div class="ib-chips">'+fs.map(CuepaFolders.chip).join('')+'</div>':'';const avs=CuepaFolders.avatarStyle(fs[0]);
+    return '<div class="ib-row'+(m.unread?' unread':'')+(i===current?' on':'')+'" role="button" tabindex="0" data-i="'+i+'"><span class="ib-dot" aria-hidden="true"></span><span class="ib-av" aria-hidden="true"'+avs+'>'+esc(initial(who))+'</span><div style="min-width:0"><div class="ib-r1"><span class="ib-name">'+(who===m.to&&who!==m.from?'To ':'')+esc(nameOf(who))+'</span><time>'+esc(when(m.date))+'</time></div><div class="ib-subj">'+esc(m.subject||'(no subject)')+'</div><div class="ib-snip">'+esc(m.snippet)+'</div>'+tags+'</div></div>';}).join('');
 }
 async function load(fetchNew=true){
   if(!fetchNew){renderList();return;}
@@ -339,7 +354,7 @@ async function load(fetchNew=true){
     if(deepLink){const id=deepLink;deepLink=null;let i=msgs.findIndex(m=>m.id===id);if(i<0){msgs.unshift({id,from:'',subject:'',snippet:'',date:'',unread:false});renderList();i=0;}await open(i);if(OPEN_REPLY&&$('reply'))$('reply').click();}}
   catch(e){$('list').innerHTML=errBox(e.message);}
 }
-function closeReader(){document.body.classList.remove('reading');current=-1;$('view').innerHTML=EMPTY_READER;document.querySelectorAll('.ib-row.on').forEach(x=>x.classList.remove('on'));}
+function closeReader(){document.body.classList.remove('reading','focus');current=-1;$('view').innerHTML=EMPTY_READER;document.querySelectorAll('.ib-row.on').forEach(x=>x.classList.remove('on'));}
 function moveOptions(){return labels.filter(l=>l.id!==folder&&l.id!=='TRASH'&&l.id!=='SENT').map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name)+'</option>').join('');}
 async function doMove(i,label){const m=msgs[i];if(!m||!label)return;const from=folder;try{await post('move',{id:m.id,label});msgs.splice(i,1);closeReader();renderList();toast('Moved to '+labelName(label)+'.',()=>post('move',{id:m.id,label:from}));}catch(e){banner(e.message);}}
 async function doTrash(i){const m=msgs[i];if(!m)return;try{await post('trash',{id:m.id});msgs.splice(i,1);closeReader();renderList();toast('Deleted. It stays in Trash for 30 days.',()=>post('untrash',{id:m.id}));}catch(e){banner(e.message);}}
@@ -353,14 +368,15 @@ async function open(i){const m0=msgs[i];if(!m0)return;current=i;
     const trash=folder==='TRASH';
     $('view').innerHTML='<div class="ib-read">'
       +'<button type="button" class="ib-quiet ib-back" id="mback">Back to '+esc(labelName(folder)||'Inbox')+'</button>'
-      +'<h2 class="ib-subject">'+esc(m.subject||'(no subject)')+'</h2>'
-      +'<div class="ib-from"><span class="ib-av" aria-hidden="true">'+esc(initial(m.from))+'</span><div style="min-width:0"><b>'+esc(nameOf(m.from))+'</b><span class="ib-addr">'+esc(addrOf(m.from))+'</span><div class="ib-to">To '+esc(m.to)+(m.cc?'<br>Cc '+esc(m.cc):'')+'</div></div><time>'+esc(longWhen(m.date))+'</time></div>'
-      +'<div class="ib-actions">'+(trash?'<button type="button" class="ib-primary" id="restore">Restore to inbox</button>':'<button type="button" class="ib-primary" id="reply">Reply</button><button type="button" class="ib-quiet" id="replyAll">Reply all</button>'+(moveOptions()?'<select class="ib-select" id="sideMove" aria-label="Move to folder"><option value="">Move to…</option>'+moveOptions()+'</select>':'')+'<button type="button" class="ib-quiet ib-del" id="sideDel">Delete</button>')+'</div>'
+      +'<div><h2 class="ib-subject">'+esc(m.subject||'(no subject)')+'</h2>'+(()=>{const fs=CuepaFolders.foldersOf(m,labels,'');return fs.length?'<div class="ib-chips" style="margin-top:10px">'+fs.map(CuepaFolders.chip).join('')+'</div>':'';})()+'</div>'
+      +'<div class="ib-from"><span class="ib-av" aria-hidden="true"'+CuepaFolders.avatarStyle(CuepaFolders.foldersOf(m,labels,'')[0])+'>'+esc(initial(m.from))+'</span><div style="min-width:0"><b>'+esc(nameOf(m.from))+'</b><span class="ib-addr">'+esc(addrOf(m.from))+'</span><div class="ib-to">To '+esc(m.to)+(m.cc?'<br>Cc '+esc(m.cc):'')+'</div></div><time>'+esc(longWhen(m.date))+'</time></div>'
+      +'<div class="ib-actions">'+(trash?'<button type="button" class="ib-primary" id="restore">Restore to inbox</button>':'<button type="button" class="ib-primary" id="reply">Reply</button><button type="button" class="ib-quiet" id="replyAll">Reply all</button>'+(moveOptions()?'<select class="ib-select" id="sideMove" aria-label="Move to folder"><option value="">Move to…</option>'+moveOptions()+'</select>':'')+'<button type="button" class="ib-quiet ib-del" id="sideDel">Delete</button>')+'<button type="button" class="ib-quiet ib-expand" id="expand" aria-pressed="'+document.body.classList.contains('focus')+'">'+(document.body.classList.contains('focus')?'Back to list':'Expand')+'</button>'+'</div>'
       +'<div class="ib-body">'+esc(m.body||m.snippet)+'</div>'
       +(trash?'':'<p class="ib-note">Replies go out from '+esc(me)+'. Nothing sends until you press Send.</p>')
       +'</div>';
     $('reader').scrollTop=0;
     $('mback').onclick=closeReader;
+    $('expand').onclick=()=>{const on=document.body.classList.toggle('focus');$('expand').textContent=on?'Back to list':'Expand';$('expand').setAttribute('aria-pressed',on);$('reader').scrollTop=0;};
     if(trash){$('restore').onclick=()=>doRestore(i);return;}
     const list=v=>String(v||'').split(',').map(x=>addrOf(x)).filter(Boolean);
     const primary=isMe(m.from)?list(m.to):list(m.replyTo||m.from);
@@ -377,7 +393,7 @@ $('list').addEventListener('keydown',e=>{const r=e.target.closest('.ib-row');if(
   if(e.key==='Enter'||e.key===' '){e.preventDefault();open(+r.dataset.i);}
   if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const n=r[e.key==='ArrowDown'?'nextElementSibling':'previousElementSibling'];if(n)n.focus();}});
 $('sform').addEventListener('submit',e=>{e.preventDefault();query=$('q').value.trim();renderFolders();closeReader();load();});
-document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('q').focus();}if(e.key==='Escape'&&document.body.classList.contains('reading')&&!$('dlg').open)closeReader();});
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('q').focus();}if(e.key==='Escape'&&!$('dlg').open){if(document.body.classList.contains('focus')){document.body.classList.remove('focus');const x=$('expand');if(x){x.textContent='Expand';x.setAttribute('aria-pressed','false');}}else if(document.body.classList.contains('reading'))closeReader();}});
 $('refresh').onclick=()=>{closeReader();load();};
 
 let draft={};
