@@ -413,6 +413,26 @@ body[data-workspace-page="today"] .safe i{display:none!important}
 .fc-chip i{width:7px;height:7px;border-radius:50%;flex:none}
 body[data-workspace-page="room"] .rm-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 
+/* The Room: Needs you · Inbox · Your day sit on ONE connected surface (not three islands).
+   One white card, one soft shadow, equal heights, a hairline where the panels meet. */
+body[data-workspace-page="room"] .shell{gap:0!important;align-items:stretch!important;background:#fff;border-radius:var(--x-r,18px);box-shadow:var(--x-sh);overflow:hidden}
+body[data-workspace-page="room"] .shell>*{min-width:0}
+body[data-workspace-page="room"] .priorities-column,body[data-workspace-page="room"] .schedule-column{gap:0!important}
+body[data-workspace-page="room"] .priorities-column>*,body[data-workspace-page="room"] .schedule-column>*,body[data-workspace-page="room"] .shell>.panel{box-shadow:none!important;border-radius:0!important;background:transparent!important;margin:0!important}
+body[data-workspace-page="room"] .needsec,body[data-workspace-page="room"] .schedule-column>.agenda{flex:1 1 auto}
+body[data-workspace-page="room"] .shell>.panel{min-height:0!important}
+body[data-workspace-page="room"] .shell>.panel{box-shadow:inset 1px 0 0 var(--x-rule),inset -1px 0 0 var(--x-rule)!important}
+/* the footer line of each panel sits on the same bottom edge */
+body[data-workspace-page="room"] .needsec .ontrack{margin-top:auto!important}
+@media(max-width:1150px){
+  body[data-workspace-page="room"] .shell>.panel{box-shadow:inset 1px 0 0 var(--x-rule)!important}
+  body[data-workspace-page="room"] .schedule-column{display:flex!important;flex-direction:column;box-shadow:inset 0 1px 0 var(--x-rule)}
+}
+@media(max-width:720px){
+  body[data-workspace-page="room"] .shell>.panel,body[data-workspace-page="room"] .schedule-column{box-shadow:inset 0 1px 0 var(--x-rule)!important}
+}
+/* the Ask CUEPA button never sits on top of the last row */
+body[data-workspace-page] main,body[data-workspace-page] .workspace{padding-bottom:96px!important}
 /* ---------- Today: no number boxes, one surface (Nov 1, Marcos) ----------
    What needs you · Today in one view · Why this is here sit on ONE white card with one shadow.
    Thin rules mark where the panels meet. No islands. */

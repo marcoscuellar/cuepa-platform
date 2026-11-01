@@ -17,7 +17,7 @@
   function healthText(s) {
     var absent = missing(s);
     if (absent.length) return 'Not fully checked · ' + absent.join(', ') + ' unavailable or not connected.';
-    return s.needs.length ? 'Connected sources checked. ' + s.needs.length + ' attention items found.' : 'No known attention items from the connected sources.';
+    return s.needs.length ? 'Connected sources checked. ' + s.needs.length + (s.needs.length === 1 ? ' item needs you.' : ' items need you.') : 'No known attention items from the connected sources.';
   }
   function assistantReply(question, s, events, mode) {
     if (mode === 'ideas') return 'Let’s structure this outcome: “' + question + '”\n\n1. What would success look like?\n2. Who benefits, and who owns the next step?\n3. What is the smallest experiment you could run?\n4. What evidence would tell you to continue or stop?\n\nThis is a worksheet, not an AI recommendation.';
