@@ -138,8 +138,8 @@
     }).join('') : '<div class="empty">No known decisions from the sources available.</div>';
 
     $('health').textContent = model.healthText(S);
-    renderAgenda(calOk, todays);
-    renderTrack(tc, unread, calOk, mailOk, todays);
+    renderAgenda(calOk, calOk ? eventsOn(selDay()) : []);
+    if ($('track')) renderTrack(tc, unread, calOk, mailOk, todays);
     renderWeek(calOk);
     var editing = $('panel').contains(document.activeElement) && /^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName);
     if (!editing) renderPanel();
@@ -176,29 +176,17 @@
     $('track').innerHTML = html;
   }
 
+  function selDay() { return S.day == null ? TODAY_I : S.day; }
   function renderWeek(calOk) {
-    var names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], html = '';
+    var names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], sel = selDay(), html = '';
+    if (!calOk) { $('days').innerHTML = ''; $('dayOpen').innerHTML = ''; return; }
     for (var i = 0; i < 7; i++) {
-      var evs = calOk ? eventsOn(i) : [], cls = 'day' + (i < TODAY_I ? ' past' : '') + (i === TODAY_I ? ' today' : '') + (S.day === i ? ' sel' : '');
-      html += '<div class="' + cls + '"><button class="dh" data-day="' + i + '" aria-label="Open ' + names[i] + '" aria-expanded="' + (S.day === i) + '"><span>' + names[i] + '</span><span>' + (i === TODAY_I ? 'Today' : i < TODAY_I ? '✓' : '') + '</span></button>' +
-        evs.slice(0, 3).map(function (e) { var k = kind(e); return '<button class="ev ' + k + '" data-day="' + i + '"><small>' + KLAB[k] + '</small>' + esc(e.title) + '</button>'; }).join('') +
-        (evs.length > 3 ? '<span class="more">+' + (evs.length - 3) + ' more</span>' : '') + '</div>';
+      var d = new Date(WEEK0); d.setDate(d.getDate() + i);
+      var n = eventsOn(i).length;
+      html += '<button class="dstrip' + (i === TODAY_I ? ' today' : '') + (i === sel ? ' sel' : '') + '" data-day="' + i + '" aria-pressed="' + (i === sel) + '" aria-label="' + esc(d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })) + ', ' + plural(n, 'event') + '">' +
+        '<span>' + names[i] + '</span><b>' + d.getDate() + '</b><i' + (n ? '' : ' class="none"') + ' aria-hidden="true"></i></button>';
     }
-    $('days').innerHTML = html;
-    if (!calOk) { $('dayOpen').innerHTML = '<div class="empty" style="margin-top:12px">' + (S.cal && S.cal.error === 'unavailable' ? 'The calendar isn’t set up on this version of the hub. On app.makingcuepa.com your week fills in here.' : (S.cal && S.cal.error === 'expired' ? 'Your calendar connection expired. ' : 'No calendar connected yet. ') + '<a href="/' + WS + '/hub#connect">Connect it</a> and your week fills in here.') + '</div>'; return; }
-    if (S.day == null) { $('dayOpen').innerHTML = ''; return; }
-    var d = new Date(WEEK0); d.setDate(d.getDate() + S.day);
-    var list = eventsOn(S.day);
-    $('dayOpen').innerHTML = '<div class="dayopen"><div class="top"><div><h3>' + esc(d.toLocaleDateString(undefined, { weekday: 'long' })) + '</h3><span class="meta">' + esc(d.toLocaleDateString(undefined, { month: 'long', day: 'numeric' })) + ' · ' + (list.length ? plural(list.length, 'item') : 'nothing scheduled') + '</span></div>' +
-      '<div style="display:flex;align-items:center"><a class="btn link" href="/' + WS + '/hub#calendar">Open in Calendar</a><button class="x" id="dayClose" aria-label="Close day">✕</button></div></div>' +
-      (list.length ? '<div class="dayitems">' + list.map(function (e) {
-        var s = startOf(e), k = kind(e), rows = [];
-        if (e.location) rows.push(['Where', e.location]); if (e.who && e.who.length) rows.push(['With', e.who.join(', ')]); if (e.calendar) rows.push(['Calendar', e.calendar]);
-        return '<div class="item"><div class="t"><span>' + (isAllDay(e) ? 'All day' : clock(s)) + '</span><b class="' + (k === 'pe' ? 'teal' : '') + '">' + KLAB[k] + '</b></div><h4>' + esc(e.title) + '</h4>' +
-          rows.map(function (r) { return '<div class="r"><span>' + esc(r[0]) + '</span><span style="color:var(--ink)">' + esc(r[1]) + '</span></div>'; }).join('') +
-          (e.link ? '<div class="r"><span></span><a href="' + esc(e.link) + '" target="_blank" rel="noopener">Open in Google Calendar ↗</a></div>' : '') + '</div>';
-      }).join('') + '</div>' : '<div class="empty" style="margin-top:10px">Nothing on the calendar. A clear day.</div>') + '</div>';
-    $('dayClose').onclick = function () { S.day = null; renderWeek(true); };
+    $('days').innerHTML = html; $('dayOpen').innerHTML = '';
   }
 
   function renderPanel() {
@@ -279,10 +267,13 @@
       target.innerHTML = '<div class="empty">' + msg + '</div>' + (calExpired || notConnected ? '<div class="rm-acts" style="margin-top:12px"><a class="btn go" href="/' + WS + '/hub#connect">' + (calExpired ? 'Reconnect calendar' : 'Connect calendar') + '</a></div>' : '');
       return;
     }
+    var sd = new Date(WEEK0); sd.setDate(sd.getDate() + selDay());
+    if ($('agendaH')) $('agendaH').textContent = selDay() === TODAY_I ? 'Your day' : sd.toLocaleDateString(undefined, { weekday: 'long' });
+    if ($('calWhen')) $('calWhen').textContent = sd.toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
     target.innerHTML = (events.length ? events.slice(0, 5).map(function (event) {
       return '<button class="agenda-row" data-meeting="' + esc(event.id) + '"><time>' + esc(isAllDay(event) ? 'All day' : clock(startOf(event))) + '</time><span><b>' + esc(event.title) + '</b><small>' + esc(event.location || event.calendar || 'Calendar event') + '</small></span><span aria-hidden="true">↗</span></button>';
-    }).join('') : '<div class="empty">No events on today’s connected calendars.</div>') +
-      (events.length > 5 ? '<a class="btn link" href="/' + WS + '/today">See all ' + events.length + ' events →</a>' : '') +
+    }).join('') : '<div class="empty">' + (selDay() === TODAY_I ? 'Nothing on your calendar today.' : 'Nothing on ' + sd.toLocaleDateString(undefined, { weekday: 'long' }) + '.') + '</div>') +
+      (events.length > 5 ? '<a class="btn link" href="/' + WS + '/today">See all ' + events.length + ' events →</a>' : '') + '<a class="btn wide" href="/' + WS + '/hub#calendar">Open full calendar <span aria-hidden="true">→</span></a>' +
       (S.followups.length ? '<div class="meeting-followups"><h3 class="eyebrow">Your follow-ups · this session</h3>' + S.followups.map(function (f) { return '<p><b>' + esc(f.title) + '</b><br>' + esc(f.text) + '</p>'; }).join('') + '</div>' : '');
   }
   function openMeeting(id) {
@@ -310,14 +301,14 @@
       var blob = new Blob([text], { type: 'text/plain;charset=utf-8' }), url = URL.createObjectURL(blob), a = document.createElement('a');
       a.href = url; a.download = 'meeting-notes.txt'; a.click(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     };
-    $('followupForm').onsubmit = function (e) { e.preventDefault(); var text = $('meetingFollowup').value.trim(); if (!text) return; S.followups.push({ id: event.id, title: event.title, text: text }); $('meetingFollowup').value = ''; renderAgenda(model.calendarReady(S), eventsOn(TODAY_I)); toast('Follow-up added for this session.'); };
+    $('followupForm').onsubmit = function (e) { e.preventDefault(); var text = $('meetingFollowup').value.trim(); if (!text) return; S.followups.push({ id: event.id, title: event.title, text: text }); $('meetingFollowup').value = ''; renderAgenda(model.calendarReady(S), eventsOn(selDay())); toast('Follow-up added for this session.'); };
   }
 
   $('agenda').addEventListener('click', function (e) { var button = e.target.closest('[data-meeting]'); if (button) openMeeting(button.dataset.meeting); });
 
   /* events */
   $('needs').addEventListener('click', function (e) { var b = e.target.closest('[data-need]'); if (b) pick(b.dataset.need); });
-  $('days').addEventListener('click', function (e) { var b = e.target.closest('[data-day]'); if (!b) return; var i = +b.dataset.day; S.day = S.day === i ? null : i; renderWeek(model.calendarReady(S)); });
+  $('days').addEventListener('click', function (e) { var b = e.target.closest('[data-day]'); if (!b) return; S.day = +b.dataset.day; var ok = model.calendarReady(S); renderWeek(ok); renderAgenda(ok, ok ? eventsOn(selDay()) : []); });
   function openMail(i) {
     var top = S.inbox.filter(function (m) { return m.unread; }).sort(function (a, b) { return (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0); }).slice(0, 6);
     var m = top[i]; if (!m || S.bodies[m.id]) return;
