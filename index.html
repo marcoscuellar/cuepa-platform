@@ -4,7 +4,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Welcome to CUEPA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <style>
 /* Sign-in: same look as the onboarding cards. Inter, one white card, soft shadow, no outlines, light + dark. */
 :root{--bg:#f4f5f4;--card:#ffffff;--soft:#f3f4f3;--ink:#0a0a0a;--ink2:#3c4547;--mute:#6b7575;--line:#e4e7e6;--turq:#2dd4bf;--teal:#0b756a;--tbg:#e3f6f2;--err:#b42318;--shadow:0 1px 2px rgba(10,10,10,.04),0 24px 60px rgba(10,10,10,.10);color-scheme:light}
@@ -53,6 +53,25 @@ h1{font-size:clamp(40px,5.6vw,64px);line-height:1.0}
 .card{width:100%;padding:32px;gap:14px}
 .card .day,.card .sub,.card>h1{display:none}
 @media (max-width:860px){.duo{grid-template-columns:1fr;gap:20px}h1{font-size:clamp(32px,9vw,44px)}}
+
+/* CUEPA v2 (Nov 2026): Inter only, Teal Mark #0F766E only, straight 8px/6px corners, shadows not outlines, sentence case. */
+:root{--turq:#0F766E;--teal:#0F766E;--teal-text:#0F766E;--x-grey:#595959;--x-fill:#F5F6F6;--x-rule:#ECECEC;--x-sh:0 1px 2px rgba(0,0,0,.06),0 4px 18px rgba(0,0,0,.06)}
+html,body{background:#fff!important}
+body,body *{font-family:Inter,'Helvetica Neue',Arial,sans-serif!important}
+body *{text-transform:none!important}
+.eyebrow,.day:not(.card .day),p.day{letter-spacing:0!important;font-size:13px!important;font-weight:500!important;color:var(--x-grey)!important}
+h1{font-weight:700!important;letter-spacing:-.03em!important}
+h1 .dot{display:none!important}
+.card,.summary{border:0!important;border-radius:8px!important;box-shadow:var(--x-sh)!important}
+.mark i+i{background:#0F766E!important}
+.go{background:#0F766E!important;color:#fff!important;border-radius:6px!important;font-weight:600!important}
+.go:hover{background:#0c645d!important}
+input,select,textarea{border:0!important;border-radius:6px!important;background:var(--x-fill)!important}
+input:focus,select:focus,textarea:focus{outline:2px solid #0F766E!important;outline-offset:0}
+:focus-visible{outline:2px solid #0F766E!important}
+.card{width:min(460px,100%)!important;animation:none!important}
+.ok,.err{border-radius:6px!important}
+.brand b{letter-spacing:.06em!important}
 </style></head>
 <body>
 <div class="wrap">

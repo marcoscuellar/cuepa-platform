@@ -255,7 +255,7 @@ $('look').onclick=()=>{const dark=document.documentElement.dataset.look!=='dark'
 /* header */
 const now=new Date();const h=now.getHours();
 $('date').textContent=now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
-$('hi').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', '+(first(OWNER)||'there')+'.';
+$('hi').textContent=now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'}); // The Room greets; Today is about the date
 $('sform').addEventListener('submit',e=>{e.preventDefault();const q=$('q').value.trim();location.href='/'+WS+'/inbox'+(q?'?q='+encodeURIComponent(q):'');});
 document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('q').focus();}});
 
