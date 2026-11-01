@@ -392,3 +392,18 @@ body[data-workspace-page="today"] .search{background:#fff!important;box-shadow:v
 body[data-workspace-page="today"] .need .btn.dark,body[data-workspace-page="today"] .need button.dark{background:var(--x-teal)!important;color:#fff!important}
 @media(max-width:650px){body[data-workspace-page="room"] .hello,body[data-workspace-page="room"] .hello b,body[data-workspace-page="today"] .hello h1,.hub h1,body[data-workspace-page="start"] h1{font-size:30px!important}body[data-workspace-page="room"] .hello{overflow-wrap:anywhere}}
 @media(max-width:380px){body[data-workspace-page="room"] .hello,body[data-workspace-page="room"] .hello b{font-size:26px!important}}
+
+/* ---------- No side lines, no teal glows: emphasis = deep black drop shadow (Nov 1, Marcos) ---------- */
+:root{--x-deep:0 2px 6px rgba(0,0,0,.08),0 18px 48px rgba(0,0,0,.18)}
+/* the Room summary card: deep shadow only */
+body[data-workspace-page="room"] .brief{box-shadow:var(--x-deep)!important;padding-left:var(--x-pad)!important}
+/* selected / highlighted items lift off the page instead of getting a side line */
+body[data-workspace-page="today"] .need.on{background:#fff!important;box-shadow:var(--x-deep)!important;border-radius:var(--x-r)!important;position:relative;z-index:1}
+.hub .hub-step.next{background:#fff!important;box-shadow:var(--x-deep)!important;position:relative;z-index:1}
+body[data-workspace-page="room"] .mail.on,body[data-workspace-page="room"] .rm-row.on{background:#fff!important;box-shadow:var(--x-deep)!important;border-radius:14px;position:relative;z-index:1}
+/* Today calendar blocks: no coloured side bars, no teal hover ring */
+body[data-workspace-page="today"] .blk,body[data-workspace-page="today"] .ev{border-left:0!important;border-radius:10px!important}
+body[data-workspace-page="today"] .blk:hover,body[data-workspace-page="today"] .ev:hover{box-shadow:0 2px 6px rgba(0,0,0,.08),0 8px 20px rgba(0,0,0,.12)!important}
+body[data-workspace-page="today"] .safe i{display:none!important}
+.hub .hub-trustline i{box-shadow:none!important}
+.hub .hub-eyebrow{color:var(--x-teal)!important}

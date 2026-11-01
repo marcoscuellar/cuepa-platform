@@ -176,7 +176,8 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-row+.ib-row::before{content:"";position:absolute;top:0;left:72px;right:24px;height:1px;background:#EFEFEF}
 .ib-row:hover{background:var(--fill)}
 .ib-row:hover::before,.ib-row:hover+.ib-row::before,.ib-row.on::before,.ib-row.on+.ib-row::before{background:transparent}
-.ib-row.on{background:var(--tint);box-shadow:inset 3px 0 0 var(--teal)}
+.ib-row.on{background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08),0 18px 48px rgba(0,0,0,.18);border-radius:14px;z-index:1}
+.ib-row.on::before,.ib-row.on+.ib-row::before{background:transparent!important}
 .ib-dot{width:8px;height:8px;border-radius:50%;margin-top:14px}
 .ib-row.unread .ib-dot{background:var(--teal)}
 .ib-av{width:36px;height:36px;border-radius:50%;background:#F0F0F0;color:#000;display:grid;place-items:center;font:600 14px Inter,Arial,sans-serif;flex:none}
