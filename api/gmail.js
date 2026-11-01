@@ -203,14 +203,14 @@ nav a.on::before{content:"";width:6px;height:6px;border-radius:50%;background:va
 .toast button{background:var(--turq);border-color:var(--turq);color:#04201d;padding:6px 12px}
 .side .fx{display:flex;gap:8px;flex-wrap:wrap}.side .fx select{font:600 13px Inter,sans-serif;border-radius:9px;padding:8px 10px;background:#1d2323;color:#fff;border:1px solid #2a3232}.side .fx .del{background:#1d2323;border-color:#2a3232;color:#ff9a85}
 /* reading panel: black card like "Prepared for you" */
-.side{position:sticky;top:76px;background:var(--ink);color:#fff;border-radius:18px;padding:22px;display:grid;gap:16px;max-height:calc(100vh - 96px);overflow:auto}
-.side .lab{color:#8fa09d}
-.side h3{margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.2;text-wrap:balance}
-.meta{display:grid;grid-template-columns:44px 1fr;gap:4px 10px;font-size:12.5px;border-top:1px solid #262c2c;border-bottom:1px solid #262c2c;padding:12px 0}
-.meta span{color:#8fa09d}.meta div{color:#d6dddc;word-break:break-word}
-.body{white-space:pre-wrap;word-break:break-word;line-height:1.65;color:#eef2f2;font-size:14.5px}
-.side .note{font-size:12.5px;color:#8fa09d}
-.side .empty{color:#8fa09d}
+.side{position:sticky;top:76px;background:#fff;color:var(--ink);border-radius:18px;padding:22px;display:grid;gap:16px;max-height:calc(100vh - 96px);overflow:auto}
+.side .lab{color:var(--mute)}
+.side h3{color:var(--ink);margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.2;text-wrap:balance}
+.meta{display:grid;grid-template-columns:44px 1fr;gap:4px 10px;font-size:12.5px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0}
+.meta span{color:var(--mute)}.meta div{color:var(--dim);word-break:break-word}
+.body{white-space:pre-wrap;word-break:break-word;line-height:1.65;color:var(--ink);font-size:14.5px}
+.side .note{font-size:12.5px;color:var(--mute)}
+.side .empty{color:var(--mute)}
 .mback{display:none!important;background:#1d2323;border-color:#2a3232;color:#fff}
 /* connect */
 .cc{max-width:460px;margin:40px auto;background:var(--ink);color:#fff;border-radius:18px;padding:30px;display:grid;gap:16px;box-shadow:0 28px 60px rgba(0,0,0,.18)}
@@ -231,7 +231,7 @@ dialog textarea{min-height:220px;resize:vertical}
 .dacts{display:flex;gap:8px;justify-content:flex-end;align-items:center}
 .dacts .lab{margin-right:auto}
 @media (max-width:1000px){nav a:not(.on){display:none}.grid{grid-template-columns:1fr}.side{display:none;position:fixed;inset:0;z-index:6;border-radius:0;max-height:none}.shell-reading .side{display:grid}.mback{display:inline-flex!important}}
-@media (max-width:640px){.search{display:none}.brand .lab{display:none}.row .acts button{display:none}.stats{width:100%}.stat{flex:1;min-width:0}}
+@media (max-width:640px){.search{display:none}.brand .lab{display:none}.row .acts button,.row .acts select{display:none}.stats{width:100%}.stat{flex:1;min-width:0}}
 </style></head><body>
 <header class="bar"><div class="bar-in">
   <a class="brand" href="/${W}"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b><span class="lab">${N}</span></a>
