@@ -318,3 +318,25 @@ body[data-workspace-page="room"] .panel{gap:0!important}
 body[data-workspace-page="room"] .rm-head{padding:16px 0 12px!important}
 body[data-workspace-page="room"] .dh,body[data-workspace-page="room"] .dh span{letter-spacing:0!important}
 body[data-workspace-page="room"] .needs .pill{margin-top:8px}
+
+/* ---------- The Room: one calendar card (week strip + the chosen day) ---------- */
+body[data-workspace-page="room"] .cal .weekhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+body[data-workspace-page="room"] .cal .weekhead .soft{display:inline;margin:0}
+body[data-workspace-page="room"] .cal .days{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:0!important;min-width:0!important;margin:14px calc(-1 * var(--x-pad)) 4px;box-shadow:inset 0 -1px 0 var(--x-rule),inset 0 1px 0 var(--x-rule)}
+body[data-workspace-page="room"] .cal .days:empty{display:none!important}
+body[data-workspace-page="room"] .dstrip{all:unset;box-sizing:border-box;cursor:pointer;display:grid;justify-items:center;gap:2px;padding:10px 0 9px;min-height:60px}
+body[data-workspace-page="room"] .dstrip span{font-size:12px;color:var(--x-grey)}
+body[data-workspace-page="room"] .dstrip b{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+body[data-workspace-page="room"] .dstrip i{width:5px;height:5px;border-radius:50%;background:var(--x-teal)}
+body[data-workspace-page="room"] .dstrip i.none{background:transparent}
+body[data-workspace-page="room"] .dstrip:hover{background:var(--x-fill)}
+body[data-workspace-page="room"] .dstrip.today span,body[data-workspace-page="room"] .dstrip.today b{color:var(--x-teal)}
+body[data-workspace-page="room"] .dstrip.sel{box-shadow:inset 0 -2px 0 var(--x-teal)}
+body[data-workspace-page="room"] .dstrip.sel b{color:#000}
+body[data-workspace-page="room"] .dstrip.today.sel b{color:var(--x-teal)}
+body[data-workspace-page="room"] .dstrip:focus-visible{outline:2px solid var(--x-teal)!important;outline-offset:-2px}
+body[data-workspace-page="room"] .cal .btn.wide{margin-top:12px!important}
+body[data-workspace-page="room"] .cal #agenda .empty{margin-top:12px}
+body[data-workspace-page="room"] .need,body[data-workspace-page="room"] .agenda-row{width:calc(100% + 2 * var(--x-pad))!important;max-width:none!important;box-sizing:border-box!important}
+body[data-workspace-page="room"] .panel{height:auto!important;max-height:none!important}
+body[data-workspace-page="room"] .panel{min-height:0!important}

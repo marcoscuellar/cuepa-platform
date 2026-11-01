@@ -58,10 +58,7 @@ function page(ws, wsName, person) {
       <div id="needs" class="needs"></div>
       <div class="ontrack" id="health" role="status">Checking connected sources…</div>
     </section>
-    <section class="track" aria-labelledby="trackH">
-      <h2 class="eyebrow" id="trackH">Business overview</h2>
-      <div id="track"><div class="quiet">Checking…</div></div>
-    </section>
+
 
     </aside>
     <section class="panel card" aria-label="Inbox, details, and assistant">
@@ -73,15 +70,11 @@ function page(ws, wsName, person) {
 
     </section>
     <aside class="schedule-column" aria-label="Your calendar">
-    <section class="card agenda" aria-labelledby="agendaH">
-      <div class="weekhead"><h2 id="agendaH" class="h2">Your day <span class="soft">Prepare before you join</span></h2></div>
+    <section class="card agenda cal" aria-labelledby="agendaH">
+      <div class="weekhead"><h2 id="agendaH" class="h2">Your day</h2><span class="soft" id="calWhen"></span></div>
+      <div class="days" id="days" role="group" aria-label="Pick a day this week"></div>
       <div id="agenda"><p class="quiet">Checking your calendar…</p></div>
-    </section>
-    <section class="card week" aria-labelledby="weekH">
-      <div class="weekhead"><h2 id="weekH" class="h2">Your week <span class="soft">All calendars</span></h2>
-        <div class="legend"><span>▪ Meeting</span><b>! Deadline</b><span class="teal">✦ Event or class</span></div></div>
-      <div class="weekscroll"><div class="days" id="days"></div></div>
-      <div id="dayOpen"></div>
+      <div id="dayOpen" hidden></div>
     </section>
 
     </aside>
