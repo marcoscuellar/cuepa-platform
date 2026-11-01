@@ -363,11 +363,11 @@ $('dayBody').addEventListener('click',e=>{const b=e.target.closest('[data-ev]');
 $('vList').onclick=()=>{S.view='list';try{localStorage.setItem('cuepa_dayview','list')}catch(e){}renderDay();};
 $('vLine').onclick=()=>{S.view='line';try{localStorage.setItem('cuepa_dayview','line')}catch(e){}renderDay();};
 $('resync').onclick=async()=>{await loadCal();render();toast('Calendar resynced.');};
-Promise.all([loadCal(),loadTc(),loadMail()]).then(()=>{
-  // Brand-new person: nothing connected and they haven't skipped onboarding → one card at a time at /<ws>/start.
-  let skipped=false;try{skipped=localStorage.getItem('cuepa_start_'+WS)==='done'}catch(e){skipped=true}
-  const calOk=S.cal&&S.cal.connected&&!S.cal.error, mailOk=S.mail&&S.mail.connected;
-  if(!skipped&&!calOk&&!mailOk){location.replace('/'+WS+'/start');return;}
+Promise.all([loadCal(),loadTc(),loadMail()]).then(async()=>{
+  // First time this person opens the hub → the tour at /<ws>/start, once. Saved per person, not per browser.
+  let seen=false;try{seen=localStorage.getItem('cuepa_start_'+WS)==='done'}catch(e){}
+  if(seen){fetch('/api/auth?action=tour',{method:'POST',credentials:'same-origin'}).catch(()=>{});}
+  else{try{const t=await get('/api/auth?action=tour');if(!t.toured){location.replace('/'+WS+'/start');return;}}catch(e){}}
   render();
 });
 setInterval(()=>{if(!document.hidden)renderDay();},60000);

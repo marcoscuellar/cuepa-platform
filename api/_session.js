@@ -51,6 +51,22 @@ async function saveHash(email, hash) {
   });
 }
 
+// ---- first-time tour: saved per person, so it shows once no matter which browser ----
+function tourKey(email) {
+  return "tours/" + crypto.createHash("sha256").update(String(email).toLowerCase()).digest("hex") + ".json";
+}
+async function hasToured(email) {
+  const { get } = await import("@vercel/blob");
+  const r = await get(tourKey(email), { access: "private", useCache: false });
+  return !!(r && r.statusCode === 200);
+}
+async function markToured(email) {
+  const { put } = await import("@vercel/blob");
+  await put(tourKey(email), JSON.stringify({ at: new Date().toISOString() }), {
+    access: "private", addRandomSuffix: false, allowOverwrite: true, contentType: "application/json"
+  });
+}
+
 // Returns { ok, temp } — temp=true means they're still on the password we sent them.
 async function verify(user, password) {
   const saved = await getSaved(user.email);
@@ -82,4 +98,4 @@ function readSession(req) {
 function canSee(session, ws) { return !!session && (session.ws === "*" || session.ws === ws); }
 function homeOf(ws) { return ws === "*" ? "cirques-experience" : ws; }
 
-module.exports = { findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSession, canSee, homeOf };
+module.exports = { hasToured, markToured, findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSession, canSee, homeOf };
