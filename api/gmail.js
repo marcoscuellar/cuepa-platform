@@ -1,3 +1,4 @@
+const workspaceUI = require('../lib/workspace-ui');
 // /api/gmail — connect Gmail, inbox page, read, send/reply, disconnect.
 // Only someone signed in to the workspace can use it (same rule as the hub).
 const crypto = require('node:crypto');
@@ -72,6 +73,9 @@ module.exports = async (req, res) => {
     if (!allowed(s, ws)) return json(res, 403, { ok: false, error: 'Sign in to use email.' });
 
     if (action === 'start') {
+      const backTo = url.searchParams.get('back') === 'start' ? 'start' : 'inbox';
+      // Not set up here (for example a preview build without the Google settings): send people back to a page, never raw JSON.
+      try { g.config(); } catch (e) { return go(res, `/${ws}/${backTo}?connect=unavailable`); }
       const state = crypto.randomBytes(24).toString('base64url');
       const back = url.searchParams.get('back') === 'start' ? 'start' : 'inbox'; // where Google sends them afterwards
       res.setHeader('Set-Cookie', flowCookie(g.seal({ state, ws, back, exp: Date.now() + 600000 }, 'gmail-flow')));
@@ -119,7 +123,7 @@ function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<'
 
 function page(ws, name) {
   const W = esc(ws), N = esc(name);
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  return workspaceUI.apply(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>Inbox · ${N} · CUEPA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
@@ -307,6 +311,7 @@ if(p==='ok')banner('Email connected. Your inbox is below.',true);
 if(p==='cancelled')banner('Connection cancelled. Nothing was changed.');
 if(p==='scopes')banner('Please allow both "read and manage" and "send" on the Google screen, then connect again.');
 if(p==='failed')banner('Google could not connect. Try again, or contact CUEPA.');
+if(p==='unavailable')banner('Email can’t be connected on this version of the hub. Use app.makingcuepa.com, or contact CUEPA.');
 if(p)history.replaceState(null,'',location.pathname);
 async function init(){
   let st;try{st=await api('status');}catch(e){$('app').hidden=false;$('list').innerHTML='<div class="empty">'+esc(e.message)+'</div>';return;}
@@ -361,5 +366,6 @@ $('form').addEventListener('submit',async e=>{e.preventDefault();$('sendBtn').di
   }catch(err){$('err').textContent=err.message;}finally{$('sendBtn').disabled=false;}
 });
 init();
-</script></body></html>`;
+</script></body></html>`, ws, name, 'inbox');
 }
+

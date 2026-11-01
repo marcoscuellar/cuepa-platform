@@ -1,3 +1,4 @@
+const workspaceUI = require('../lib/workspace-ui');
 // /<ws>/today — the new Today page (White Today layout, light + dark).
 // Same sign-in rule as the hub. All data comes live from /api/google, /api/timecards and /api/gmail in the browser.
 const { readSession, canSee } = require('./_session');
@@ -30,7 +31,7 @@ module.exports = (req, res) => {
 function page(ws, wsName, person) {
   const W = esc(ws), N = esc(wsName), P = esc(person);
   const ini = esc(String(person || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?');
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  return workspaceUI.apply(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>Today · ${N} · CUEPA</title>
 <script>try{if(localStorage.getItem("cuepa_look")==="dark")document.documentElement.dataset.look="dark"}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
@@ -178,7 +179,8 @@ nav a.on .ct{background:var(--turq);color:#04201d}
     <a class="brand" href="/${W}"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b></a>
     <div class="wsbox"><div class="lab">Workspace</div><b>${N}</b></div>
     <nav aria-label="Hub">
-      <a class="on" href="/${W}" aria-current="page">Today<span class="ct" id="nNeeds" hidden></span></a>
+      <a href="/${W}">The Room</a>
+      <a class="on" href="/${W}/today" aria-current="page">Today<span class="ct" id="nNeeds" hidden></span></a>
       <a href="/${W}/inbox">Inbox<span class="ct" id="nUnread" hidden></span></a>
       <a href="/${W}/hub#calendar">Calendar</a>
       <a href="/${W}/hub#timecards">Timecards<span class="ct" id="nTc" hidden></span></a>
@@ -389,5 +391,6 @@ Promise.all([loadCal(),loadTc(),loadMail()]).then(()=>{
   render();
 });
 setInterval(()=>{if(!document.hidden)renderDay();},60000);
-</script></body></html>`;
+</script></body></html>`, ws, wsName, 'today');
 }
+

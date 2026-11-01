@@ -1,3 +1,4 @@
+const workspaceUI = require('../lib/workspace-ui');
 // /<ws>/start — onboarding, one card at a time. Each card does the real thing (connects Gmail, connects
 // Calendar, adds the team) and the home page stays clean. Same sign-in rule as the hub. No sample data.
 const { readSession, canSee } = require('./_session');
@@ -23,7 +24,7 @@ module.exports = (req, res) => {
 
 function page(ws, wsName, person) {
   const W = esc(ws), N = esc(wsName);
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  return workspaceUI.apply(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>Let’s set up your hub · ${N} · CUEPA</title>
 <script>try{if(localStorage.getItem("cuepa_look")==="dark")document.documentElement.dataset.look="dark"}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
@@ -112,6 +113,7 @@ if(q.get('connect')==='ok')S.msg=['ok','Gmail connected.'];
 else if(q.get('connect')==='cancelled')S.msg=['warn','No problem, nothing was connected. You can try again or skip for now.'];
 else if(q.get('connect')==='scopes')S.msg=['warn','Google needs both boxes checked (read and send). Try again and tick both.'];
 else if(q.get('connect')==='failed')S.msg=['warn','Google didn’t finish the connection. Try again in a moment.'];
+else if(q.get('connect')==='unavailable')S.msg=['warn','Email can’t be connected on this version of the hub. Use app.makingcuepa.com, or skip for now.'];
 if(q.get('google')==='cancelled')S.msg=['warn','No problem, nothing was connected. You can try again or skip for now.'];
 else if(q.get('google')==='failed')S.msg=['warn','Google didn’t finish the connection. Try again in a moment.'];
 if(q.has('connect')||q.has('google'))history.replaceState(null,'',location.pathname);
@@ -181,5 +183,6 @@ function render(){
   c.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.dataset.a==='next'){S.step++;render();window.scrollTo({top:0,behavior:'smooth'});}else if(b.dataset.a==='finish')finish();else if(b.dataset.a==='later'){try{localStorage.setItem('cuepa_start_'+WS,'done')}catch(e){}onboarding(false);location.href='/'+WS;}};
 }
 load().catch(()=>render());
-</script></body></html>`;
+</script></body></html>`, ws, wsName, 'start');
 }
+

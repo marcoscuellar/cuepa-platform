@@ -1,3 +1,4 @@
+const workspaceUI = require('../lib/workspace-ui');
 // Serves a client's hub only to someone signed in to that workspace.
 const fs = require("fs");
 const path = require("path");
@@ -63,5 +64,6 @@ module.exports = (req, res) => {
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.setHeader("Cache-Control", "private, no-store");
   res.setHeader("X-Robots-Tag", "noindex, nofollow");
-  res.end(html);
+  res.end(workspaceUI.apply(html, ws, conf.name, 'hub'));
 };
+
