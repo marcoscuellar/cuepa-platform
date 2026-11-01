@@ -202,17 +202,17 @@
     if (S.panel === 'details' && S.meeting) { renderMeeting(); return; }
     if (S.panel === 'inbox') {
       var mailOk = model.mailReady(S);
-      if (!mailOk && S.mail && S.mail.error === 'unavailable') { el.innerHTML = '<h2>Newest unread email</h2><div class="empty">Email isn’t set up on this version of the hub. On app.makingcuepa.com your newest unread emails show here.</div>'; return; }
-      if (S.mail && S.mail.error && S.mail.error !== 'unavailable') { el.innerHTML = '<h2>Newest unread email</h2><div class="empty">Gmail could not be checked. Unread messages are unknown until the connection recovers.</div><a class="btn" href="/' + WS + '/inbox">Open Inbox →</a>'; return; }
-      if (!mailOk) { el.innerHTML = '<h2>Newest unread email</h2><div class="empty">Connect Gmail and your newest unread emails show up here. Nothing sends without you.</div><a class="btn" href="/' + WS + '/inbox">Connect Gmail →</a>'; return; }
+      if (!mailOk && S.mail && S.mail.error === 'unavailable') { el.innerHTML = '<h2>Your inbox</h2><div class="empty">Email isn’t available right now. Open your inbox to check the connection.</div>'; return; }
+      if (S.mail && S.mail.error && S.mail.error !== 'unavailable') { el.innerHTML = '<h2>Your inbox</h2><div class="empty">We couldn’t load your email. Open your inbox to reconnect or try again.</div><a class="btn" href="/' + WS + '/inbox">Open inbox →</a>'; return; }
+      if (!mailOk) { el.innerHTML = '<h2>Your inbox</h2><div class="empty">Connect Gmail to see your messages here. You decide what to send.</div><a class="btn" href="/' + WS + '/inbox">Connect Gmail →</a>'; return; }
       var top = S.inbox.filter(function (m) { return m.unread; }).sort(function (a, b) { return (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0); }).slice(0, 6);
-      el.innerHTML = '<div><h2>Newest unread email</h2><div class="quiet">Newest unread first · top ' + top.length + '</div></div>' +
+      el.innerHTML = '<div><h2>Your inbox</h2><div class="quiet">' + (top.length ? 'Your latest unread messages' : 'You’re up to date') + '</div></div>' +
         (top.length ? top.map(function (m, i) {
           var on = S.mailOpen === i;
           return '<div class="mail lift' + (on ? ' on' : '') + '"><button data-mail="' + i + '" aria-expanded="' + on + '"><span class="n">' + (i + 1) + '</span><span><span class="f"><b>' + esc(fromName(m.from)) + '</b><span>' + esc(m.date ? new Date(m.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '') + '</span></span><span class="s">' + esc(m.subject || '(no subject)') + '</span></span></button>' +
-            (on ? '<div class="o">' + esc(m.snippet) + '<br><a class="btn" href="/' + WS + '/inbox">Reply in Inbox →</a></div>' : '') + '</div>';
-        }).join('') : '<div class="empty">No unread messages in the loaded inbox.</div>') +
-        '<a class="btn wide" href="/' + WS + '/inbox">See inbox <span aria-hidden="true">→</span></a>';
+            (on ? '<div class="o">' + esc(m.snippet) + '<br><a class="btn" href="/' + WS + '/inbox">Open inbox →</a></div>' : '') + '</div>';
+        }).join('') : '<div class="empty">No unread messages in your latest email check.</div>') +
+        '<a class="btn wide" href="/' + WS + '/inbox">View full inbox <span aria-hidden="true">→</span></a>';
       return;
     }
     var x = S.needs.filter(function (n) { return n.id === S.pick; })[0];
