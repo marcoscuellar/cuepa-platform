@@ -21,7 +21,7 @@ test('unknown workspace is not found', () => {
   assert.equal(call(load({ ws: 'nope', name: 'A' }), '/api/room?ws=nope').statusCode, 404);
 });
 test('signed in gets The Room, escaped, with no sample data', () => {
-  const r = call(load({ ws: 'cirques-experience', name: '<b>Chris</b>' }), '/api/room?ws=cirques-experience');
+  const r = call(load({ ws: 'cirques-experience', name: '<b>Chris</b>' }), '/api/room?ws=cirques-experience&room=1');
   assert.equal(r.statusCode, 200);
   assert.match(r.body, /The Room · Cirques Experience/);
   assert.match(r.body, /aria-current="page">.*The Room/);
