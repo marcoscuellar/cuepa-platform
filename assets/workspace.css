@@ -290,3 +290,31 @@ body[data-workspace-page="room"] .rm-acts{display:flex;gap:10px;flex-wrap:wrap}
 body[data-workspace-page="room"] .rm-acts .btn{height:38px;padding:0 16px;display:inline-flex;align-items:center;text-decoration:none}
 body[data-workspace-page="room"] .panel .btn.wide{margin-top:0!important}
 @media(max-width:650px){body[data-workspace-page="room"] .rm-read{padding-left:var(--x-pad)}}
+
+/* ---------- full pass (Nov 1): one rule for notes, no invisible indents ---------- */
+/* Notes and empty states are flat grey blocks with even padding — never a box inside a box. */
+.empty,.hub .hub-last,.hub .hub-warnnote{box-shadow:none!important;background:var(--x-fill)!important;border:0!important;border-radius:var(--x-rs)!important;padding:14px 16px!important;color:#3a3a3a!important;font-size:14px!important;line-height:1.55;text-align:left!important}
+body[data-workspace-page="room"] .ontrack{background:transparent!important;border-radius:0!important;box-shadow:inset 0 1px 0 var(--x-rule)!important;padding:12px 0 0!important;margin-top:8px!important}
+/* small labels above titles line up with the title (old pill padding removed) */
+.hub .hub-eyebrow{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;gap:0!important;margin-bottom:6px}
+/* Room */
+body[data-workspace-page="room"] .soft{display:block;margin-top:2px}
+body[data-workspace-page="room"] .brief h1{max-width:none!important;text-wrap:balance}
+body[data-workspace-page="room"] .ticker .dot{background:var(--x-teal)!important}
+body[data-workspace-page="room"] .ticker .dot.bad{background:transparent!important;box-shadow:inset 0 0 0 1.5px #000}
+body[data-workspace-page="room"] .switch{margin-bottom:8px!important}
+body[data-workspace-page="room"] .rm-head{padding:12px 0!important}
+body[data-workspace-page="room"] .rm-head h2{font-size:15px!important;font-weight:600!important}
+body[data-workspace-page="room"] .rm-list+.btn.wide{box-shadow:none!important}
+body[data-workspace-page="room"] .day .dh{letter-spacing:0!important}
+body[data-workspace-page="room"] .metric .top span{color:var(--x-grey)}
+/* Today: the side panel rows line up at the panel's edge */
+body[data-workspace-page="today"] .why section h2,body[data-workspace-page="today"] .why .colhead h2{font-size:17px!important;font-weight:650!important}
+body[data-workspace-page="today"] .ifyou{background:transparent!important;border-radius:0!important;box-shadow:inset 0 1px 0 var(--x-rule)}
+body[data-workspace-page="today"] .ifyou .h,body[data-workspace-page="today"] .ifyou .r{padding-left:0!important;padding-right:0!important;border-color:var(--x-rule)!important}
+body[data-workspace-page="today"] .safe{background:var(--x-tint)!important;border-radius:var(--x-rs)!important;padding:12px 14px!important}
+body[data-workspace-page="today"] .day .empty{margin-top:12px}
+body[data-workspace-page="room"] .panel{gap:0!important}
+body[data-workspace-page="room"] .rm-head{padding:16px 0 12px!important}
+body[data-workspace-page="room"] .dh,body[data-workspace-page="room"] .dh span{letter-spacing:0!important}
+body[data-workspace-page="room"] .needs .pill{margin-top:8px}

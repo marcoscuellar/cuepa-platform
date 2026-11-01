@@ -158,7 +158,7 @@
       [1, 'Next check', clock(new Date(at.getTime() + EVERY)), 'every 15 minutes']
     ];
     var one = items.slice(0, 3).map(function (x) {
-      return '<span class="tk" title="' + esc(x[2] + ' · ' + x[3]) + '"><span class="dot ' + (x[0] ? 'ok' : 'bad') + '" aria-hidden="true"></span><b>' + esc(x[1]) + '</b> ' + (x[0] ? 'Synced' : 'Unavailable') + '</span>';
+      return '<span class="tk" title="' + esc(x[2] + ' · ' + x[3]) + '"><span class="dot ' + (x[0] ? 'ok' : 'bad') + '" aria-hidden="true"></span><b>' + esc(x[1]) + '</b> ' + (x[0] ? 'Synced' : 'Needs a look') + '</span>';
     }).join('');
     $('ticker').innerHTML = one;
   }
@@ -177,7 +177,7 @@
   }
 
   function renderWeek(calOk) {
-    var names = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'], html = '';
+    var names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], html = '';
     for (var i = 0; i < 7; i++) {
       var evs = calOk ? eventsOn(i) : [], cls = 'day' + (i < TODAY_I ? ' past' : '') + (i === TODAY_I ? ' today' : '') + (S.day === i ? ' sel' : '');
       html += '<div class="' + cls + '"><button class="dh" data-day="' + i + '" aria-label="Open ' + names[i] + '" aria-expanded="' + (S.day === i) + '"><span>' + names[i] + '</span><span>' + (i === TODAY_I ? 'Today' : i < TODAY_I ? '✓' : '') + '</span></button>' +
@@ -209,12 +209,12 @@
     if (S.panel === 'inbox') {
       var mailOk = model.mailReady(S);
       if (!mailOk && S.mail && S.mail.error === 'unavailable') { el.innerHTML = '<h2>Your inbox</h2><div class="empty">Email isn’t available right now. Open your inbox to check the connection.</div>'; return; }
-      if (S.mail && S.mail.error && S.mail.error !== 'unavailable') { el.innerHTML = '<h2>Your inbox</h2><div class="empty">We couldn’t load your email. Open your inbox to reconnect or try again.</div><a class="btn" href="/' + WS + '/inbox">Open inbox →</a>'; return; }
+      if (S.mail && S.mail.error && S.mail.error !== 'unavailable') { var expired = /connect your email again|not connected/i.test(S.mail.error); el.innerHTML = '<div class="rm-head"><h2>Email</h2></div><div class="empty">' + (expired ? 'Google signed CUEPA out of your Gmail. Reconnect to see your email here again. It takes about a minute.' : 'We couldn’t load your email just now. Try again in a moment.') + '</div><div class="rm-acts" style="margin-top:12px">' + (expired ? '<a class="btn go" href="/api/gmail?action=start&ws=' + encodeURIComponent(WS) + '">Reconnect Gmail</a>' : '') + '<a class="btn" href="/' + WS + '/inbox">Open inbox</a></div>'; return; }
       if (!mailOk) { el.innerHTML = '<h2>Your inbox</h2><div class="empty">Connect Gmail to see your messages here. You decide what to send.</div><a class="btn" href="/' + WS + '/inbox">Connect Gmail →</a>'; return; }
       var top = S.inbox.filter(function (m) { return m.unread; }).sort(function (a, b) { return (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0); }).slice(0, 6);
       var allUnread = S.inbox.filter(function (m) { return m.unread && !m.seen; }).length;
       var IN = '/' + WS + '/inbox';
-      el.innerHTML = '<div class="rm-head"><h2>Inbox</h2><span>' + (allUnread ? plural(allUnread, 'unread') : 'All caught up') + '</span></div>' +
+      el.innerHTML = '<div class="rm-head"><h2>Latest unread</h2><span>' + (allUnread ? allUnread + ' unread' : 'All caught up') + '</span></div>' +
         (top.length ? '<div class="rm-list">' + top.map(function (m, i) {
           var on = S.mailOpen === i, b = S.bodies[m.id];
           var row = '<div class="rm-row' + (on ? ' on' : '') + (m.seen ? '' : ' unread') + '">' +
@@ -271,7 +271,14 @@
   /* Context stays beside the work, with calendar facts separated from personal notes. */
   function renderAgenda(ready, events) {
     var target = $('agenda');
-    if (!ready) { target.innerHTML = '<div class="empty">Calendar unavailable or not selected. Connect a calendar to see your day.</div>'; return; }
+    if (!ready) {
+      var calErr = S.cal && S.cal.error, calExpired = calErr === 'expired', notConnected = !calErr && !(S.cal && S.cal.connected && S.cal.selected);
+      var msg = calExpired ? 'Google signed CUEPA out of your calendar. Reconnect and your day shows up here.'
+        : notConnected ? 'No calendar connected yet. Connect one to see your day here.'
+        : 'Your calendar is unavailable right now. Try again in a moment.';
+      target.innerHTML = '<div class="empty">' + msg + '</div>' + (calExpired || notConnected ? '<div class="rm-acts" style="margin-top:12px"><a class="btn go" href="/' + WS + '/hub#connect">' + (calExpired ? 'Reconnect calendar' : 'Connect calendar') + '</a></div>' : '');
+      return;
+    }
     target.innerHTML = (events.length ? events.slice(0, 5).map(function (event) {
       return '<button class="agenda-row" data-meeting="' + esc(event.id) + '"><time>' + esc(isAllDay(event) ? 'All day' : clock(startOf(event))) + '</time><span><b>' + esc(event.title) + '</b><small>' + esc(event.location || event.calendar || 'Calendar event') + '</small></span><span aria-hidden="true">↗</span></button>';
     }).join('') : '<div class="empty">No events on today’s connected calendars.</div>') +

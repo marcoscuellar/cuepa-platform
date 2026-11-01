@@ -115,6 +115,7 @@ module.exports = async (req, res) => {
   } catch (e) {
     const status = e.status || 500;
     if (status >= 500) console.error('gmail', action, e.message);
+    else if (status === 401 || status === 403) console.warn('gmail access problem', { action, status }); // no tokens or addresses logged
     return json(res, status, { ok: false, error: status >= 500 && !e.status ? 'Something went wrong. Try again.' : e.message });
   }
 };
