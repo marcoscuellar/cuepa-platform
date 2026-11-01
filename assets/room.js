@@ -65,6 +65,7 @@
     return get('/api/gmail?action=status&ws=' + WS).then(function (st) {
       S.mail = { connected: st.connected, email: st.email };
       if (!st.connected) { S.inbox = []; return; }
+      get('/api/gmail?action=labels&ws=' + WS).then(function (r) { S.labels = r.labels || []; if (window.CuepaFolders) window.CuepaFolders.assign(S.labels); if (S.panel === 'inbox' && S.updated) renderPanel(); }).catch(function () { S.labels = []; });
       return get('/api/gmail?action=list&ws=' + WS).then(function (r) { S.inbox = r.messages || []; did('Inbox checked, ' + S.inbox.filter(function (m) { return m.unread; }).length + ' unread'); });
     }).catch(function (e) { S.mail = { connected: S.mail ? S.mail.connected : false, error: e.status === 503 ? 'unavailable' : e.message }; S.inbox = []; });
   }
@@ -205,10 +206,11 @@
       el.innerHTML = '<div class="rm-head"><h2>Latest unread</h2><span>' + (allUnread ? allUnread + ' unread' : 'All caught up') + '</span></div>' +
         (top.length ? '<div class="rm-list">' + top.map(function (m, i) {
           var on = S.mailOpen === i, b = S.bodies[m.id];
+          var F = window.CuepaFolders, fs = F ? F.foldersOf(m, S.labels || [], '') : [], chips = fs.length ? '<span class="rm-chips">' + fs.map(F.chip).join('') + '</span>' : '';
           var row = '<div class="rm-row' + (on ? ' on' : '') + (m.seen ? '' : ' unread') + '">' +
-            '<button class="rm-sum" data-mail="' + i + '" aria-expanded="' + on + '"><span class="rm-av" aria-hidden="true">' + esc(initialOf(m.from)) + '</span>' +
+            '<button class="rm-sum" data-mail="' + i + '" aria-expanded="' + on + '"><span class="rm-av" aria-hidden="true"' + (fs[0] && !on ? F.avatarStyle(fs[0]) : '') + '>' + esc(initialOf(m.from)) + '</span>' +
             '<span class="rm-txt"><span class="rm-l1"><b>' + esc(fromName(m.from)) + '</b><time>' + esc(whenOf(m.date)) + '</time></span>' +
-            '<span class="rm-subj">' + esc(m.subject || '(no subject)') + '</span>' + (on ? '' : '<span class="rm-snip">' + esc(m.snippet) + '</span>') + '</span></button>';
+            '<span class="rm-subj">' + esc(m.subject || '(no subject)') + '</span>' + (on ? '' : '<span class="rm-snip">' + esc(m.snippet) + '</span>') + chips + '</span></button>';
           if (on) {
             var body = !b ? '<p class="rm-wait">Opening…</p>' : b.error ? '<p class="rm-wait">This email couldn’t open here. Open it in your Inbox.</p>' :
               '<div class="rm-meta">' + esc(addrOf(m.from)) + ' · ' + esc(new Date(m.date).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })) + '</div>' +

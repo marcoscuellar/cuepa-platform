@@ -188,7 +188,17 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-subj{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
 .ib-row.unread .ib-subj{font-weight:600}
 .ib-snip{color:var(--grey);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.ib-tag{font-size:11.5px;font-weight:500;color:var(--teal);background:var(--tint);border-radius:4px;padding:1px 7px;margin-left:8px}
+.ib-tag{display:none}
+.fc-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:8px;padding:3px 9px;white-space:nowrap;line-height:1.3}
+.fc-chip i{width:7px;height:7px;border-radius:50%;flex:none}
+.ib-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.ib-tabs button i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.ib-actions .ib-expand{margin-left:auto}
+body.focus .ib-panes{grid-template-columns:1fr}
+body.focus .ib-panes>.ib-pane:first-child{display:none}
+body.focus .ib-read{max-width:900px;margin:0 auto;padding:48px 56px 64px}
+body.focus .ib-body{font-size:17px;line-height:1.75}
+@media (max-width:900px){.ib-expand{display:none!important}}
 .ib-none{color:var(--grey);text-align:center;padding:64px 24px;font-size:14.5px}
 .ib-none .ib-btn{margin-top:16px}
 /* reader — the hero */
@@ -203,7 +213,7 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-to{color:var(--grey);font-size:13.5px;margin-top:2px;overflow-wrap:anywhere}
 .ib-from time{color:var(--grey);font-size:13.5px;white-space:nowrap;align-self:start;padding-top:2px}
 .ib-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.ib-actions .ib-del{margin-left:auto}
+.ib-actions .ib-del{margin-left:0}
 .ib-body{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.7;max-width:66ch;padding-top:4px}
 .ib-note{margin:0;color:var(--grey);font-size:13px}
 .ib-reader .ib-none{display:grid;place-items:center;height:100%;padding:24px}
@@ -283,6 +293,7 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
   <p class="ib-err" id="err" role="alert"></p>
   <div class="ib-dacts"><span class="ib-from-lab" id="fromLab"></span><button type="button" class="ib-quiet" id="cancel">Cancel</button><button class="ib-primary" id="sendBtn" title="Send (Ctrl or ⌘ + Enter)">Send</button></div>
 </form></dialog>
+<script src="/assets/folder-colors.js"></script>
 <script>
 const WS=${JSON.stringify(ws)};
 const $=id=>document.getElementById(id);
@@ -315,10 +326,11 @@ if(p==='failed')banner('Google could not connect. Try again, or contact CUEPA.')
 if(p==='unavailable')banner('Email can’t be connected on this version of the hub. Use app.makingcuepa.com, or contact CUEPA.');
 if(p||OPEN_ID)history.replaceState(null,'',location.pathname);
 
-async function loadLabels(){try{labels=(await api('labels')).labels;}catch(e){labels=[{id:'INBOX',name:'Inbox'},{id:'SENT',name:'Sent'},{id:'TRASH',name:'Trash'}];}renderFolders();}
-function renderFolders(){$('folders').innerHTML=labels.map(l=>'<button type="button" data-f="'+esc(l.id)+'"'+(l.id===folder&&!query?' aria-current="true"':'')+'>'+esc(l.name)+'</button>').join('')+'<button type="button" class="add" data-add="1">New folder</button>';}
+async function loadLabels(){try{labels=(await api('labels')).labels;}catch(e){labels=[{id:'INBOX',name:'Inbox'},{id:'SENT',name:'Sent'},{id:'TRASH',name:'Trash'}];}CuepaFolders.assign(labels);renderFolders();}
+const isUserFolder=l=>!/^(INBOX|SENT|TRASH|SPAM|STARRED|IMPORTANT|UNREAD|DRAFT)$/.test(l.id);
+function renderFolders(){$('folders').innerHTML=labels.map(l=>'<button type="button" data-f="'+esc(l.id)+'"'+(l.id===folder&&!query?' aria-current="true"':'')+'>'+(isUserFolder(l)?'<i style="background:'+CuepaFolders.colorFor(l).dot+'" aria-hidden="true"></i>':'')+esc(l.name)+'</button>').join('')+'<button type="button" class="add" data-add="1">New folder</button>';}
 $('folders').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.add){const name=prompt('Name the new folder');if(!name)return;try{const r=await post('label-create',{name});labels.splice(labels.length-1,0,r.label);folder=r.label.id;query='';$('q').value='';renderFolders();load();}catch(err){banner(err.message);}return;}
+  if(b.dataset.add){const name=prompt('Name the new folder');if(!name)return;try{const r=await post('label-create',{name});labels.splice(labels.length-1,0,r.label);CuepaFolders.assign(labels);folder=r.label.id;query='';$('q').value='';renderFolders();load();}catch(err){banner(err.message);}return;}
   folder=b.dataset.f;query='';$('q').value='';renderFolders();closeReader();load();});
 
 function renderTop(){
@@ -332,8 +344,8 @@ function renderList(){
   renderTop();
   const fname=labelName(folder)||'Inbox';
   if(!msgs.length){$('list').innerHTML='<div class="ib-none">'+(query?'No emails match that search.':folder==='TRASH'?'Trash is empty.':folder==='SENT'?'Nothing sent yet.':fname==='Inbox'?'Your inbox is empty.':'Nothing in '+esc(fname)+' yet.')+'</div>';return;}
-  $('list').innerHTML=msgs.map((m,i)=>{const who=rowWho(m);const tags=query&&m.labels?m.labels.filter(l=>labelName(l)&&l!=='INBOX').map(l=>'<span class="ib-tag">'+esc(labelName(l))+'</span>').join(''):'';
-    return '<div class="ib-row'+(m.unread?' unread':'')+(i===current?' on':'')+'" role="button" tabindex="0" data-i="'+i+'"><span class="ib-dot" aria-hidden="true"></span><span class="ib-av" aria-hidden="true">'+esc(initial(who))+'</span><div style="min-width:0"><div class="ib-r1"><span class="ib-name">'+(who===m.to&&who!==m.from?'To ':'')+esc(nameOf(who))+tags+'</span><time>'+esc(when(m.date))+'</time></div><div class="ib-subj">'+esc(m.subject||'(no subject)')+'</div><div class="ib-snip">'+esc(m.snippet)+'</div></div></div>';}).join('');
+  $('list').innerHTML=msgs.map((m,i)=>{const who=rowWho(m);const fs=CuepaFolders.foldersOf(m,labels,folder);const tags=fs.length?'<div class="ib-chips">'+fs.map(CuepaFolders.chip).join('')+'</div>':'';const avs=CuepaFolders.avatarStyle(fs[0]);
+    return '<div class="ib-row'+(m.unread?' unread':'')+(i===current?' on':'')+'" role="button" tabindex="0" data-i="'+i+'"><span class="ib-dot" aria-hidden="true"></span><span class="ib-av" aria-hidden="true"'+avs+'>'+esc(initial(who))+'</span><div style="min-width:0"><div class="ib-r1"><span class="ib-name">'+(who===m.to&&who!==m.from?'To ':'')+esc(nameOf(who))+'</span><time>'+esc(when(m.date))+'</time></div><div class="ib-subj">'+esc(m.subject||'(no subject)')+'</div><div class="ib-snip">'+esc(m.snippet)+'</div>'+tags+'</div></div>';}).join('');
 }
 async function load(fetchNew=true){
   if(!fetchNew){renderList();return;}
@@ -342,7 +354,7 @@ async function load(fetchNew=true){
     if(deepLink){const id=deepLink;deepLink=null;let i=msgs.findIndex(m=>m.id===id);if(i<0){msgs.unshift({id,from:'',subject:'',snippet:'',date:'',unread:false});renderList();i=0;}await open(i);if(OPEN_REPLY&&$('reply'))$('reply').click();}}
   catch(e){$('list').innerHTML=errBox(e.message);}
 }
-function closeReader(){document.body.classList.remove('reading');current=-1;$('view').innerHTML=EMPTY_READER;document.querySelectorAll('.ib-row.on').forEach(x=>x.classList.remove('on'));}
+function closeReader(){document.body.classList.remove('reading','focus');current=-1;$('view').innerHTML=EMPTY_READER;document.querySelectorAll('.ib-row.on').forEach(x=>x.classList.remove('on'));}
 function moveOptions(){return labels.filter(l=>l.id!==folder&&l.id!=='TRASH'&&l.id!=='SENT').map(l=>'<option value="'+esc(l.id)+'">'+esc(l.name)+'</option>').join('');}
 async function doMove(i,label){const m=msgs[i];if(!m||!label)return;const from=folder;try{await post('move',{id:m.id,label});msgs.splice(i,1);closeReader();renderList();toast('Moved to '+labelName(label)+'.',()=>post('move',{id:m.id,label:from}));}catch(e){banner(e.message);}}
 async function doTrash(i){const m=msgs[i];if(!m)return;try{await post('trash',{id:m.id});msgs.splice(i,1);closeReader();renderList();toast('Deleted. It stays in Trash for 30 days.',()=>post('untrash',{id:m.id}));}catch(e){banner(e.message);}}
@@ -356,14 +368,15 @@ async function open(i){const m0=msgs[i];if(!m0)return;current=i;
     const trash=folder==='TRASH';
     $('view').innerHTML='<div class="ib-read">'
       +'<button type="button" class="ib-quiet ib-back" id="mback">Back to '+esc(labelName(folder)||'Inbox')+'</button>'
-      +'<h2 class="ib-subject">'+esc(m.subject||'(no subject)')+'</h2>'
-      +'<div class="ib-from"><span class="ib-av" aria-hidden="true">'+esc(initial(m.from))+'</span><div style="min-width:0"><b>'+esc(nameOf(m.from))+'</b><span class="ib-addr">'+esc(addrOf(m.from))+'</span><div class="ib-to">To '+esc(m.to)+(m.cc?'<br>Cc '+esc(m.cc):'')+'</div></div><time>'+esc(longWhen(m.date))+'</time></div>'
-      +'<div class="ib-actions">'+(trash?'<button type="button" class="ib-primary" id="restore">Restore to inbox</button>':'<button type="button" class="ib-primary" id="reply">Reply</button><button type="button" class="ib-quiet" id="replyAll">Reply all</button>'+(moveOptions()?'<select class="ib-select" id="sideMove" aria-label="Move to folder"><option value="">Move to…</option>'+moveOptions()+'</select>':'')+'<button type="button" class="ib-quiet ib-del" id="sideDel">Delete</button>')+'</div>'
+      +'<div><h2 class="ib-subject">'+esc(m.subject||'(no subject)')+'</h2>'+(()=>{const fs=CuepaFolders.foldersOf(m,labels,'');return fs.length?'<div class="ib-chips" style="margin-top:10px">'+fs.map(CuepaFolders.chip).join('')+'</div>':'';})()+'</div>'
+      +'<div class="ib-from"><span class="ib-av" aria-hidden="true"'+CuepaFolders.avatarStyle(CuepaFolders.foldersOf(m,labels,'')[0])+'>'+esc(initial(m.from))+'</span><div style="min-width:0"><b>'+esc(nameOf(m.from))+'</b><span class="ib-addr">'+esc(addrOf(m.from))+'</span><div class="ib-to">To '+esc(m.to)+(m.cc?'<br>Cc '+esc(m.cc):'')+'</div></div><time>'+esc(longWhen(m.date))+'</time></div>'
+      +'<div class="ib-actions">'+(trash?'<button type="button" class="ib-primary" id="restore">Restore to inbox</button>':'<button type="button" class="ib-primary" id="reply">Reply</button><button type="button" class="ib-quiet" id="replyAll">Reply all</button>'+(moveOptions()?'<select class="ib-select" id="sideMove" aria-label="Move to folder"><option value="">Move to…</option>'+moveOptions()+'</select>':'')+'<button type="button" class="ib-quiet ib-del" id="sideDel">Delete</button>')+'<button type="button" class="ib-quiet ib-expand" id="expand" aria-pressed="'+document.body.classList.contains('focus')+'">'+(document.body.classList.contains('focus')?'Back to list':'Expand')+'</button>'+'</div>'
       +'<div class="ib-body">'+esc(m.body||m.snippet)+'</div>'
       +(trash?'':'<p class="ib-note">Replies go out from '+esc(me)+'. Nothing sends until you press Send.</p>')
       +'</div>';
     $('reader').scrollTop=0;
     $('mback').onclick=closeReader;
+    $('expand').onclick=()=>{const on=document.body.classList.toggle('focus');$('expand').textContent=on?'Back to list':'Expand';$('expand').setAttribute('aria-pressed',on);$('reader').scrollTop=0;};
     if(trash){$('restore').onclick=()=>doRestore(i);return;}
     const list=v=>String(v||'').split(',').map(x=>addrOf(x)).filter(Boolean);
     const primary=isMe(m.from)?list(m.to):list(m.replyTo||m.from);
@@ -380,7 +393,7 @@ $('list').addEventListener('keydown',e=>{const r=e.target.closest('.ib-row');if(
   if(e.key==='Enter'||e.key===' '){e.preventDefault();open(+r.dataset.i);}
   if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const n=r[e.key==='ArrowDown'?'nextElementSibling':'previousElementSibling'];if(n)n.focus();}});
 $('sform').addEventListener('submit',e=>{e.preventDefault();query=$('q').value.trim();renderFolders();closeReader();load();});
-document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('q').focus();}if(e.key==='Escape'&&document.body.classList.contains('reading')&&!$('dlg').open)closeReader();});
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('q').focus();}if(e.key==='Escape'&&!$('dlg').open){if(document.body.classList.contains('focus')){document.body.classList.remove('focus');const x=$('expand');if(x){x.textContent='Expand';x.setAttribute('aria-pressed','false');}}else if(document.body.classList.contains('reading'))closeReader();}});
 $('refresh').onclick=()=>{closeReader();load();};
 
 let draft={};

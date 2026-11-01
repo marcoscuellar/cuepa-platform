@@ -83,6 +83,7 @@ function page(ws, wsName, person) {
 </main>
 <div class="toast" id="toast" role="status" hidden></div>
 <script src="/assets/room-model.js"></script>
+<script src="/assets/folder-colors.js"></script>
 <script src="/assets/room.js"></script>
 </body></html>`, ws, wsName, 'room');
 }
