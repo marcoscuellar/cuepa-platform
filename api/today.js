@@ -356,7 +356,7 @@ function renderWhy(){
     draft='<div class="draft"><div class="top"><span class="lab">Draft</span><span class="lab">✎ Not sent</span></div><label class="lab" for="draftTxt" style="text-transform:none;letter-spacing:0;font-family:Inter,sans-serif;font-size:13px">Each person gets their own name and timecard link.</label><textarea id="draftTxt">'+esc(S.drafts[x.draft])+'</textarea>'+
       (ready?'<button class="btn go" id="sendDraft">Send '+x.to.length+' reminder'+(x.to.length>1?'s':'')+' from my email</button>':'<small>'+(S.mail&&S.mail.connected?'Add an email for each person on the Timecards page to send from here.':'Sends from your own email once Gmail is connected.')+'</small>')+'</div>';}
   el.innerHTML='<div><div class="lab t">Why this is here · '+pad(S.sel+1)+'</div><h2>'+esc(x.title)+'</h2></div><p>'+esc(x.why)+'</p>'+
-    '<div><h4>What the hub checked</h4><div class="checked">'+x.checked.map(c=>'<span>▢ '+esc(c)+'</span>').join('')+'</div></div>'+
+    '<div><h4 aria-level="3">What the hub checked</h4><div class="checked">'+x.checked.map(c=>'<span>▢ '+esc(c)+'</span>').join('')+'</div></div>'+
     '<div class="ifyou"><div class="h">If you approve</div>'+x.ifyou.map(r=>'<div class="r"><span class="lab">'+esc(r[0])+'</span><div>'+esc(r[1])+'</div></div>').join('')+'</div>'+draft+
     '<div class="safe"><i></i>Preparing and flagging happen automatically. Sending and approving stay with a person.</div>'+act;
   const ta=$('draftTxt');if(ta)ta.oninput=()=>{S.drafts[x.draft]=ta.value;};

@@ -246,3 +246,47 @@ body[data-workspace-page="today"] .need{padding:var(--x-pad)!important}
 .hub .hub-step{padding:20px var(--x-pad)!important}
 @media(max-width:650px){:root{--x-pad:20px}}
 @media(max-width:650px){body[data-workspace-page="room"] .box+.box{box-shadow:inset 0 1px 0 var(--x-rule)!important}body[data-workspace-page="room"] .box.rec{box-shadow:none!important}}
+
+/* ---------- accessibility pass (WCAG 2.1 AA + 2.2 target size) ---------- */
+/* no auto-moving content: the Room's sync status sits still (2.2.2) */
+.tickmove{animation:none!important;width:auto!important;flex-wrap:wrap}
+/* tap targets at least 24x24 (2.5.8) */
+.hub .hub-linkbtn{min-height:28px;display:inline-flex;align-items:center;padding:2px 4px!important}
+.hub input[type=checkbox]{width:24px;height:24px;margin:0}
+.cuepa-nav>a,.cuepa-more summary,.btn,button{min-height:24px}
+/* reflow at 320px (1.4.10) */
+body[data-workspace-page="today"] .search{min-width:0!important;max-width:100%!important;width:100%}
+body[data-workspace-page="today"] .topbar{min-width:0}
+@media(max-width:650px){body[data-workspace-page="today"] .search kbd{display:none}}
+
+/* ---------- The Room: reading panel (rows like the Inbox, read in place) ---------- */
+body[data-workspace-page="room"] .rm-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:12px}
+body[data-workspace-page="room"] .rm-head h2{margin:0}
+body[data-workspace-page="room"] .rm-head span{font-size:13px;color:var(--x-grey)}
+body[data-workspace-page="room"] .rm-list{margin:0 calc(-1 * var(--x-pad));box-shadow:inset 0 1px 0 var(--x-rule)}
+body[data-workspace-page="room"] .rm-row{box-shadow:inset 0 -1px 0 var(--x-rule)}
+body[data-workspace-page="room"] .rm-row.on{background:#fff;box-shadow:inset 3px 0 0 var(--x-teal),inset 0 -1px 0 var(--x-rule)}
+body[data-workspace-page="room"] .rm-sum{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:36px minmax(0,1fr);gap:14px;align-items:start;padding:14px var(--x-pad);cursor:pointer}
+body[data-workspace-page="room"] .rm-sum:hover{background:var(--x-fill)}
+body[data-workspace-page="room"] .rm-sum:focus-visible{outline:2px solid var(--x-teal);outline-offset:-2px}
+body[data-workspace-page="room"] .rm-av{width:36px;height:36px;border-radius:50%;background:#F0F0F0;color:#000;display:grid;place-items:center;font-weight:600;font-size:14px}
+body[data-workspace-page="room"] .rm-row.on .rm-av{background:#000;color:#fff}
+body[data-workspace-page="room"] .rm-txt{display:grid;gap:2px;min-width:0}
+body[data-workspace-page="room"] .rm-l1{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+body[data-workspace-page="room"] .rm-l1 b{font-weight:500;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-workspace-page="room"] .rm-row.unread .rm-l1 b{font-weight:700}
+body[data-workspace-page="room"] .rm-l1 time{font-size:12.5px;color:var(--x-grey);white-space:nowrap;font-variant-numeric:tabular-nums}
+body[data-workspace-page="room"] .rm-subj{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-workspace-page="room"] .rm-row.unread .rm-subj{font-weight:600}
+body[data-workspace-page="room"] .rm-row.on .rm-subj{white-space:normal;font-size:17px;font-weight:650;letter-spacing:-.01em;line-height:1.3}
+body[data-workspace-page="room"] .rm-snip{font-size:13.5px;color:var(--x-grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-workspace-page="room"] .rm-read{padding:0 var(--x-pad) 20px calc(var(--x-pad) + 50px);display:grid;gap:14px}
+body[data-workspace-page="room"] .rm-meta{font-size:13px;color:var(--x-grey);overflow-wrap:anywhere}
+body[data-workspace-page="room"] .rm-body{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.65;max-width:62ch;display:-webkit-box;-webkit-line-clamp:14;-webkit-box-orient:vertical;overflow:hidden}
+body[data-workspace-page="room"] .rm-body.full{display:block;-webkit-line-clamp:unset}
+body[data-workspace-page="room"] .rm-more{all:unset;cursor:pointer;color:var(--x-teal);font-weight:600;font-size:14px;min-height:28px;display:inline-flex;align-items:center;justify-self:start}
+body[data-workspace-page="room"] .rm-wait{margin:0;color:var(--x-grey);font-size:14px}
+body[data-workspace-page="room"] .rm-acts{display:flex;gap:10px;flex-wrap:wrap}
+body[data-workspace-page="room"] .rm-acts .btn{height:38px;padding:0 16px;display:inline-flex;align-items:center;text-decoration:none}
+body[data-workspace-page="room"] .panel .btn.wide{margin-top:0!important}
+@media(max-width:650px){body[data-workspace-page="room"] .rm-read{padding-left:var(--x-pad)}}

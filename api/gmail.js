@@ -149,7 +149,7 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-count{color:var(--grey);font-size:15px;white-space:nowrap}
 .ib-search{justify-self:end;display:flex;align-items:center;gap:10px;background:var(--fill);border-radius:6px;padding:0 14px;height:40px;width:min(380px,100%)}
 .ib-search svg{width:16px;height:16px;stroke:var(--grey);fill:none;stroke-width:2;flex:none}
-.ib-search input{flex:1;min-width:0;border:0;background:transparent!important;box-shadow:none!important;font:15px Inter,Arial,sans-serif;color:var(--ink);outline:none;padding:0}
+.ib-search input{flex:1;min-width:0;height:100%;border:0;background:transparent!important;box-shadow:none!important;font:15px Inter,Arial,sans-serif;color:var(--ink);outline:none;padding:0}
 .ib-search kbd{font:500 12px Inter,Arial,sans-serif;color:var(--grey)}
 /* folder tabs */
 .ib-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-top:-4px;box-shadow:inset 0 -1px 0 #ECECEC}
@@ -293,6 +293,7 @@ const isToday=d=>{const t=new Date(d);return !isNaN(t)&&t.toDateString()===new D
 const when=d=>{const t=new Date(d);if(isNaN(t))return '';return isToday(d)?t.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}):t.toLocaleDateString([], {month:'short',day:'numeric'});};
 const longWhen=d=>{const t=new Date(d);return isNaN(t)?'':t.toLocaleString([], {weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});};
 let msgs=[],query='',me='',labels=[],folder='INBOX',current=-1;
+let deepLink=null;
 const isMe=a=>me&&String(a||'').toLowerCase().includes(me.toLowerCase());
 const labelName=id=>{const l=labels.find(x=>x.id===id);return l?l.name:'';};
 const needsReconnect=msg=>/connect your email again|not connected yet/i.test(String(msg||''));
@@ -301,13 +302,14 @@ const EMPTY_READER='<div class="ib-none">Select an email to read it.</div>';
 function errBox(msg){return '<div class="ib-none">'+esc(msg)+(needsReconnect(msg)?'<div><a class="ib-btn ib-primary" href="'+RECONNECT+'">Reconnect Gmail</a></div>':'')+'</div>';}
 function banner(text,ok){const b=$('banner');b.className='ib-banner '+(ok?'ok':'bad');b.textContent=text;if(!ok&&needsReconnect(text)){const a=document.createElement('a');a.href=RECONNECT;a.textContent='Reconnect Gmail';b.appendChild(a);}b.hidden=false;}
 function toast(text,undo){const old=document.querySelector('.ib-toast');if(old)old.remove();const t=document.createElement('div');t.className='ib-toast';t.setAttribute('role','status');t.innerHTML='<span>'+esc(text)+'</span>'+(undo?'<button type="button">Undo</button>':'');document.body.appendChild(t);if(undo)t.querySelector('button').onclick=async()=>{t.remove();try{await undo();}catch(e){banner(e.message);}load();};setTimeout(()=>t.remove(),7000);}
-const p=new URLSearchParams(location.search).get('connect');
+const QS=new URLSearchParams(location.search);const OPEN_ID=QS.get('open'),OPEN_REPLY=QS.get('reply')==='1';
+const p=QS.get('connect');
 if(p==='ok')banner('Email connected. Your inbox is below.',true);
 if(p==='cancelled')banner('Connection cancelled. Nothing was changed.');
 if(p==='scopes')banner('Please allow both "read and manage" and "send" on the Google screen, then connect again.');
 if(p==='failed')banner('Google could not connect. Try again, or contact CUEPA.');
 if(p==='unavailable')banner('Email can’t be connected on this version of the hub. Use app.makingcuepa.com, or contact CUEPA.');
-if(p)history.replaceState(null,'',location.pathname);
+if(p||OPEN_ID)history.replaceState(null,'',location.pathname);
 
 async function loadLabels(){try{labels=(await api('labels')).labels;}catch(e){labels=[{id:'INBOX',name:'Inbox'},{id:'SENT',name:'Sent'},{id:'TRASH',name:'Trash'}];}renderFolders();}
 function renderFolders(){$('folders').innerHTML=labels.map(l=>'<button type="button" data-f="'+esc(l.id)+'"'+(l.id===folder&&!query?' aria-current="true"':'')+'>'+esc(l.name)+'</button>').join('')+'<button type="button" class="add" data-add="1">New folder</button>';}
@@ -332,7 +334,8 @@ function renderList(){
 async function load(fetchNew=true){
   if(!fetchNew){renderList();return;}
   current=-1;$('list').innerHTML='<div class="ib-none">Loading…</div>';
-  try{const r=await api('list',query?'&q='+encodeURIComponent(query):'&label='+encodeURIComponent(folder));msgs=r.messages;renderList();}
+  try{const r=await api('list',query?'&q='+encodeURIComponent(query):'&label='+encodeURIComponent(folder));msgs=r.messages;renderList();
+    if(deepLink){const id=deepLink;deepLink=null;let i=msgs.findIndex(m=>m.id===id);if(i<0){msgs.unshift({id,from:'',subject:'',snippet:'',date:'',unread:false});renderList();i=0;}await open(i);if(OPEN_REPLY&&$('reply'))$('reply').click();}}
   catch(e){$('list').innerHTML=errBox(e.message);}
 }
 function closeReader(){document.body.classList.remove('reading');current=-1;$('view').innerHTML=EMPTY_READER;document.querySelectorAll('.ib-row.on').forEach(x=>x.classList.remove('on'));}
@@ -391,7 +394,7 @@ async function init(){
   let st;try{st=await api('status');}catch(e){$('app').hidden=false;$('list').innerHTML=errBox(e.message);return;}
   if(!st.connected){$('connect').hidden=false;return;}
   me=st.email||'';$('fromLab').textContent='From '+me;
-  $('app').hidden=false;await loadLabels();load();
+  $('app').hidden=false;await loadLabels();deepLink=/^[A-Za-z0-9]{6,64}$/.test(OPEN_ID||'')?OPEN_ID:null;load();
 }
 init();
 </script></body></html>`, ws, name, 'inbox');

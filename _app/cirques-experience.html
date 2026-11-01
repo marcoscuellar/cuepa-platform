@@ -777,7 +777,7 @@ function Setup({s,go,openC,tc}){
         </ol>
       </div>
       <aside class="hub-setup-aside">
-        <div class="hub-card"><span class="hub-eyebrow">Need a hand?</span><h3>We can do it together.</h3><p class="hub-sub">Book a few minutes with Marcos and we’ll finish setup on a call.</p>
+        <div class="hub-card"><span class="hub-eyebrow">Need a hand?</span><h3 aria-level="2">We can do it together.</h3><p class="hub-sub">Book a few minutes with Marcos and we’ll finish setup on a call.</p>
           <button type="button" class="hub-dark" onClick=${()=>mailCUEPA('Hub setup call',['I’d like to finish my hub setup on a call.','','Times that work for me:'])}>Book a setup call</button></div>
         <div class="hub-card hub-tc-dark"><span class="hub-eyebrow">Where things live</span>
           <p><b>The hub</b><br/>Timecards, reminders and your approvals.</p><p><b>QuickBooks</b><br/>Payroll, invoices and bills, same as today.</p></div>
@@ -1055,7 +1055,7 @@ function Meetings({s,up}){
 function Meet({m,up}){
   const [draft,setDraft]=useState(m.notes||"");
   return html`<div class="hub-card hub-meet">
-    <div class="hub-card-title" style=${{margin:0}}><div><span class="hub-eyebrow">${m.when}</span><h3>${m.title}</h3><small style=${{color:"var(--h-muted)"}}>With ${m.with}</small></div></div>
+    <div class="hub-card-title" style=${{margin:0}}><div><span class="hub-eyebrow">${m.when}</span><h3 aria-level="2">${m.title}</h3><small style=${{color:"var(--h-muted)"}}>With ${m.with}</small></div></div>
     <div class="hub-last"><span class="hub-eyebrow">From last time</span><ul>${m.last.map((x,i)=>html`<li key=${i}>${x}</li>`)}</ul></div>
     <div><span class="hub-eyebrow" style=${{marginBottom:"4px"}}>Next steps</span>${m.actions.map((a,i)=>html`<label key=${i} class=${"hub-check"+(a.d?" dim":"")} style=${{display:"flex"}}>
       <input type="checkbox" id=${m.id+"-a"+i} checked=${a.d} onChange=${()=>up(n=>{const x=n.meetings.find(y=>y.id===m.id).actions[i];x.d=!x.d})}/><span>${a.t}</span></label>`)}</div>
