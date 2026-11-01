@@ -134,46 +134,46 @@ function page(ws, name) {
 body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01"}
 .ib{max-width:1440px;margin:0 auto;padding:32px 40px 48px;display:grid;gap:20px}
 /* buttons */
-.ib button,.ib-dlg button,.ib-btn{font:600 14px/1 Inter,Arial,sans-serif;border:0;border-radius:10px;height:40px;padding:0 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap;transition:background .15s,box-shadow .15s}
+.ib button,.ib-dlg button,.ib-btn{font:600 14px/1 Inter,Arial,sans-serif;border:0;border-radius:6px;height:40px;padding:0 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap;transition:background .15s,box-shadow .15s}
 .ib-primary{background:var(--teal)!important;color:#fff!important;box-shadow:0 1px 2px rgba(0,0,0,.12),0 4px 14px rgba(0,0,0,.10)}
 .ib-primary:hover{background:#0c645d!important}
 .ib-quiet{background:#fff;color:var(--ink);box-shadow:var(--sh-sm)}
 .ib-quiet:hover{background:var(--fill)}
 .ib-text{background:transparent;color:var(--grey);padding:0 10px!important}
 .ib-text:hover{background:var(--fill);color:var(--ink)}
-.ib-select{font:600 14px Inter,Arial,sans-serif;height:40px;border:0;border-radius:10px;padding:0 34px 0 14px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23000' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 13px center;-webkit-appearance:none;appearance:none;color:var(--ink);box-shadow:var(--sh-sm)!important;cursor:pointer}
+.ib-select{font:600 14px Inter,Arial,sans-serif;height:40px;border:0;border-radius:6px;padding:0 34px 0 14px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23000' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 13px center;-webkit-appearance:none;appearance:none;color:var(--ink);box-shadow:var(--sh-sm)!important;cursor:pointer}
 /* toolbar */
 .ib-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:24px}
 .ib-title{display:flex;align-items:baseline;gap:14px;min-width:0}
 .ib-title h1{margin:0;font-size:30px;font-weight:700;letter-spacing:-.025em;line-height:1.1}
 .ib-count{color:var(--grey);font-size:15px;white-space:nowrap}
-.ib-search{justify-self:end;display:flex;align-items:center;gap:10px;background:var(--fill);border-radius:10px;padding:0 14px;height:40px;width:min(380px,100%)}
+.ib-search{justify-self:end;display:flex;align-items:center;gap:10px;background:var(--fill);border-radius:6px;padding:0 14px;height:40px;width:min(380px,100%)}
 .ib-search svg{width:16px;height:16px;stroke:var(--grey);fill:none;stroke-width:2;flex:none}
-.ib-search input{flex:1;min-width:0;border:0;background:transparent!important;box-shadow:none!important;font:15px Inter,Arial,sans-serif;color:var(--ink);outline:none;padding:0}
+.ib-search input{flex:1;min-width:0;height:100%;border:0;background:transparent!important;box-shadow:none!important;font:15px Inter,Arial,sans-serif;color:var(--ink);outline:none;padding:0}
 .ib-search kbd{font:500 12px Inter,Arial,sans-serif;color:var(--grey)}
 /* folder tabs */
-.ib-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-top:-4px}
+.ib-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-top:-4px;box-shadow:inset 0 -1px 0 #ECECEC}
 .ib-tabs button{background:transparent;color:var(--grey);font-weight:500;padding:0 12px;border-radius:8px}
 .ib-tabs button:hover{color:var(--ink);background:var(--fill)}
-.ib-tabs button[aria-current="true"]{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--teal);border-radius:8px 8px 0 0;background:transparent}
+.ib-tabs button[aria-current="true"]{color:var(--ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--teal);border-radius:0;background:transparent}
 .ib-tabs .add{margin-left:auto}
 /* banner + toast */
-.ib-banner{padding:12px 16px;border-radius:12px;font-size:14px;font-weight:500;box-shadow:var(--sh-sm)}
+.ib-banner{padding:12px 16px;border-radius:6px;font-size:14px;font-weight:500;box-shadow:var(--sh-sm)}
 .ib-banner.ok{background:var(--tint);color:#0b4f49;box-shadow:none}
 .ib-banner.bad{background:#fff;color:var(--ink)}
 .ib-banner a{color:var(--teal);font-weight:600;margin-left:6px}
-.ib-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#000;color:#fff;border-radius:12px;padding:10px 10px 10px 18px;display:flex;gap:14px;align-items:center;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:14px}
+.ib-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#000;color:#fff;border-radius:6px;padding:10px 10px 10px 18px;display:flex;gap:14px;align-items:center;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:14px}
 .ib-toast button{height:34px!important;background:#fff!important;color:#000!important;padding:0 14px!important}
 /* panes */
 .ib-panes{display:grid;grid-template-columns:minmax(340px,5fr) minmax(0,7fr);gap:24px;align-items:stretch;height:max(560px,calc(100dvh - 300px))}
-.ib-pane{background:#fff;border-radius:16px;box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;min-height:0}
-.ib-listhead{display:flex;justify-content:space-between;align-items:center;padding:12px 12px 12px 22px;color:var(--grey);font-size:13px}
-.ib-list{overflow:auto;padding:0 8px 8px;flex:1}
-.ib-row{display:grid;grid-template-columns:8px 36px minmax(0,1fr);gap:12px;align-items:start;padding:14px 14px 14px 6px;border-radius:12px;cursor:pointer;position:relative}
-.ib-row+.ib-row::before{content:"";position:absolute;top:0;left:62px;right:14px;height:1px;background:#EFEFEF}
+.ib-pane{background:#fff;border-radius:8px;box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.ib-listhead{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 12px 24px;color:var(--grey);font-size:13px}
+.ib-list{overflow:auto;padding:0;flex:1;box-shadow:inset 0 1px 0 #EFEFEF}
+.ib-row{display:grid;grid-template-columns:8px 36px minmax(0,1fr);gap:12px;align-items:start;padding:14px 24px 14px 4px;border-radius:0;cursor:pointer;position:relative}
+.ib-row+.ib-row::before{content:"";position:absolute;top:0;left:72px;right:24px;height:1px;background:#EFEFEF}
 .ib-row:hover{background:var(--fill)}
 .ib-row:hover::before,.ib-row:hover+.ib-row::before,.ib-row.on::before,.ib-row.on+.ib-row::before{background:transparent}
-.ib-row.on{background:var(--tint)}
+.ib-row.on{background:var(--tint);box-shadow:inset 3px 0 0 var(--teal)}
 .ib-dot{width:8px;height:8px;border-radius:50%;margin-top:14px}
 .ib-row.unread .ib-dot{background:var(--teal)}
 .ib-av{width:36px;height:36px;border-radius:50%;background:#F0F0F0;color:#000;display:grid;place-items:center;font:600 14px Inter,Arial,sans-serif;flex:none}
@@ -184,7 +184,7 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-subj{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
 .ib-row.unread .ib-subj{font-weight:600}
 .ib-snip{color:var(--grey);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.ib-tag{font-size:11.5px;font-weight:500;color:var(--teal);background:var(--tint);border-radius:6px;padding:1px 7px;margin-left:8px}
+.ib-tag{font-size:11.5px;font-weight:500;color:var(--teal);background:var(--tint);border-radius:4px;padding:1px 7px;margin-left:8px}
 .ib-none{color:var(--grey);text-align:center;padding:64px 24px;font-size:14.5px}
 .ib-none .ib-btn{margin-top:16px}
 /* reader — the hero */
@@ -204,7 +204,7 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-note{margin:0;color:var(--grey);font-size:13px}
 .ib-reader .ib-none{display:grid;place-items:center;height:100%;padding:24px}
 /* connect */
-.ib-connect{max-width:520px;margin:48px auto;background:#fff;border-radius:20px;box-shadow:var(--sh);padding:40px;display:grid;gap:20px}
+.ib-connect{max-width:520px;margin:48px auto;background:#fff;border-radius:8px;box-shadow:var(--sh);padding:40px;display:grid;gap:20px}
 .ib-connect h1{margin:0;font-size:30px;font-weight:700;letter-spacing:-.025em;line-height:1.15}
 .ib-connect ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
 .ib-connect li{display:grid;grid-template-columns:22px 1fr;gap:8px}
@@ -212,15 +212,15 @@ body{margin:0;background:#fff;color:var(--ink);font:15px/1.5 Inter,'Helvetica Ne
 .ib-connect p{margin:0;color:var(--grey);font-size:13.5px}
 .ib-connect .ib-btn{height:48px;font-size:15px}
 /* compose */
-.ib-dlg{border:0;border-radius:20px;padding:0;width:min(640px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.28)}
+.ib-dlg{border:0;border-radius:8px;padding:0;width:min(640px,94vw);box-shadow:0 30px 80px rgba(0,0,0,.28)}
 .ib-dlg::backdrop{background:rgba(0,0,0,.4)}
 .ib-dlg form{display:grid;gap:12px;padding:28px}
 .ib-dlg h2{margin:0 0 6px;font-size:22px;font-weight:700;letter-spacing:-.02em}
-.ib-field{display:grid;grid-template-columns:72px minmax(0,1fr);align-items:center;background:var(--fill);border-radius:10px;padding:0 14px}
+.ib-field{display:grid;grid-template-columns:72px minmax(0,1fr);align-items:center;background:var(--fill);border-radius:6px;padding:0 14px}
 .ib-field label{color:var(--grey);font-size:14px}
 .ib-field input{border:0;background:transparent!important;box-shadow:none!important;font:15px Inter,Arial,sans-serif;color:var(--ink);padding:12px 0;outline:none;min-width:0}
 .ib-field:focus-within{box-shadow:inset 0 0 0 2px var(--teal)}
-.ib-dlg textarea{border:0;background:var(--fill);box-shadow:none!important;border-radius:10px;padding:14px;font:16px/1.6 Inter,Arial,sans-serif;color:var(--ink);min-height:240px;resize:vertical;outline:none;width:100%}
+.ib-dlg textarea{border:0;background:var(--fill);box-shadow:none!important;border-radius:6px;padding:14px;font:16px/1.6 Inter,Arial,sans-serif;color:var(--ink);min-height:240px;resize:vertical;outline:none;width:100%}
 .ib-dlg textarea:focus{box-shadow:inset 0 0 0 2px var(--teal)!important}
 .ib-dlg textarea:focus-visible,.ib-field input:focus-visible{outline:none!important}
 .ib-err{color:var(--ink);font-weight:600;font-size:13.5px;min-height:1.2em;margin:0}
@@ -293,6 +293,7 @@ const isToday=d=>{const t=new Date(d);return !isNaN(t)&&t.toDateString()===new D
 const when=d=>{const t=new Date(d);if(isNaN(t))return '';return isToday(d)?t.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}):t.toLocaleDateString([], {month:'short',day:'numeric'});};
 const longWhen=d=>{const t=new Date(d);return isNaN(t)?'':t.toLocaleString([], {weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});};
 let msgs=[],query='',me='',labels=[],folder='INBOX',current=-1;
+let deepLink=null;
 const isMe=a=>me&&String(a||'').toLowerCase().includes(me.toLowerCase());
 const labelName=id=>{const l=labels.find(x=>x.id===id);return l?l.name:'';};
 const needsReconnect=msg=>/connect your email again|not connected yet/i.test(String(msg||''));
@@ -301,13 +302,14 @@ const EMPTY_READER='<div class="ib-none">Select an email to read it.</div>';
 function errBox(msg){return '<div class="ib-none">'+esc(msg)+(needsReconnect(msg)?'<div><a class="ib-btn ib-primary" href="'+RECONNECT+'">Reconnect Gmail</a></div>':'')+'</div>';}
 function banner(text,ok){const b=$('banner');b.className='ib-banner '+(ok?'ok':'bad');b.textContent=text;if(!ok&&needsReconnect(text)){const a=document.createElement('a');a.href=RECONNECT;a.textContent='Reconnect Gmail';b.appendChild(a);}b.hidden=false;}
 function toast(text,undo){const old=document.querySelector('.ib-toast');if(old)old.remove();const t=document.createElement('div');t.className='ib-toast';t.setAttribute('role','status');t.innerHTML='<span>'+esc(text)+'</span>'+(undo?'<button type="button">Undo</button>':'');document.body.appendChild(t);if(undo)t.querySelector('button').onclick=async()=>{t.remove();try{await undo();}catch(e){banner(e.message);}load();};setTimeout(()=>t.remove(),7000);}
-const p=new URLSearchParams(location.search).get('connect');
+const QS=new URLSearchParams(location.search);const OPEN_ID=QS.get('open'),OPEN_REPLY=QS.get('reply')==='1';
+const p=QS.get('connect');
 if(p==='ok')banner('Email connected. Your inbox is below.',true);
 if(p==='cancelled')banner('Connection cancelled. Nothing was changed.');
 if(p==='scopes')banner('Please allow both "read and manage" and "send" on the Google screen, then connect again.');
 if(p==='failed')banner('Google could not connect. Try again, or contact CUEPA.');
 if(p==='unavailable')banner('Email can’t be connected on this version of the hub. Use app.makingcuepa.com, or contact CUEPA.');
-if(p)history.replaceState(null,'',location.pathname);
+if(p||OPEN_ID)history.replaceState(null,'',location.pathname);
 
 async function loadLabels(){try{labels=(await api('labels')).labels;}catch(e){labels=[{id:'INBOX',name:'Inbox'},{id:'SENT',name:'Sent'},{id:'TRASH',name:'Trash'}];}renderFolders();}
 function renderFolders(){$('folders').innerHTML=labels.map(l=>'<button type="button" data-f="'+esc(l.id)+'"'+(l.id===folder&&!query?' aria-current="true"':'')+'>'+esc(l.name)+'</button>').join('')+'<button type="button" class="add" data-add="1">New folder</button>';}
@@ -332,7 +334,8 @@ function renderList(){
 async function load(fetchNew=true){
   if(!fetchNew){renderList();return;}
   current=-1;$('list').innerHTML='<div class="ib-none">Loading…</div>';
-  try{const r=await api('list',query?'&q='+encodeURIComponent(query):'&label='+encodeURIComponent(folder));msgs=r.messages;renderList();}
+  try{const r=await api('list',query?'&q='+encodeURIComponent(query):'&label='+encodeURIComponent(folder));msgs=r.messages;renderList();
+    if(deepLink){const id=deepLink;deepLink=null;let i=msgs.findIndex(m=>m.id===id);if(i<0){msgs.unshift({id,from:'',subject:'',snippet:'',date:'',unread:false});renderList();i=0;}await open(i);if(OPEN_REPLY&&$('reply'))$('reply').click();}}
   catch(e){$('list').innerHTML=errBox(e.message);}
 }
 function closeReader(){document.body.classList.remove('reading');current=-1;$('view').innerHTML=EMPTY_READER;document.querySelectorAll('.ib-row.on').forEach(x=>x.classList.remove('on'));}
@@ -391,7 +394,7 @@ async function init(){
   let st;try{st=await api('status');}catch(e){$('app').hidden=false;$('list').innerHTML=errBox(e.message);return;}
   if(!st.connected){$('connect').hidden=false;return;}
   me=st.email||'';$('fromLab').textContent='From '+me;
-  $('app').hidden=false;await loadLabels();load();
+  $('app').hidden=false;await loadLabels();deepLink=/^[A-Za-z0-9]{6,64}$/.test(OPEN_ID||'')?OPEN_ID:null;load();
 }
 init();
 </script></body></html>`, ws, name, 'inbox');

@@ -18,10 +18,16 @@
       return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) { var e = new Error(j.error || 'Unavailable'); e.status = r.status; throw e; } return j; });
     });
   }
+  function post(url, body) {
+    return fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  }
+  var initialOf = function (f) { var n = fromName(f).replace(/^[^A-Za-z0-9\u00C0-\u00FF]+/, ''); return (n[0] || '·').toUpperCase(); };
+  var whenOf = function (d) { var t = new Date(d); if (isNaN(t)) return ''; return t.toDateString() === new Date().toDateString() ? clock(t) : t.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); };
+  var addrOf = function (f) { var m = String(f || '').match(/<([^>]+)>/); return m ? m[1] : String(f || '').trim(); };
   function toast(t) { var el = $('toast'); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(function () { el.hidden = true; }, 4200); }
   var log = []; function did(text) { log.unshift({ at: new Date(), text: text }); }
 
-  var S = { cal: null, events: [], tc: null, mail: null, inbox: [], needs: [], pick: null, panel: 'inbox', mailOpen: 0, day: null, drafts: {}, updated: null, meeting: null, notes: {}, followups: [], assistantMode: 'day' };
+  var S = { cal: null, events: [], tc: null, mail: null, inbox: [], needs: [], pick: null, panel: 'inbox', mailOpen: -1, bodies: {}, full: {}, day: null, drafts: {}, updated: null, meeting: null, notes: {}, followups: [], assistantMode: 'day' };
   var NOW = new Date(), WEEK0 = mondayOf(NOW), TODAY_I = (NOW.getDay() + 6) % 7;
 
   /* look + greeting */
@@ -123,7 +129,7 @@
     var rec = S.needs.filter(function (x) { return x.draft; })[0] || top;
     var b3 = '<button class="box rec lift" id="bRec"><small>→ Recommended</small><b>' + esc(rec ? rec.cta : model.sourcesReady(S) ? 'Review your day' : 'Check your connections') + '</b><span>' + esc(rec ? 'Nothing happens until you approve' : 'Based on available sources') + '</span></button>';
     $('boxes').innerHTML = b1 + b2 + b3;
-    if ($('bMail')) $('bMail').onclick = function () { S.panel = 'inbox'; S.mailOpen = 0; renderPanel(); };
+    if ($('bMail')) $('bMail').onclick = function () { S.panel = 'inbox'; S.mailOpen = 0; renderPanel(); openMail(0); };
     $('bCrit').onclick = function () { if (top) pick(top.id); };
     $('bRec').onclick = function () { if (rec) pick(rec.id); else location.href = '/' + WS + (model.sourcesReady(S) ? '/today' : '/hub#connect'); };
 
@@ -206,13 +212,25 @@
       if (S.mail && S.mail.error && S.mail.error !== 'unavailable') { el.innerHTML = '<h2>Your inbox</h2><div class="empty">We couldn’t load your email. Open your inbox to reconnect or try again.</div><a class="btn" href="/' + WS + '/inbox">Open inbox →</a>'; return; }
       if (!mailOk) { el.innerHTML = '<h2>Your inbox</h2><div class="empty">Connect Gmail to see your messages here. You decide what to send.</div><a class="btn" href="/' + WS + '/inbox">Connect Gmail →</a>'; return; }
       var top = S.inbox.filter(function (m) { return m.unread; }).sort(function (a, b) { return (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0); }).slice(0, 6);
-      el.innerHTML = '<div><h2>Your inbox</h2><div class="quiet">' + (top.length ? 'Your latest unread messages' : 'You’re up to date') + '</div></div>' +
-        (top.length ? top.map(function (m, i) {
-          var on = S.mailOpen === i;
-          return '<div class="mail lift' + (on ? ' on' : '') + '"><button data-mail="' + i + '" aria-expanded="' + on + '"><span class="n">' + (i + 1) + '</span><span><span class="f"><b>' + esc(fromName(m.from)) + '</b><span>' + esc(m.date ? new Date(m.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '') + '</span></span><span class="s">' + esc(m.subject || '(no subject)') + '</span></span></button>' +
-            (on ? '<div class="o">' + esc(m.snippet) + '<br><a class="btn" href="/' + WS + '/inbox">Open inbox →</a></div>' : '') + '</div>';
-        }).join('') : '<div class="empty">No unread messages in your latest email check.</div>') +
-        '<a class="btn wide" href="/' + WS + '/inbox">View full inbox <span aria-hidden="true">→</span></a>';
+      var allUnread = S.inbox.filter(function (m) { return m.unread && !m.seen; }).length;
+      var IN = '/' + WS + '/inbox';
+      el.innerHTML = '<div class="rm-head"><h2>Inbox</h2><span>' + (allUnread ? plural(allUnread, 'unread') : 'All caught up') + '</span></div>' +
+        (top.length ? '<div class="rm-list">' + top.map(function (m, i) {
+          var on = S.mailOpen === i, b = S.bodies[m.id];
+          var row = '<div class="rm-row' + (on ? ' on' : '') + (m.seen ? '' : ' unread') + '">' +
+            '<button class="rm-sum" data-mail="' + i + '" aria-expanded="' + on + '"><span class="rm-av" aria-hidden="true">' + esc(initialOf(m.from)) + '</span>' +
+            '<span class="rm-txt"><span class="rm-l1"><b>' + esc(fromName(m.from)) + '</b><time>' + esc(whenOf(m.date)) + '</time></span>' +
+            '<span class="rm-subj">' + esc(m.subject || '(no subject)') + '</span>' + (on ? '' : '<span class="rm-snip">' + esc(m.snippet) + '</span>') + '</span></button>';
+          if (on) {
+            var body = !b ? '<p class="rm-wait">Opening…</p>' : b.error ? '<p class="rm-wait">This email couldn’t open here. Open it in your Inbox.</p>' :
+              '<div class="rm-meta">' + esc(addrOf(m.from)) + ' · ' + esc(new Date(m.date).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })) + '</div>' +
+              '<div class="rm-body' + (S.full[m.id] ? ' full' : '') + '">' + esc(b.body || m.snippet) + '</div>' +
+              ((b.body || '').length > 700 && !S.full[m.id] ? '<button class="rm-more" data-full="' + esc(m.id) + '">Show the whole email</button>' : '');
+            row += '<div class="rm-read">' + body + '<div class="rm-acts"><a class="btn go" href="' + IN + '?open=' + encodeURIComponent(m.id) + '&reply=1">Reply</a><a class="btn" href="' + IN + '?open=' + encodeURIComponent(m.id) + '">Open in Inbox</a></div></div>';
+          }
+          return row + '</div>';
+        }).join('') + '</div>' : '<div class="empty">No unread email. You’re up to date.</div>') +
+        '<a class="btn wide" href="' + IN + '">See all email <span aria-hidden="true">→</span></a>';
       return;
     }
     var x = S.needs.filter(function (n) { return n.id === S.pick; })[0];
@@ -293,7 +311,18 @@
   /* events */
   $('needs').addEventListener('click', function (e) { var b = e.target.closest('[data-need]'); if (b) pick(b.dataset.need); });
   $('days').addEventListener('click', function (e) { var b = e.target.closest('[data-day]'); if (!b) return; var i = +b.dataset.day; S.day = S.day === i ? null : i; renderWeek(model.calendarReady(S)); });
-  $('panel').addEventListener('click', function (e) { var b = e.target.closest('[data-mail]'); if (!b) return; var i = +b.dataset.mail; S.mailOpen = S.mailOpen === i ? -1 : i; renderPanel(); });
+  function openMail(i) {
+    var top = S.inbox.filter(function (m) { return m.unread; }).sort(function (a, b) { return (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0); }).slice(0, 6);
+    var m = top[i]; if (!m || S.bodies[m.id]) return;
+    get('/api/gmail?action=read&ws=' + encodeURIComponent(WS) + '&id=' + encodeURIComponent(m.id)).then(function (r) {
+      S.bodies[m.id] = r.message || { body: m.snippet };
+      if (!m.seen) { m.seen = true; post('/api/gmail?action=read-state&ws=' + encodeURIComponent(WS), { id: m.id, unread: false }).catch(function () {}); }
+    }).catch(function () { S.bodies[m.id] = { error: true }; }).then(function () { if (S.panel === 'inbox') renderPanel(); });
+  }
+  $('panel').addEventListener('click', function (e) {
+    var f = e.target.closest('[data-full]'); if (f) { S.full[f.dataset.full] = true; renderPanel(); return; }
+    var b = e.target.closest('[data-mail]'); if (!b) return; var i = +b.dataset.mail; S.mailOpen = S.mailOpen === i ? -1 : i; renderPanel(); if (S.mailOpen === i) openMail(i);
+  });
   $('tabInbox').onclick = function () { S.panel = 'inbox'; renderPanel(); };
   $('tabDetails').onclick = function () { S.panel = 'details'; renderPanel(); };
 

@@ -24,3 +24,269 @@ body[data-workspace-page="start"] .top{display:none}body[data-workspace-page="st
 .hub .hub-step.next .hub-step-t>span:last-child,.hub .hub-step.next .hub-eyebrow{color:#000000}.hub .hub-step.next .hub-step-n{background:#0F766E;color:#FFFFFF}.hub .hub-qb-steps li{box-shadow:var(--h-shadow)}
 html:not(.light) .hub .hub-tc-dark,html.light .hub .hub-tc-dark{background:#FFFFFF!important;color:#000000!important;border:0!important}.hub .hub-dark,html:not(.light) .hub .hub-dark{background:#000000;color:#FFFFFF;border:0}.hub .hub-tc-tag i,.hub .hub-tc-look i{background:#0F766E}.hub .hub-trustline i{box-shadow:none}.hub .hub-switch[aria-checked="true"]::after{background:#FFFFFF}
 #cuepa-ai{position:fixed;right:24px;bottom:24px;z-index:100;font:14px/1.5 Inter,Arial,sans-serif;color:#000}#cuepa-ai>[data-toggle]{background:#0F766E;color:#fff;border:0;border-radius:28px;padding:14px 20px;box-shadow:0 5px 22px #0003}#cuepa-ai section{position:absolute;bottom:65px;right:0;width:min(380px,calc(100vw - 32px));max-height:calc(100dvh - 120px);overflow:auto;background:#fff;padding:20px;border-radius:16px;box-shadow:0 8px 40px #0003}#cuepa-ai header{display:flex;gap:8px;align-items:center;justify-content:space-between}#cuepa-ai header button{background:#fff;border:0;padding:8px;color:#000;font-size:12px}#cuepa-ai [role=log]{max-height:260px;overflow:auto;overflow-wrap:anywhere}#cuepa-ai [role=log] p{padding:12px;border-radius:10px;box-shadow:0 2px 12px #0001;white-space:pre-wrap}#cuepa-ai .user{background:#0F766E;color:#fff;margin-left:20px}#cuepa-ai form{display:grid;gap:10px}#cuepa-ai textarea{font:16px/1.5 Inter,Arial,sans-serif;width:100%;padding:12px;border:0;border-radius:8px;background:#fff;color:#000;resize:vertical}#cuepa-ai form button{background:#0F766E;color:#fff;border:0;border-radius:8px;padding:10px}#cuepa-ai button:disabled{opacity:.5}#cuepa-ai [role=status],#cuepa-ai small{display:block;font-size:11px;color:#595959;margin:10px 0}#cuepa-ai [hidden]{display:none!important}
+
+
+/* ==========================================================================
+   CUEPA Workspace System v2 (Nov 2026) — clean, straight lines.
+   White ground, black type, Teal Mark #0F766E as the only colour, Inter only.
+   Tight 8px corners on surfaces, 6px on controls, no pill shapes. Outer
+   surfaces lift with black shadows; rows inside them are separated by straight
+   hairline rules, never floating boxes or outlines.
+   ========================================================================== */
+:root{--x-ink:#000;--x-grey:#595959;--x-fill:#F5F6F6;--x-rule:#ECECEC;--x-teal:#0F766E;--x-tint:#EDF7F5;
+  --x-r:8px;--x-rs:6px;
+  --x-sh:0 1px 2px rgba(0,0,0,.06),0 4px 18px rgba(0,0,0,.06);--x-sh-sm:0 1px 2px rgba(0,0,0,.10),0 1px 6px rgba(0,0,0,.05);
+  --shadow:var(--x-sh);--lift:0 2px 4px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.10)}
+body,body *:not(svg):not(svg *){font-family:Inter,'Helvetica Neue',Arial,sans-serif!important}
+body *{text-transform:none!important}
+.eyebrow,.lab,.chip,.hub-state,.hub-eyebrow,.hub-tc-tag,.roomdate,.roomtime,.k,.n,.s,.tk,.hub-crumb,.hub-badge,small,time,kbd,.legend,.hub-tc-head span{letter-spacing:0!important}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+/* header: straight bar, rule underneath */
+.cuepa-header{min-height:68px;padding:0 40px;box-shadow:0 1px 0 var(--x-rule)}
+.cuepa-brand{font-size:24px;letter-spacing:-.04em}
+.cuepa-brand small{font:500 13px/1 Inter,Arial,sans-serif!important;color:var(--x-grey);margin-left:14px;padding-left:14px;box-shadow:inset 1px 0 0 var(--x-rule)}
+.cuepa-header .cuepa-nav{gap:2px;align-self:stretch}
+.cuepa-nav>a,.cuepa-more summary{font-size:14px!important;padding:0 14px!important;min-height:68px;display:inline-flex!important;align-items:center;border-radius:0!important;background:transparent!important;color:#3a3a3a!important}
+.cuepa-nav>a:hover,.cuepa-more summary:hover{color:#000!important;background:transparent!important;box-shadow:inset 0 -2px 0 var(--x-rule)}
+.cuepa-nav a[aria-current="page"]{color:#000!important;font-weight:600!important;box-shadow:inset 0 -2px 0 var(--x-teal)!important}
+.cuepa-more{display:flex}
+.cuepa-more summary{list-style:none;gap:6px}
+.cuepa-more summary::-webkit-details-marker{display:none}
+.cuepa-more summary::after{content:"";width:6px;height:6px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+.cuepa-more>div{top:100%!important;border-radius:var(--x-r);padding:6px;box-shadow:0 2px 6px rgba(0,0,0,.06),0 12px 32px rgba(0,0,0,.12)}
+.cuepa-more a{border-radius:var(--x-rs);padding:10px 12px}.cuepa-more a:hover{background:var(--x-fill)}
+
+/* shared surfaces + controls */
+.card,.panel,.needsec,.track,.agenda,.week,.why,.tile,.stat,.hub .hub-card,.hub .hub-tc-stat,.hub .hub-step,.hub .hub-tc-payroll{border-radius:var(--x-r)!important;box-shadow:var(--x-sh)!important}
+.btn,button.btn,.hub .hub-primary,.hub .hub-ghost,.hub button.hub-dark,.hub a.hub-dark{border-radius:var(--x-rs)!important;font-weight:600!important}
+.go,.btn.go,.hub .hub-primary{background:var(--x-teal)!important;color:#fff!important}
+.pill,.hub .hub-tc-tag,.hub .hub-state,.chip{border-radius:4px!important}
+:focus-visible{outline:2px solid var(--x-teal)!important;outline-offset:2px}
+
+/* Ask CUEPA */
+#cuepa-ai>[data-toggle]{height:46px;padding:0 20px;border-radius:var(--x-rs);font:600 14px Inter,Arial,sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.14),0 8px 24px rgba(0,0,0,.14)}
+#cuepa-ai section{border-radius:var(--x-r);padding:22px;box-shadow:0 2px 6px rgba(0,0,0,.06),0 20px 50px rgba(0,0,0,.16)}
+#cuepa-ai header{padding-bottom:12px;box-shadow:0 1px 0 var(--x-rule)}
+#cuepa-ai header b{font-size:16px}
+#cuepa-ai header button{border-radius:var(--x-rs);font-weight:600;font-size:13px;color:var(--x-grey)}#cuepa-ai header button:hover{background:var(--x-fill);color:#000}
+#cuepa-ai [role=log] p{box-shadow:none;background:var(--x-fill);border-radius:var(--x-rs);line-height:1.55}
+#cuepa-ai .user{background:var(--x-teal)!important;color:#fff}
+#cuepa-ai textarea{background:var(--x-fill)!important;box-shadow:none!important;border-radius:var(--x-rs)}
+#cuepa-ai textarea:focus{outline:none!important;box-shadow:inset 0 0 0 2px var(--x-teal)!important}
+#cuepa-ai form button{height:42px;border-radius:var(--x-rs);font-weight:600}
+#cuepa-ai label{font-size:13px;color:var(--x-grey)}
+
+/* ---------- The Room ---------- */
+body[data-workspace-page="room"] .workspace{max-width:1440px;margin:0 auto;padding:32px 40px 56px}
+body[data-workspace-page="room"] .page-heading{align-items:flex-end;margin-bottom:24px}
+body[data-workspace-page="room"] .page-heading .eyebrow{display:none}
+body[data-workspace-page="room"] .hello{font-size:30px!important;font-weight:700!important;letter-spacing:-.025em!important;line-height:1.15;margin:0 0 6px}
+body[data-workspace-page="room"] .hello b{font-weight:700!important}
+body[data-workspace-page="room"] .page-heading .quiet{font-size:15px;color:var(--x-grey);margin:0}
+body[data-workspace-page="room"] .roomdate{font-size:14px!important;font-weight:600;color:#000}
+body[data-workspace-page="room"] .roomtime{font-weight:400;color:var(--x-grey)}
+body[data-workspace-page="room"] .ticker{font-size:13px;color:var(--x-grey)}
+body[data-workspace-page="room"] .ticker .dot{background:var(--x-teal)!important}
+/* brief: white, teal rule on the left edge, three straight columns */
+body[data-workspace-page="room"] .brief{padding:28px 28px 24px!important;box-shadow:var(--x-sh),inset 3px 0 0 var(--x-teal)!important}
+body[data-workspace-page="room"] .brief h1{font-size:26px!important;font-weight:600!important;letter-spacing:-.02em;line-height:1.3;margin:0 0 22px;max-width:40ch}
+body[data-workspace-page="room"] .brief h1 em{font-style:normal;color:var(--x-teal)!important;font-weight:700}
+body[data-workspace-page="room"] .boxes{gap:0!important;box-shadow:0 -1px 0 var(--x-rule);padding-top:4px}
+body[data-workspace-page="room"] .box{background:transparent!important;box-shadow:none!important;border-radius:0!important;padding:16px 20px!important;text-align:left}
+body[data-workspace-page="room"] .box:first-child{padding-left:0!important}
+body[data-workspace-page="room"] .box+.box{box-shadow:inset 1px 0 0 var(--x-rule)!important}
+body[data-workspace-page="room"] .box:hover{background:var(--x-fill)!important}
+body[data-workspace-page="room"] .box small{color:var(--x-grey)!important;font-size:12.5px}
+body[data-workspace-page="room"] .box.rec{background:var(--x-teal)!important;border-radius:var(--x-rs)!important;padding-left:20px!important;box-shadow:none!important;margin:0!important}
+body[data-workspace-page="room"] .box.rec:hover{background:#0c645d!important}
+body[data-workspace-page="room"] .box.rec small,body[data-workspace-page="room"] .box.rec span{color:#D7EFEB!important}
+/* three columns */
+body[data-workspace-page="room"] .shell{gap:24px;margin-top:24px}
+body[data-workspace-page="room"] .needsec,body[data-workspace-page="room"] .track,body[data-workspace-page="room"] .panel,body[data-workspace-page="room"] .agenda,body[data-workspace-page="room"] .week{padding:22px!important;background:#fff!important}
+body[data-workspace-page="room"] .h2,body[data-workspace-page="room"] .panel h2{font-size:17px!important;font-weight:650!important;letter-spacing:-.01em;color:#000!important}
+body[data-workspace-page="room"] .soft{color:var(--x-grey);font-weight:400;font-size:13px}
+body[data-workspace-page="room"] .track .eyebrow{font-size:17px!important;font-weight:650;color:#000}
+/* rows: straight rules, no floating boxes */
+body[data-workspace-page="room"] .need,body[data-workspace-page="room"] .mail,body[data-workspace-page="room"] .agenda-row{box-shadow:none!important;background:transparent!important;border-radius:0!important;margin:0!important}
+body[data-workspace-page="room"] .need+.need,body[data-workspace-page="room"] .mail+.mail,body[data-workspace-page="room"] .agenda-row+.agenda-row{box-shadow:inset 0 1px 0 var(--x-rule)!important}
+body[data-workspace-page="room"] .need,body[data-workspace-page="room"] .agenda-row{padding:14px 0!important}
+body[data-workspace-page="room"] .need:hover,body[data-workspace-page="room"] .mail:hover,body[data-workspace-page="room"] .agenda-row:hover{background:var(--x-fill)!important}
+body[data-workspace-page="room"] .mail.on{background:var(--x-tint)!important;box-shadow:inset 3px 0 0 var(--x-teal)!important}
+body[data-workspace-page="room"] .agenda-row time{white-space:nowrap;font-size:13px;color:var(--x-grey);font-variant-numeric:tabular-nums}
+body[data-workspace-page="room"] .switch{background:transparent;border-radius:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0;box-shadow:inset 0 -1px 0 var(--x-rule);margin-bottom:16px}
+body[data-workspace-page="room"] .switch button{border-radius:0!important;height:40px;background:transparent!important;color:var(--x-grey)!important;font-weight:600;box-shadow:none!important}
+body[data-workspace-page="room"] .switch button[aria-pressed="true"]{color:#000!important;box-shadow:inset 0 -2px 0 var(--x-teal)!important}
+body[data-workspace-page="room"] .btn{box-shadow:var(--x-sh-sm);background:#fff}
+body[data-workspace-page="room"] .btn.wide{background:transparent!important;box-shadow:inset 0 1px 0 var(--x-rule)!important;border-radius:0!important}
+body[data-workspace-page="room"] .ontrack{color:var(--x-grey);font-size:13px;box-shadow:inset 0 1px 0 var(--x-rule);padding-top:12px}
+body[data-workspace-page="room"] .metric .bullet{background:var(--x-fill);border-radius:2px}
+body[data-workspace-page="room"] .metric .bullet .act{background:var(--x-teal)!important;border-radius:2px}
+body[data-workspace-page="room"] .day{box-shadow:none!important;border-radius:var(--x-rs)!important}
+body[data-workspace-page="room"] .day.today{background:var(--x-tint)!important}
+body[data-workspace-page="room"] .ev{border-radius:4px!important}
+body[data-workspace-page="room"] .workspace-footer{color:var(--x-grey);font-size:13px;text-align:center;padding-top:32px}
+
+/* ---------- Today ---------- */
+body[data-workspace-page="today"]>.shell{max-width:1440px!important;padding:32px 40px 56px!important}
+body[data-workspace-page="today"] .tile{padding:18px 20px!important}
+body[data-workspace-page="today"] .tile span{font-size:13px;color:var(--x-grey)}
+body[data-workspace-page="today"] .tile b{white-space:nowrap;font-size:26px;font-weight:700;letter-spacing:-.02em}
+body[data-workspace-page="today"] .tile small{white-space:nowrap;font-size:12.5px;color:var(--x-grey)}
+body[data-workspace-page="today"] .search{background:var(--x-fill)!important;box-shadow:none!important;border-radius:var(--x-rs)!important;height:44px}
+body[data-workspace-page="today"] .search input{background:transparent!important;box-shadow:none!important}
+body[data-workspace-page="today"] .conn{font-size:13px;color:var(--x-grey)}
+body[data-workspace-page="today"] .hello .lab{display:none}
+body[data-workspace-page="today"] .hello h1{font-size:30px!important;font-weight:700!important;letter-spacing:-.025em!important;line-height:1.15;margin:0 0 8px}
+body[data-workspace-page="today"] .hello p{font-size:16px;color:var(--x-grey);max-width:60ch}
+body[data-workspace-page="today"] .stats{display:none}
+body[data-workspace-page="today"] .colhead,body[data-workspace-page="today"] .dayhead{box-shadow:inset 0 -1px 0 var(--x-rule);padding-bottom:12px;margin-bottom:4px}
+body[data-workspace-page="today"] .colhead h2,body[data-workspace-page="today"] .dayhead h2,body[data-workspace-page="today"] .why h2{font-size:17px!important;font-weight:650!important;letter-spacing:-.01em}
+body[data-workspace-page="today"] .why>h2,body[data-workspace-page="today"] .why h2:first-of-type{font-size:22px!important;font-weight:700!important;letter-spacing:-.02em;line-height:1.25}
+body[data-workspace-page="today"] .colhead .lab{font-size:13px;color:var(--x-grey)}
+body[data-workspace-page="today"] .need{border-radius:0!important;box-shadow:none!important;background:transparent!important;padding:20px 16px!important;margin:0!important}
+body[data-workspace-page="today"] .need+.need{box-shadow:inset 0 1px 0 var(--x-rule)!important}
+body[data-workspace-page="today"] .need.on{background:var(--x-tint)!important;box-shadow:inset 3px 0 0 var(--x-teal)!important}
+body[data-workspace-page="today"] .need .row1,body[data-workspace-page="today"] .need .row1 *{font-size:12.5px;font-weight:600;color:var(--x-teal)}
+body[data-workspace-page="today"] .need h3{font-size:17px;font-weight:650;letter-spacing:-.01em}
+body[data-workspace-page="today"] .btn{height:38px;padding:0 14px;display:inline-flex;align-items:center;box-shadow:var(--x-sh-sm);background:#fff;color:#000}
+body[data-workspace-page="today"] .btn.dark,body[data-workspace-page="today"] button.dark{background:var(--x-teal)!important;color:#fff!important}
+body[data-workspace-page="today"] .day{padding:22px!important;border-radius:var(--x-r)!important;box-shadow:var(--x-sh)!important}
+body[data-workspace-page="today"] .seg{background:transparent;border-radius:var(--x-rs);padding:0;box-shadow:inset 0 0 0 1px var(--x-rule)}
+body[data-workspace-page="today"] .seg button{border-radius:var(--x-rs)!important;background:transparent;color:var(--x-grey);font-weight:600}
+body[data-workspace-page="today"] .seg button[aria-pressed="true"],body[data-workspace-page="today"] .seg button.on{background:#000!important;color:#fff!important}
+body[data-workspace-page="today"] .slot time,body[data-workspace-page="today"] .slots time{font-size:12.5px;color:var(--x-grey);font-variant-numeric:tabular-nums}
+body[data-workspace-page="today"] .chip{font-size:12px!important;font-weight:600;color:var(--x-grey)}
+body[data-workspace-page="today"] .chip.t{color:var(--x-teal)}
+body[data-workspace-page="today"] .why{padding:26px!important}
+body[data-workspace-page="today"] .why .lab{font-size:12.5px;color:var(--x-grey);font-weight:600}
+body[data-workspace-page="today"] .safe{color:var(--x-teal);font-size:13.5px}
+
+/* ---------- Hub sections ---------- */
+.hub .hub-content{max-width:1440px!important;margin:0 auto!important;padding:28px 40px 72px!important}
+.hub .hub-crumb{visibility:hidden}
+.hub .hub-content{position:relative}
+.hub .hub-actions{align-items:center;position:absolute;top:28px;right:40px;z-index:2;margin:0!important}
+.hub .hub-actions>.hub-crumb{display:none}
+.hub .hub-content:has(.hub-setup) .hub-actions,.hub .hub-content:has(.hub-hello) .hub-actions{position:static;justify-content:flex-end;margin:0 0 8px!important}
+.hub .hub-badge{font-size:13px;color:var(--x-grey);background:transparent!important}
+.hub .hub-actions .hub-primary{background:#fff!important;color:#000!important;box-shadow:var(--x-sh-sm)!important}
+.hub h1{font-size:34px!important;font-weight:700!important;letter-spacing:-.03em!important;line-height:1.1!important}
+.hub h1 .dot{display:none!important}
+.hub .hub-pagehead>.hub-eyebrow{display:none}
+.hub .hub-eyebrow{font-size:13px!important;font-weight:500!important;color:var(--x-grey)!important}
+.hub .hub-eyebrow::before{display:none!important}
+.hub .hub-hello p,.hub .hub-pagehead p{font-size:16px;color:var(--x-grey)!important;max-width:62ch}
+.hub h2{font-size:20px!important;font-weight:650!important;letter-spacing:-.015em!important}
+.hub h3{font-size:16px!important;font-weight:650!important}
+.hub .hub-card{padding:24px!important}
+.hub button.hub-dark,.hub a.hub-dark{background:#fff!important;color:#000!important;box-shadow:var(--x-sh-sm)!important}
+.hub .hub-ghost{background:#fff!important;color:#000!important;box-shadow:var(--x-sh-sm)!important}
+.hub .hub-tc-tag,.hub .hub-state{font-size:12px!important;font-weight:600!important;padding:3px 8px!important;background:var(--x-fill)!important;color:#000!important}
+.hub .hub-tc-tag i{display:none}
+.hub .hub-tc-ok,.hub .hub-open{background:var(--x-tint)!important;color:var(--x-teal)!important}
+.hub .hub-tc-stat b{font-size:30px!important;font-weight:700!important;letter-spacing:-.02em}
+.hub .hub-tc-head span{font-size:12.5px!important;color:var(--x-grey)!important;font-weight:500!important}
+.hub .hub-tc-row+.hub-tc-row{box-shadow:inset 0 1px 0 var(--x-rule)}
+.hub .hub-slot{box-shadow:inset 0 1px 0 var(--x-rule)}
+.hub .hub-slot time{font-size:13px;color:var(--x-grey);font-variant-numeric:tabular-nums}
+.hub .hub-block{border-radius:4px!important}
+.hub .hub-step{box-shadow:var(--x-sh-sm)!important}
+.hub .hub-step.next{background:var(--x-tint)!important;box-shadow:inset 3px 0 0 var(--x-teal)!important}
+.hub .hub-prog{background:var(--x-fill)!important;border-radius:2px}.hub .hub-prog i{background:var(--x-teal)!important;border-radius:2px}
+.hub input,.hub textarea,.hub select{background:var(--x-fill)!important;box-shadow:none!important;border-radius:var(--x-rs)!important}
+.hub .hub-sub{color:var(--x-grey)!important}
+
+/* ---------- Setup (start) ---------- */
+body[data-workspace-page="start"] .btn.dark,body[data-workspace-page="start"] button.dark{background:#fff!important;color:#000!important;box-shadow:var(--x-sh-sm)!important}
+body[data-workspace-page="start"] h1{font-size:30px!important;font-weight:700!important;letter-spacing:-.025em!important}
+body[data-workspace-page="start"] h1 .dot{display:none}
+body[data-workspace-page="start"] .lab{font-size:13px!important;color:var(--x-grey)!important;font-weight:500!important}
+
+/* ---------- smaller screens ---------- */
+@media(max-width:1050px){.cuepa-header{padding:0 24px}.cuepa-nav>a,.cuepa-more summary{min-height:52px}body[data-workspace-page="room"] .workspace,body[data-workspace-page="today"]>.shell{padding:24px!important}.hub .hub-content{padding:24px 24px 72px!important}}
+@media(max-width:900px){.hub .hub-actions{position:static;margin:0 0 16px!important;justify-content:flex-start}}
+@media(max-width:650px){
+  .cuepa-header{padding:12px 16px 0;gap:4px}
+  .cuepa-header .cuepa-nav{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;margin:0 -16px!important;padding:0 8px;width:calc(100% + 32px)!important;justify-content:flex-start!important}
+  .cuepa-header .cuepa-nav::-webkit-scrollbar{display:none}
+  .cuepa-nav>a,.cuepa-more summary{flex:none;min-height:44px;padding:0 10px!important}
+  .cuepa-more>div{position:fixed!important;left:16px!important;right:16px!important;top:110px!important}
+  body[data-workspace-page="room"] .workspace,body[data-workspace-page="today"]>.shell{padding:20px 16px 96px!important}
+  .hub .hub-content{padding:20px 16px 96px!important}
+  body[data-workspace-page="room"] .brief{padding:22px 18px!important}
+  body[data-workspace-page="room"] .brief h1{font-size:21px!important}
+  body[data-workspace-page="room"] .box{padding:14px 0!important;box-shadow:inset 0 1px 0 var(--x-rule)!important}
+  body[data-workspace-page="room"] .box:first-child{box-shadow:none!important}
+  body[data-workspace-page="room"] .box.rec{margin:8px 0 0;padding:14px 16px!important}
+  body[data-workspace-page="room"] .hello,body[data-workspace-page="today"] .hello h1{font-size:26px!important}
+  .hub h1{font-size:28px!important}
+  #cuepa-ai{right:16px;bottom:16px}
+}
+
+/* ---------- spacing pass: one rule — 24px inside every box (20px on phones); rows run edge to edge
+   with the same 24px inset so every text column lines up with its box ---------- */
+:root{--x-pad:24px}
+body[data-workspace-page="room"] .needsec,body[data-workspace-page="room"] .track,body[data-workspace-page="room"] .panel,body[data-workspace-page="room"] .agenda,body[data-workspace-page="room"] .week,
+body[data-workspace-page="today"] .tile,body[data-workspace-page="today"] .day,body[data-workspace-page="today"] .why,
+.hub .hub-card,.hub .hub-tc-stat,.hub .hub-tc-payroll{padding:var(--x-pad)!important}
+body[data-workspace-page="room"] .brief{padding:28px var(--x-pad) var(--x-pad) calc(var(--x-pad) + 3px)!important}
+/* Room rows bleed to the card edge */
+body[data-workspace-page="room"] .need,body[data-workspace-page="room"] .agenda-row,body[data-workspace-page="room"] .mail{margin:0 calc(-1 * var(--x-pad))!important;padding-left:var(--x-pad)!important;padding-right:var(--x-pad)!important}
+body[data-workspace-page="room"] .mail>button{padding-left:0!important;padding-right:0!important}
+body[data-workspace-page="room"] .mail .o{padding-left:0!important;padding-right:0!important}
+body[data-workspace-page="room"] .btn.wide{margin:0 calc(-1 * var(--x-pad)) calc(-1 * var(--x-pad))!important;padding:16px var(--x-pad)!important;width:calc(100% + 2 * var(--x-pad))!important}
+body[data-workspace-page="room"] .switch{margin:calc(-1 * var(--x-pad)) calc(-1 * var(--x-pad)) 20px!important}
+body[data-workspace-page="room"] .ontrack{margin-top:4px}
+/* Today: decision rows inset 24 */
+body[data-workspace-page="today"] .need{padding:var(--x-pad)!important}
+/* Hub tables: rows carry the inset, the card does not double it */
+.hub .hub-tc-table{padding:0 0 4px!important}
+.hub .hub-tc-row{padding-left:var(--x-pad)!important;padding-right:var(--x-pad)!important}
+.hub .hub-step{padding:20px var(--x-pad)!important}
+@media(max-width:650px){:root{--x-pad:20px}}
+@media(max-width:650px){body[data-workspace-page="room"] .box+.box{box-shadow:inset 0 1px 0 var(--x-rule)!important}body[data-workspace-page="room"] .box.rec{box-shadow:none!important}}
+
+/* ---------- accessibility pass (WCAG 2.1 AA + 2.2 target size) ---------- */
+/* no auto-moving content: the Room's sync status sits still (2.2.2) */
+.tickmove{animation:none!important;width:auto!important;flex-wrap:wrap}
+/* tap targets at least 24x24 (2.5.8) */
+.hub .hub-linkbtn{min-height:28px;display:inline-flex;align-items:center;padding:2px 4px!important}
+.hub input[type=checkbox]{width:24px;height:24px;margin:0}
+.cuepa-nav>a,.cuepa-more summary,.btn,button{min-height:24px}
+/* reflow at 320px (1.4.10) */
+body[data-workspace-page="today"] .search{min-width:0!important;max-width:100%!important;width:100%}
+body[data-workspace-page="today"] .topbar{min-width:0}
+@media(max-width:650px){body[data-workspace-page="today"] .search kbd{display:none}}
+
+/* ---------- The Room: reading panel (rows like the Inbox, read in place) ---------- */
+body[data-workspace-page="room"] .rm-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:12px}
+body[data-workspace-page="room"] .rm-head h2{margin:0}
+body[data-workspace-page="room"] .rm-head span{font-size:13px;color:var(--x-grey)}
+body[data-workspace-page="room"] .rm-list{margin:0 calc(-1 * var(--x-pad));box-shadow:inset 0 1px 0 var(--x-rule)}
+body[data-workspace-page="room"] .rm-row{box-shadow:inset 0 -1px 0 var(--x-rule)}
+body[data-workspace-page="room"] .rm-row.on{background:#fff;box-shadow:inset 3px 0 0 var(--x-teal),inset 0 -1px 0 var(--x-rule)}
+body[data-workspace-page="room"] .rm-sum{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:36px minmax(0,1fr);gap:14px;align-items:start;padding:14px var(--x-pad);cursor:pointer}
+body[data-workspace-page="room"] .rm-sum:hover{background:var(--x-fill)}
+body[data-workspace-page="room"] .rm-sum:focus-visible{outline:2px solid var(--x-teal);outline-offset:-2px}
+body[data-workspace-page="room"] .rm-av{width:36px;height:36px;border-radius:50%;background:#F0F0F0;color:#000;display:grid;place-items:center;font-weight:600;font-size:14px}
+body[data-workspace-page="room"] .rm-row.on .rm-av{background:#000;color:#fff}
+body[data-workspace-page="room"] .rm-txt{display:grid;gap:2px;min-width:0}
+body[data-workspace-page="room"] .rm-l1{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+body[data-workspace-page="room"] .rm-l1 b{font-weight:500;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-workspace-page="room"] .rm-row.unread .rm-l1 b{font-weight:700}
+body[data-workspace-page="room"] .rm-l1 time{font-size:12.5px;color:var(--x-grey);white-space:nowrap;font-variant-numeric:tabular-nums}
+body[data-workspace-page="room"] .rm-subj{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-workspace-page="room"] .rm-row.unread .rm-subj{font-weight:600}
+body[data-workspace-page="room"] .rm-row.on .rm-subj{white-space:normal;font-size:17px;font-weight:650;letter-spacing:-.01em;line-height:1.3}
+body[data-workspace-page="room"] .rm-snip{font-size:13.5px;color:var(--x-grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body[data-workspace-page="room"] .rm-read{padding:0 var(--x-pad) 20px calc(var(--x-pad) + 50px);display:grid;gap:14px}
+body[data-workspace-page="room"] .rm-meta{font-size:13px;color:var(--x-grey);overflow-wrap:anywhere}
+body[data-workspace-page="room"] .rm-body{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.65;max-width:62ch;display:-webkit-box;-webkit-line-clamp:14;-webkit-box-orient:vertical;overflow:hidden}
+body[data-workspace-page="room"] .rm-body.full{display:block;-webkit-line-clamp:unset}
+body[data-workspace-page="room"] .rm-more{all:unset;cursor:pointer;color:var(--x-teal);font-weight:600;font-size:14px;min-height:28px;display:inline-flex;align-items:center;justify-self:start}
+body[data-workspace-page="room"] .rm-wait{margin:0;color:var(--x-grey);font-size:14px}
+body[data-workspace-page="room"] .rm-acts{display:flex;gap:10px;flex-wrap:wrap}
+body[data-workspace-page="room"] .rm-acts .btn{height:38px;padding:0 16px;display:inline-flex;align-items:center;text-decoration:none}
+body[data-workspace-page="room"] .panel .btn.wide{margin-top:0!important}
+@media(max-width:650px){body[data-workspace-page="room"] .rm-read{padding-left:var(--x-pad)}}
