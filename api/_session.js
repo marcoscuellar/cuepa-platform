@@ -5,7 +5,7 @@
 const crypto = require("crypto");
 
 const COOKIE = "cuepa_session";
-const MAX_AGE = 60 * 60 * 12; // 12 hours: everyone signs in again each day
+const MAX_AGE = 60 * 60 * 24 * 30; // 30 days: sign in about once a month (Sign out still ends it right away)
 
 function users() {
   try { return JSON.parse(process.env.CUEPA_USERS || "[]"); } catch (e) { return []; }
