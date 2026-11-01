@@ -131,6 +131,9 @@ async function load(){
       S.msg=['ok','Calendar connected. Your main calendar is on.'];
     }catch(e){S.msg=['ok','Calendar connected. Choose which calendars to show from Setup anytime.'];}
   }
+  // Already took the tour and just reconnected? Straight back to Today.
+  let seen=false;try{seen=localStorage.getItem('cuepa_start_'+WS)==='done'}catch(e){}
+  if(seen&&q.get('google')==='connected'){location.replace('/'+WS+'/today');return;}
   // First open with nothing to do on this card? Move ahead to the first unfinished one.
   if(!q.has('connect')&&!q.has('google')&&!q.has('tour')){if(S.mail.connected)S.step=1;if(S.mail.connected&&S.cal.connected)S.step=2;}
   render();

@@ -21,7 +21,7 @@ for(const name of ['room','today','gmail','hub','start']) {
   const html=response.body;
   assert.equal((html.match(/class="cuepa-header"/g)||[]).length,1);
   assert.match(html,/href="\/assets\/workspace.css"/);
-  for(const route of ['/cirques-experience/today','/cirques-experience/inbox','/cirques-experience/hub#calendar','/cirques-experience/hub#timecards','/cirques-experience/hub#vendors','/cirques-experience/hub#meetings','/cirques-experience/hub#connect','/cirques-experience/hub#access']) assert.ok(html.includes('href="'+route+'"'),route);
+  for(const route of ['/cirques-experience/today','/cirques-experience/inbox','/cirques-experience/hub#calendar','/cirques-experience/hub#timecards','/cirques-experience/hub#vendors','/cirques-experience/hub#meetings','/cirques-experience/start','/cirques-experience/hub#access']) assert.ok(html.includes('href="'+route+'"'),route);
   for(const script of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)) new vm.Script(script[1]);
   assert.doesNotMatch(html,/<a[^>]+href="https:\/\/app\.makingcuepa\.com/);
  });
