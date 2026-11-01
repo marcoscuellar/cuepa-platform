@@ -256,7 +256,10 @@ body.focus .ib-body{font-size:17px;line-height:1.75}
   .ib-connect{padding:28px 22px;margin:24px auto}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style></head><body>
+
+.ib-link{display:inline-flex;align-items:center;gap:2px;color:#0F766E;font-weight:600;text-decoration:none;background:#EDF7F5;border-radius:6px;padding:0 7px;line-height:1.6;white-space:nowrap}
+.ib-link:hover{text-decoration:underline}
+</style><script src="/assets/mail-body.js"></script></head><body>
 <main class="ib">
   <div id="banner" class="ib-banner" role="status" hidden></div>
 
@@ -371,7 +374,7 @@ async function open(i){const m0=msgs[i];if(!m0)return;current=i;
       +'<div><h2 class="ib-subject">'+esc(m.subject||'(no subject)')+'</h2>'+(()=>{const fs=CuepaFolders.foldersOf(m,labels,'');return fs.length?'<div class="ib-chips" style="margin-top:10px">'+fs.map(CuepaFolders.chip).join('')+'</div>':'';})()+'</div>'
       +'<div class="ib-from"><span class="ib-av" aria-hidden="true"'+CuepaFolders.avatarStyle(CuepaFolders.foldersOf(m,labels,'')[0])+'>'+esc(initial(m.from))+'</span><div style="min-width:0"><b>'+esc(nameOf(m.from))+'</b><span class="ib-addr">'+esc(addrOf(m.from))+'</span><div class="ib-to">To '+esc(m.to)+(m.cc?'<br>Cc '+esc(m.cc):'')+'</div></div><time>'+esc(longWhen(m.date))+'</time></div>'
       +'<div class="ib-actions">'+(trash?'<button type="button" class="ib-primary" id="restore">Restore to inbox</button>':'<button type="button" class="ib-primary" id="reply">Reply</button><button type="button" class="ib-quiet" id="replyAll">Reply all</button>'+(moveOptions()?'<select class="ib-select" id="sideMove" aria-label="Move to folder"><option value="">Move to…</option>'+moveOptions()+'</select>':'')+'<button type="button" class="ib-quiet ib-del" id="sideDel">Delete</button>')+'<button type="button" class="ib-quiet ib-expand" id="expand" aria-pressed="'+document.body.classList.contains('focus')+'">'+(document.body.classList.contains('focus')?'Back to list':'Expand')+'</button>'+'</div>'
-      +'<div class="ib-body">'+esc(m.body||m.snippet)+'</div>'
+      +'<div class="ib-body">'+(window.mailBody?mailBody(m.body||m.snippet):esc(m.body||m.snippet))+'</div>'
       +(trash?'':'<p class="ib-note">Replies go out from '+esc(me)+'. Nothing sends until you press Send.</p>')
       +'</div>';
     $('reader').scrollTop=0;
