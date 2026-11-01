@@ -437,3 +437,30 @@ body[data-workspace-page="today"] .surface.line .day{grid-column:1/-1;box-shadow
   body[data-workspace-page="today"] .surface,body[data-workspace-page="today"] .surface.line{grid-template-columns:minmax(0,1fr)!important}
   body[data-workspace-page="today"] .surface .day,body[data-workspace-page="today"] .surface .why{grid-column:auto;box-shadow:inset 0 1px 0 var(--x-rule)!important}
 }
+
+/* ---------- Ask CUEPA: a bit of pizzazz (Nov 1, Marcos) ----------
+   Teal Mark only. Emphasis = deep black drop shadow + lift, never a teal glow. */
+#cuepa-ai>[data-toggle]{display:inline-flex;align-items:center;gap:10px;height:52px!important;padding:0 22px 0 8px!important;border-radius:999px!important;background:#0F766E!important;color:#fff!important;font:700 15px Inter,Arial,sans-serif!important;letter-spacing:-.01em;position:relative;overflow:hidden;
+  box-shadow:0 2px 6px rgba(0,0,0,.14),0 14px 34px rgba(0,0,0,.24)!important;transition:transform .18s ease,box-shadow .18s ease;animation:ai-in .5s cubic-bezier(.2,.9,.3,1.2) .4s both}
+#cuepa-ai>[data-toggle]::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s ease}
+#cuepa-ai>[data-toggle]:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.16),0 22px 48px rgba(0,0,0,.30)!important}
+#cuepa-ai>[data-toggle]:hover::after{transform:translateX(120%)}
+#cuepa-ai>[data-toggle]:active{transform:translateY(0)}
+#cuepa-ai>[data-toggle][aria-expanded="true"]{background:#000!important}
+#cuepa-ai .ai-ico{width:36px;height:36px;border-radius:50%;background:#fff;color:#0F766E;display:grid;place-items:center;flex:none}
+#cuepa-ai>[data-toggle] .ai-ico svg{transition:transform .5s ease}
+#cuepa-ai>[data-toggle]:hover .ai-ico svg{transform:rotate(-200deg)}
+#cuepa-ai>[data-toggle][aria-expanded="true"] .ai-ico{color:#000}
+#cuepa-ai .ai-title{display:flex;align-items:center;gap:12px;margin-right:auto}
+#cuepa-ai .ai-title .ai-ico{background:#0F766E;color:#fff}
+#cuepa-ai .ai-title b{display:block;line-height:1.2}
+#cuepa-ai .ai-sub{display:block;font-size:12.5px;color:var(--x-grey);font-weight:500}
+#cuepa-ai .ai-starts{display:grid;gap:8px;margin:14px 0 4px}
+#cuepa-ai .ai-starts button{text-align:left;background:#fff;border:0;border-radius:var(--x-rs);padding:11px 14px;font:600 14px Inter,Arial,sans-serif;color:#000;box-shadow:0 1px 2px rgba(0,0,0,.08),0 4px 14px rgba(0,0,0,.08);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+#cuepa-ai .ai-starts button::after{content:" →";color:#0F766E}
+#cuepa-ai .ai-starts button:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.10),0 10px 24px rgba(0,0,0,.14)}
+@keyframes ai-in{from{opacity:0;transform:translateY(16px) scale(.92)}to{opacity:1;transform:none}}
+/* phone: icon only, so it stops covering what you're reading */
+@media(max-width:650px){#cuepa-ai>[data-toggle]{width:56px;height:56px!important;padding:0!important;justify-content:center}#cuepa-ai>[data-toggle] .ai-txt{display:none}#cuepa-ai>[data-toggle] .ai-ico{width:40px;height:40px;background:transparent;color:#fff}}
+@media(prefers-reduced-motion:reduce){#cuepa-ai>[data-toggle],#cuepa-ai>[data-toggle] .ai-ico svg,#cuepa-ai>[data-toggle]::after{animation:none!important;transition:none!important}}
+#cuepa-ai header{display:flex;align-items:center;gap:4px}#cuepa-ai header button{white-space:nowrap;padding:6px 8px}#cuepa-ai .ai-title{min-width:0}

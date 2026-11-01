@@ -1,4 +1,4 @@
-const { findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSession, homeOf } = require("./_session");
+const { hasToured, markToured, findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSession, homeOf } = require("./_session");
 
 function json(res, code, body, cookie) {
   res.statusCode = code;
@@ -54,6 +54,15 @@ module.exports = async (req, res) => {
       const s = readSession(req);
       if (!s) return json(res, 401, { ok: false });
       return json(res, 200, { ok: true, name: s.name, ws: homeOf(s.ws), temp: s.temp });
+    }
+
+    // First-time tour: has this person seen it yet? (GET) / they finished or skipped it (POST)
+    if (action === "tour") {
+      const s = readSession(req);
+      if (!s) return json(res, 401, { ok: false });
+      if (req.method === "POST") { await markToured(s.email); return json(res, 200, { ok: true, toured: true }); }
+      let toured = true; try { toured = await hasToured(s.email); } catch (e) { toured = true; } // if unsure, don't block their day
+      return json(res, 200, { ok: true, toured });
     }
 
     return json(res, 404, { ok: false, error: "Not found" });

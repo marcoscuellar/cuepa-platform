@@ -102,7 +102,8 @@ $('look').onclick=()=>{const dark=document.documentElement.dataset.look!=='dark'
 
 // Mark onboarding as in progress so Google's calendar callback comes back here (api/today.js checks this cookie).
 function onboarding(on){document.cookie='cuepa_start='+(on?'1':'')+'; Path=/; Max-Age='+(on?1800:0)+'; SameSite=Lax; Secure';}
-function finish(){try{localStorage.setItem('cuepa_start_'+WS,'done')}catch(e){}onboarding(false);location.replace('/'+WS);}
+function toured(){try{localStorage.setItem('cuepa_start_'+WS,'done')}catch(e){}fetch('/api/auth?action=tour',{method:'POST',credentials:'same-origin',keepalive:true}).catch(()=>{});}
+function finish(){toured();onboarding(false);location.replace('/'+WS);}
 
 const q=new URLSearchParams(location.search);
 const S={step:0,mail:null,cal:null,team:[],msg:null};
@@ -131,7 +132,7 @@ async function load(){
     }catch(e){S.msg=['ok','Calendar connected. Choose which calendars to show from Setup anytime.'];}
   }
   // First open with nothing to do on this card? Move ahead to the first unfinished one.
-  if(!q.has('connect')&&!q.has('google')){if(S.mail.connected)S.step=1;if(S.mail.connected&&S.cal.connected)S.step=2;}
+  if(!q.has('connect')&&!q.has('google')&&!q.has('tour')){if(S.mail.connected)S.step=1;if(S.mail.connected&&S.cal.connected)S.step=2;}
   render();
 }
 function monday(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
@@ -180,7 +181,7 @@ function render(){
       +'<p class="lede">'+(n.length?'Connected: '+esc(n.join(', '))+'. ':'')+'Your Today page shows what needs you, your day in one view, and why each thing is there. Anything you skipped is waiting in Setup.</p>'
       +'<div class="acts"><button class="btn go" data-a="finish">Open my hub →</button>'+(n.length<3?'<button class="btn" data-a="later">Finish setup later</button>':'')+'</div>';
   }
-  c.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.dataset.a==='next'){S.step++;render();window.scrollTo({top:0,behavior:'smooth'});}else if(b.dataset.a==='finish')finish();else if(b.dataset.a==='later'){try{localStorage.setItem('cuepa_start_'+WS,'done')}catch(e){}onboarding(false);location.href='/'+WS;}};
+  c.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.dataset.a==='next'){S.step++;render();window.scrollTo({top:0,behavior:'smooth'});}else if(b.dataset.a==='finish')finish();else if(b.dataset.a==='later'){toured();onboarding(false);location.href='/'+WS;}};
 }
 load().catch(()=>render());
 </script></body></html>`, ws, wsName, 'start');
