@@ -10,7 +10,7 @@ function handler(name, session) {
 }
 async function call(name,session) {
  const res={statusCode:200,headers:{},body:'',setHeader(k,v){this.headers[k]=v},end(value){this.body=value||''}};
- await handler(name,session)({url:'/api/'+name+'?ws=cirques-experience'+(name==='gmail'?'&action=page':''),headers:{host:'preview.example'},method:'GET'},res);
+ await handler(name,session)({url:'/api/'+name+'?ws=cirques-experience'+(name==='gmail'?'&action=page':'')+(name==='room'?'&room=1':''),headers:{host:'preview.example'},method:'GET'},res);
  return res;
 }
 const session={ws:'cirques-experience',name:'Chris',email:'owner@example.test'};
@@ -34,4 +34,15 @@ test('shared navigation follows hub sections without leaving the preview origin'
  const context={location:{hash:'#calendar'},window:{addEventListener(k,f){listeners[k]=f}},document:{body:{dataset:{workspacePage:'hub'}},querySelectorAll:selector=>selector==='[data-cuepa-view]'?[link]:[]}};
  vm.runInNewContext(fs.readFileSync(require.resolve('../assets/workspace-nav.js'),'utf8'),context);
  assert.equal(attrs['aria-current'],undefined);context.location.hash='#timecards';listeners.hashchange();assert.equal(attrs['aria-current'],'page');
+});
+
+test('Today is the home page for now: /<ws> goes to /<ws>/today',async()=>{
+ const res={statusCode:200,headers:{},body:'',setHeader(k,v){this.headers[k]=v},end(v){this.body=v||''}};
+ await handler('room',session)({url:'/api/room?ws=cirques-experience',headers:{host:'preview.example'},method:'GET'},res);
+ assert.equal(res.statusCode,302);assert.equal(res.headers.Location,'/cirques-experience/today');
+});
+test('The Room is not in the menu while Today is home',()=>{
+ delete require.cache[require.resolve('../lib/workspace-ui')];
+ const html=require('../lib/workspace-ui').header('cirques-experience','Cirques Experience','today');
+ assert.doesNotMatch(html,/>The Room</);assert.match(html,/>Today</);
 });

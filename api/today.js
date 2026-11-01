@@ -176,10 +176,9 @@ nav a.on .ct{background:var(--turq);color:#04201d}
 </style></head><body>
 <div class="shell">
   <aside class="side">
-    <a class="brand" href="/${W}"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b></a>
+    <a class="brand" href="/${W}/today"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b></a>
     <div class="wsbox"><div class="lab">Workspace</div><b>${N}</b></div>
     <nav aria-label="Hub">
-      <a href="/${W}">The Room</a>
       <a class="on" href="/${W}/today" aria-current="page">Today<span class="ct" id="nNeeds" hidden></span></a>
       <a href="/${W}/inbox">Inbox<span class="ct" id="nUnread" hidden></span></a>
       <a href="/${W}/hub#calendar">Calendar</a>
