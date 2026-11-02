@@ -1,7 +1,7 @@
 const workspaceUI = require('../lib/workspace-ui');
 // /<ws>/start — onboarding, one card at a time. Each card does the real thing (connects Gmail, connects
 // Calendar, adds the team) and the home page stays clean. Same sign-in rule as the hub. No sample data.
-const { readSession, readSessionChecked, canSee } = require('./_session');
+const { readSession, readSessionChecked, POLICY_VERSION, canSee } = require('./_session');
 const WORKSPACES = require('../lib/workspaces');
 
 function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'private, no-store');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   res.setHeader('X-Frame-Options', 'DENY');
-  res.end(page(ws, WORKSPACES[ws].name, s.name || ''));
+  res.end(workspaceUI.policyNotice(page(ws, WORKSPACES[ws].name, s.name || ''), s.policy === false, POLICY_VERSION));
 };
 
 function page(ws, wsName, person) {

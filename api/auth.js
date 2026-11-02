@@ -1,4 +1,4 @@
-const { hasToured, markToured, findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSessionChecked, homeOf } = require("./_session");
+const { hasToured, markToured, findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSessionChecked, POLICY_VERSION, acceptPolicy, homeOf } = require("./_session");
 
 function json(res, code, body, cookie) {
   res.statusCode = code;
@@ -77,6 +77,16 @@ module.exports = async (req, res) => {
       res.setHeader("Set-Cookie", clearCookie());
       res.setHeader("Location", "/?signedout=1" + (s && s.ws !== "*" ? "&next=/" + s.ws : ""));
       return res.end();
+    }
+
+    // Privacy policy and terms: the person agrees to the current version (saved with the version and time).
+    if (action === "policy" && req.method === "POST") {
+      const s = await readSessionChecked(req);
+      if (!s || s.temp) return json(res, 401, { ok: false, error: "Please sign in again." });
+      const { version } = await readBody(req);
+      if (version !== POLICY_VERSION) return json(res, 409, { ok: false, error: "The policy was updated. Reload the page to read the latest version." });
+      await acceptPolicy(s.email);
+      return json(res, 200, { ok: true });
     }
 
     if (action === "me") {

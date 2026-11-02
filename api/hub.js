@@ -2,7 +2,7 @@ const workspaceUI = require('../lib/workspace-ui');
 // Serves a client's hub only to someone signed in to that workspace.
 const fs = require("fs");
 const path = require("path");
-const { readSession, readSessionChecked, canSee } = require("./_session");
+const { readSession, readSessionChecked, POLICY_VERSION, canSee } = require("./_session");
 
 // Each workspace: display name + which hub template it uses.
 // "new-client" is a client-free workspace that starts empty, exactly like a brand-new client's.
@@ -69,6 +69,6 @@ module.exports = async (req, res) => {
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.setHeader("Cache-Control", "private, no-store");
   res.setHeader("X-Robots-Tag", "noindex, nofollow");
-  res.end(workspaceUI.apply(html, ws, conf.name, 'hub'));
+  res.end(workspaceUI.policyNotice(workspaceUI.apply(html, ws, conf.name, 'hub'), session.policy === false, POLICY_VERSION));
 };
 
