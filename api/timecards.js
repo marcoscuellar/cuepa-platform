@@ -2,7 +2,7 @@
 // Owner side (signed-in CUEPA user with access to the workspace): team list, week view, approvals, payroll spreadsheet.
 // Staff side (private link, no password): load and send their own card for the current or last week.
 const crypto = require('node:crypto');
-const { readSession, canSee } = require('./_session');
+const { readSession, readSessionChecked, canSee } = require('./_session');
 const WORKSPACES = require('../lib/workspaces');
 const tc = require('../lib/timecards');
 const { fail } = tc;
@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
 
     if (!OWNER[action]) throw fail(404, 'Not found.');
     if (req.method !== OWNER[action]) { res.setHeader('Allow', OWNER[action]); throw fail(405, 'Method not allowed.'); }
-    const s = readSession(req);
+    const s = await readSessionChecked(req);
     if (!s || s.temp) throw fail(401, 'Please sign in again.');
     if (req.method === 'POST' && !sameOrigin(req)) throw fail(403, 'Please use your CUEPA hub to make changes.');
     const data = req.method === 'POST' ? await body(req) : {};

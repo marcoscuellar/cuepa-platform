@@ -4,7 +4,7 @@ const vm=require('node:vm');
 const fs=require('node:fs');
 const root=require.resolve('../api/_session');
 function handler(name, session) {
- require.cache[root]={id:root,filename:root,loaded:true,exports:{readSession:()=>session,canSee:(s,ws)=>!!s&&s.ws===ws}};
+ require.cache[root]={id:root,filename:root,loaded:true,exports:{readSession:()=>session,readSessionChecked:async()=>session,canSee:(s,ws)=>!!s&&s.ws===ws}};
  delete require.cache[require.resolve('../api/'+name)];
  return require('../api/'+name);
 }

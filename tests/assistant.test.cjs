@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const sessionPath=require.resolve('../api/_session');
 let session={email:'owner@example.test',ws:'cirques-experience'};
-require.cache[sessionPath]={id:sessionPath,filename:sessionPath,loaded:true,exports:{readSession:()=>session,canSee:(u,w)=>u.ws===w}};
+require.cache[sessionPath]={id:sessionPath,filename:sessionPath,loaded:true,exports:{readSession:()=>session,readSessionChecked:async()=>session,canSee:(u,w)=>u.ws===w}};
 const handler=require('../api/assistant');
 async function call(body,overrides={}){const res={statusCode:200,headers:{},setHeader(k,v){this.headers[k]=v},end(s){this.data=JSON.parse(s)}};await handler({url:'/api/assistant?ws=cirques-experience',method:'POST',headers:{host:'preview.example',origin:'https://preview.example'},body,...overrides},res);return res;}
 test('assistant auth, configuration, provider request, and failures',async()=>{

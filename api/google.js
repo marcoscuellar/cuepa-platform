@@ -1,5 +1,5 @@
 const crypto=require('node:crypto');
-const {readSession,canSee}=require('./_session');
+const {readSession, readSessionChecked,canSee}=require('./_session');
 const WORKSPACES=require('../lib/workspaces');
 const g=require('../lib/google');
 const COOKIE='cuepa_google_flow';
@@ -18,7 +18,7 @@ module.exports=async(req,res)=>{
   const action=url.pathname.endsWith('/callback')?'callback':url.searchParams.get('action');
   let callbackWs;
   try{
-    const s=readSession(req);if(!s || s.temp)throw g.fail(401,'Please sign in to CUEPA with your permanent password first.');
+    const s=await readSessionChecked(req);if(!s || s.temp)throw g.fail(401,'Please sign in to CUEPA with your permanent password first.');
     const cfg=g.config();
     const methods={start:'GET',callback:'GET',status:'GET',calendars:'GET',events:'GET',select:'POST',disconnect:'POST'};
     if(!methods[action])throw g.fail(404,'Not found.');

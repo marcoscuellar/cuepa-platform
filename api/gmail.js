@@ -2,7 +2,7 @@ const workspaceUI = require('../lib/workspace-ui');
 // /api/gmail — connect Gmail, inbox page, read, send/reply, disconnect.
 // Only someone signed in to the workspace can use it (same rule as the hub).
 const crypto = require('node:crypto');
-const { readSession, canSee } = require('./_session');
+const { readSession, readSessionChecked, canSee } = require('./_session');
 const WORKSPACES = require('../lib/workspaces');
 const g = require('../lib/gmail');
 
@@ -20,7 +20,7 @@ async function body(req) {
   if (!t) for await (const c of req) { t += c; if (t.length > 60000) throw g.fail(413, 'Request is too large.'); }
   try { return JSON.parse(t || '{}'); } catch { throw g.fail(400, 'Invalid request.'); }
 }
-function session(req) { try { return readSession(req); } catch (e) { return null; } }
+async function session(req) { try { return await readSessionChecked(req); } catch (e) { return null; } }
 function allowed(s, ws) { return /^[a-z0-9-]{1,60}$/.test(ws) && WORKSPACES[ws] && s && !s.temp && canSee(s, ws); }
 function sameOrigin(req) {
   const o = req.headers.origin; if (!o) return false;
@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   const url = new URL(req.url, 'https://local.invalid');
   const action = url.pathname.endsWith('/callback') ? 'callback' : url.searchParams.get('action');
-  const s = session(req);
+  const s = await session(req);
 
   try {
     // ---- Google sends the person back here ----

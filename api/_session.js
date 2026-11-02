@@ -46,9 +46,11 @@ async function getSaved(email) {
 }
 async function saveHash(email, hash) {
   const { put } = await import("@vercel/blob");
-  await put(keyFor(email), JSON.stringify({ hash, changedAt: new Date().toISOString() }), {
+  const now = new Date();
+  await put(keyFor(email), JSON.stringify({ hash, changedAt: now.toISOString() }), {
     access: "private", addRandomSuffix: false, allowOverwrite: true, contentType: "application/json"
   });
+  CHANGED.set(String(email).toLowerCase(), { sec: Math.floor(now / 1000), at: Date.now() });
 }
 
 // ---- first-time tour: saved per person, so it shows once no matter which browser ----
@@ -75,7 +77,7 @@ async function verify(user, password) {
 }
 
 function makeCookie(user, temp) {
-  const payload = Buffer.from(JSON.stringify({ e: user.email, t: temp ? 1 : 0, x: Math.floor(Date.now() / 1000) + MAX_AGE })).toString("base64url");
+  const payload = Buffer.from(JSON.stringify({ e: user.email, t: temp ? 1 : 0, i: Math.floor(Date.now() / 1000), x: Math.floor(Date.now() / 1000) + MAX_AGE })).toString("base64url");
   return `${COOKIE}=${payload}.${sign(payload)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${MAX_AGE}`;
 }
 function clearCookie() { return `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`; }
@@ -92,10 +94,29 @@ function readSession(req) {
   if (!s || s.x < now || s.x > now + MAX_AGE + 60) return null; // also ends older, longer sign-ins
   const u = findUser(s.e); // removed from CUEPA_USERS = signed out everywhere
   if (!u) return null;
-  return { email: u.email, name: u.name, ws: u.ws, temp: !!s.t, user: u };
+  return { email: u.email, name: u.name, ws: u.ws, temp: !!s.t, iat: Number(s.i) || 0, user: u };
+}
+
+// Same as readSession, but also signs out any session started before the person's last password change.
+// Looks at the saved-password record (cached for 30 seconds per server instance). If storage can't be reached,
+// people stay signed in rather than getting locked out.
+const CHANGED = new Map();
+async function changedAt(email) {
+  const k = String(email).toLowerCase(), hit = CHANGED.get(k);
+  if (hit && Date.now() - hit.at < 30000) return hit.sec;
+  const saved = await getSaved(email);
+  const sec = saved && saved.changedAt ? Math.floor(Date.parse(saved.changedAt) / 1000) || 0 : 0;
+  CHANGED.set(k, { sec, at: Date.now() });
+  return sec;
+}
+async function readSessionChecked(req) {
+  const s = readSession(req);
+  if (!s) return null;
+  try { if (s.iat < await changedAt(s.email)) return null; } catch (e) { console.warn("session check skipped"); }
+  return s;
 }
 
 function canSee(session, ws) { return !!session && (session.ws === "*" || session.ws === ws); }
 function homeOf(ws) { return ws === "*" ? "cirques-experience" : ws; }
 
-module.exports = { hasToured, markToured, findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSession, canSee, homeOf };
+module.exports = { hasToured, markToured, findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSession, readSessionChecked, canSee, homeOf };

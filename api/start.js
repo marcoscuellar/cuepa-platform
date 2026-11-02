@@ -1,17 +1,17 @@
 const workspaceUI = require('../lib/workspace-ui');
 // /<ws>/start — onboarding, one card at a time. Each card does the real thing (connects Gmail, connects
 // Calendar, adds the team) and the home page stays clean. Same sign-in rule as the hub. No sample data.
-const { readSession, canSee } = require('./_session');
+const { readSession, readSessionChecked, canSee } = require('./_session');
 const WORKSPACES = require('../lib/workspaces');
 
 function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function go(res, to) { res.statusCode = 302; res.setHeader('Location', to); res.setHeader('Cache-Control', 'no-store'); res.end(); }
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   const u = new URL(req.url, 'http://x');
   const ws = u.searchParams.get('ws') || '';
   if (!/^[a-z0-9-]{1,60}$/.test(ws) || !WORKSPACES[ws]) { res.statusCode = 404; return res.end('Not found'); }
-  let s = null; try { s = readSession(req); } catch (e) { s = null; }
+  let s = null; try { s = await readSessionChecked(req); } catch (e) { s = null; }
   if (!canSee(s, ws)) return go(res, '/?next=/' + ws + '/start');
   if (s.temp) return go(res, '/?setpw=1&next=/' + ws + '/start');
   res.statusCode = 200;

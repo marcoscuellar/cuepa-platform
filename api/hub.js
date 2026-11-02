@@ -2,7 +2,7 @@ const workspaceUI = require('../lib/workspace-ui');
 // Serves a client's hub only to someone signed in to that workspace.
 const fs = require("fs");
 const path = require("path");
-const { readSession, canSee } = require("./_session");
+const { readSession, readSessionChecked, canSee } = require("./_session");
 
 // Each workspace: display name + which hub template it uses.
 // "new-client" is a client-free workspace that starts empty, exactly like a brand-new client's.
@@ -25,7 +25,7 @@ const BTN_NEW = 'onClick=${()=>c.id==="calendar"?setStep("cals"):' + GMAIL + '?l
 // The top-right sample badge + 'Review drafted reminders' button from the prototype.
 const TOP_OLD = "        <div class=\"hub-top-right\">\n          <span class=\"hub-badge\"><i aria-hidden=\"true\"></i>${live?`${live} of ${CONNS.length} connected`:BLANK?\"Nothing connected yet\":\"Sample data \u00b7 nothing connected\"}</span>\n          <button type=\"button\" class=\"hub-primary\" disabled=${!draftsLeft.length} onClick=${()=>setModal(draftsLeft[0].id)}>${draftsLeft.length?`Review drafted reminders (${draftsLeft.length})`:BLANK&&!s.drafts.length?\"No reminders yet\":\"All drafts reviewed\"}</button>\n        </div>";
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   const ws = new URL(req.url, "http://x").searchParams.get("ws") || "";
   const conf = WORKSPACES[ws];
   if (!/^[a-z0-9-]{1,60}$/.test(ws) || !conf) { res.statusCode = 404; return res.end("Not found"); }
@@ -33,7 +33,7 @@ module.exports = (req, res) => {
   if (!fs.existsSync(file)) { res.statusCode = 404; return res.end("Not found"); }
 
   let session = null;
-  try { session = readSession(req); } catch (e) { session = null; }
+  try { session = await readSessionChecked(req); } catch (e) { session = null; }
   if (!canSee(session, ws)) return go(res, "/?next=/" + ws);
   if (session.temp) return go(res, "/?setpw=1&next=/" + ws); // first visit: make your own password
 
