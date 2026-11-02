@@ -17,15 +17,34 @@ function readBody(req) {
 }
 const WRONG = "That email and password don't match. Try again.";
 
+// Sign-in throttle: after 8 wrong tries from one email or one address, wait 15 minutes.
+// Kept in memory, so each server instance counts on its own: it slows guessing a lot but is not a hard global cap.
+const FAILS = new Map(), MAX_FAILS = 8, WINDOW = 15 * 60 * 1000;
+function throttleKeys(req, email) {
+  const ip = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "?";
+  return ["e:" + String(email || "").trim().toLowerCase(), "i:" + ip];
+}
+function locked(keys) {
+  const now = Date.now();
+  for (const [k, v] of FAILS) if (now - v.at > WINDOW) FAILS.delete(k);
+  return keys.some(k => (FAILS.get(k) || { n: 0 }).n >= MAX_FAILS);
+}
+function noteFail(keys) { for (const k of keys) { const v = FAILS.get(k) || { n: 0 }; FAILS.set(k, { n: v.n + 1, at: Date.now() }); } }
+function clearFails(keys) { FAILS.delete(keys[0]); }
+const WAIT = "Too many tries. Please wait 15 minutes and try again.";
+
 module.exports = async (req, res) => {
   const action = new URL(req.url, "http://x").searchParams.get("action");
   try {
     if (action === "login" && req.method === "POST") {
       const { email, password } = await readBody(req);
+      const keys = throttleKeys(req, email);
+      if (locked(keys)) return json(res, 429, { ok: false, error: WAIT });
       const user = findUser(email);
-      if (!user) { matches("scrypt$00$" + "00".repeat(32), password); return json(res, 401, { ok: false, error: WRONG }); }
+      if (!user) { noteFail(keys); return json(res, 401, { ok: false, error: WRONG }); }
       const v = await verify(user, password);
-      if (!v.ok) return json(res, 401, { ok: false, error: WRONG });
+      if (!v.ok) { noteFail(keys); return json(res, 401, { ok: false, error: WRONG }); }
+      clearFails(keys);
       return json(res, 200, { ok: true, name: user.name, ws: homeOf(user.ws), temp: v.temp }, makeCookie(user, v.temp));
     }
 
@@ -33,8 +52,10 @@ module.exports = async (req, res) => {
       const s = readSession(req);
       if (!s) return json(res, 401, { ok: false, error: "Please sign in again." });
       const { current, next } = await readBody(req);
+      const keys = ["e:" + s.email.toLowerCase()];
+      if (locked(keys)) return json(res, 429, { ok: false, error: WAIT });
       const v = await verify(s.user, current);
-      if (!v.ok) return json(res, 400, { ok: false, error: "Your current password isn't right." });
+      if (!v.ok) { noteFail(keys); return json(res, 400, { ok: false, error: "Your current password isn't right." }); }
       const pw = String(next || "");
       if (pw.length < 8) return json(res, 400, { ok: false, error: "Use at least 8 characters." });
       if (pw === String(current)) return json(res, 400, { ok: false, error: "Pick a password that's different from the one we sent you." });
