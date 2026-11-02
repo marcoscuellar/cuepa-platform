@@ -2,7 +2,7 @@ const workspaceUI = require('../lib/workspace-ui');
 // /<ws> — The Room: the home page. Left rail · the day and what needs you · newest unread emails.
 // Same sign-in rule as the hub. All data comes live from /api/google, /api/timecards and /api/gmail in the browser
 // (assets/room.js). Nothing here is sample data: anything not connected shows as waiting, never as zero.
-const { readSession, readSessionChecked, canSee } = require('./_session');
+const { readSession, readSessionChecked, POLICY_VERSION, canSee } = require('./_session');
 const WORKSPACES = require('../lib/workspaces');
 
 function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'private, no-store');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   res.setHeader('X-Frame-Options', 'DENY');
-  res.end(page(ws, WORKSPACES[ws].name, s.name || ''));
+  res.end(workspaceUI.policyNotice(page(ws, WORKSPACES[ws].name, s.name || ''), s.policy === false, POLICY_VERSION));
 };
 
 function page(ws, wsName, person) {

@@ -2,7 +2,7 @@ const workspaceUI = require('../lib/workspace-ui');
 // /api/gmail — connect Gmail, inbox page, read, send/reply, disconnect.
 // Only someone signed in to the workspace can use it (same rule as the hub).
 const crypto = require('node:crypto');
-const { readSession, readSessionChecked, canSee } = require('./_session');
+const { readSession, readSessionChecked, POLICY_VERSION, canSee } = require('./_session');
 const WORKSPACES = require('../lib/workspaces');
 const g = require('../lib/gmail');
 
@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
       if (!allowed(s, ws)) return go(res, `/?next=/${ws}`);
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.setHeader('X-Frame-Options', 'DENY');
-      return res.end(page(ws, WORKSPACES[ws].name));
+      return res.end(workspaceUI.policyNotice(page(ws, WORKSPACES[ws].name), s.policy === false, POLICY_VERSION));
     }
 
     if (!allowed(s, ws)) return json(res, 403, { ok: false, error: 'Sign in to use email.' });

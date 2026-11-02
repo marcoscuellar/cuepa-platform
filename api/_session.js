@@ -69,6 +69,35 @@ async function markToured(email) {
   });
 }
 
+// ---- privacy policy / terms acknowledgment: saved per person with the version and time, so it can be shown again after a change ----
+// Bump POLICY_VERSION whenever privacy.html or terms.html changes in a way people should see again.
+const POLICY_VERSION = "2026-11-02";
+function policyKey(email) { return "policy/" + crypto.createHash("sha256").update(String(email).toLowerCase()).digest("hex") + ".json"; }
+const ACCEPTED = new Map();
+async function readPolicy(email) {
+  const { get } = await import("@vercel/blob");
+  const r = await get(policyKey(email), { access: "private", useCache: false });
+  if (!r || r.statusCode !== 200 || !r.stream) return { accepted: [] };
+  try { const d = JSON.parse(await new Response(r.stream).text()); return { accepted: Array.isArray(d.accepted) ? d.accepted : [] }; } catch (e) { return { accepted: [] }; }
+}
+// If storage can't be reached we don't lock people out; we try again on the next page.
+async function policyAccepted(email) {
+  const k = String(email).toLowerCase(), hit = ACCEPTED.get(k);
+  if (hit) return true;
+  try {
+    const ok = (await readPolicy(email)).accepted.some(a => a && a.version === POLICY_VERSION);
+    if (ok) ACCEPTED.set(k, true);
+    return ok;
+  } catch (e) { console.warn("policy check skipped"); return true; }
+}
+async function acceptPolicy(email) {
+  const { put } = await import("@vercel/blob");
+  const cur = await readPolicy(email);
+  if (!cur.accepted.some(a => a && a.version === POLICY_VERSION)) cur.accepted.push({ version: POLICY_VERSION, at: new Date().toISOString() });
+  await put(policyKey(email), JSON.stringify(cur), { access: "private", addRandomSuffix: false, allowOverwrite: true, contentType: "application/json" });
+  ACCEPTED.set(String(email).toLowerCase(), true);
+}
+
 // Returns { ok, temp } — temp=true means they're still on the password we sent them.
 async function verify(user, password) {
   const saved = await getSaved(user.email);
@@ -113,10 +142,11 @@ async function readSessionChecked(req) {
   const s = readSession(req);
   if (!s) return null;
   try { if (s.iat < await changedAt(s.email)) return null; } catch (e) { console.warn("session check skipped"); }
+  s.policy = await policyAccepted(s.email); // false = they still need to read and accept the current policy
   return s;
 }
 
 function canSee(session, ws) { return !!session && (session.ws === "*" || session.ws === ws); }
 function homeOf(ws) { return ws === "*" ? "cirques-experience" : ws; }
 
-module.exports = { hasToured, markToured, findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSession, readSessionChecked, canSee, homeOf };
+module.exports = { hasToured, markToured, findUser, matches, hashPassword, verify, saveHash, makeCookie, clearCookie, readSession, readSessionChecked, POLICY_VERSION, acceptPolicy, canSee, homeOf };
