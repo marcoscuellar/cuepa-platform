@@ -2,7 +2,7 @@ const workspaceUI = require('../lib/workspace-ui');
 // /<ws> — The Room: the home page. Left rail · the day and what needs you · newest unread emails.
 // Same sign-in rule as the hub. All data comes live from /api/google, /api/timecards and /api/gmail in the browser
 // (assets/room.js). Nothing here is sample data: anything not connected shows as waiting, never as zero.
-const { readSession, canSee } = require('./_session');
+const { readSession, readSessionChecked, canSee } = require('./_session');
 const WORKSPACES = require('../lib/workspaces');
 
 function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
@@ -10,7 +10,7 @@ function go(res, to) { res.statusCode = 302; res.setHeader('Location', to); res.
 
 const ROOM_IS_HOME = false;
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   const u = new URL(req.url, 'http://x');
   const ws = u.searchParams.get('ws') || '';
   // Google Calendar connect returns to /<ws>?google=...; the onboarding card shows the result.
@@ -18,7 +18,7 @@ module.exports = (req, res) => {
     return go(res, '/' + ws + '/start?google=' + encodeURIComponent(u.searchParams.get('google')));
   }
   if (!/^[a-z0-9-]{1,60}$/.test(ws) || !WORKSPACES[ws]) { res.statusCode = 404; return res.end('Not found'); }
-  let s = null; try { s = readSession(req); } catch (e) { s = null; }
+  let s = null; try { s = await readSessionChecked(req); } catch (e) { s = null; }
   if (!canSee(s, ws)) return go(res, '/?next=/' + ws);
   if (s.temp) return go(res, '/?setpw=1&next=/' + ws);
   // For now Today is the home page. The Room comes back once there's more real data to show.

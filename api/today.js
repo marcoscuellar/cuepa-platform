@@ -1,13 +1,13 @@
 const workspaceUI = require('../lib/workspace-ui');
 // /<ws>/today — the new Today page (White Today layout, light + dark).
 // Same sign-in rule as the hub. All data comes live from /api/google, /api/timecards and /api/gmail in the browser.
-const { readSession, canSee } = require('./_session');
+const { readSession, readSessionChecked, canSee } = require('./_session');
 const WORKSPACES = require('../lib/workspaces');
 
 function esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function go(res, to) { res.statusCode = 302; res.setHeader('Location', to); res.setHeader('Cache-Control', 'no-store'); res.end(); }
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   const u = new URL(req.url, 'http://x');
   const ws = u.searchParams.get('ws') || '';
   // Google Calendar connect returns to /<ws>?google=...#connect; that flow lives in the classic hub.
@@ -17,7 +17,7 @@ module.exports = (req, res) => {
     return go(res, '/' + ws + '/start?google=' + encodeURIComponent(u.searchParams.get('google')));
   }
   if (!/^[a-z0-9-]{1,60}$/.test(ws) || !WORKSPACES[ws]) { res.statusCode = 404; return res.end('Not found'); }
-  let s = null; try { s = readSession(req); } catch (e) { s = null; }
+  let s = null; try { s = await readSessionChecked(req); } catch (e) { s = null; }
   if (!canSee(s, ws)) return go(res, '/?next=/' + ws);
   if (s.temp) return go(res, '/?setpw=1&next=/' + ws);
   res.statusCode = 200;

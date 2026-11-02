@@ -1,12 +1,13 @@
-const {readSession,canSee}=require('./_session');
+const {readSessionChecked,canSee}=require('./_session');
 const workspaces=require('../lib/workspaces');
 const crypto=require('node:crypto');
 const limits=new Map();
+const DAILY_CAP=100;
 const send=(res,status,data)=>{res.statusCode=status;res.setHeader('Content-Type','application/json');res.end(JSON.stringify(data));};
 module.exports=async(req,res)=>{
  res.setHeader('Cache-Control','private, no-store');
  const url=new URL(req.url,'https://local.invalid'),ws=url.searchParams.get('ws');
- let user;try{user=readSession(req);}catch{}
+ let user;try{user=await readSessionChecked(req);}catch{}
  if(!user||user.temp||!workspaces[ws]||!canSee(user,ws))return send(res,401,{error:'Sign in to this workspace to use the assistant.'});
  const ready=!!(process.env.ANTHROPIC_API_KEY&&process.env.ANTHROPIC_MODEL);
  if(req.method==='GET')return send(res,200,{ready,scope:crypto.createHash('sha256').update(ws+':'+user.email).digest('hex'),provider:'Anthropic',error:ready?null:'AI is not configured. Add ANTHROPIC_API_KEY and ANTHROPIC_MODEL to this deployment.'});
@@ -25,6 +26,12 @@ module.exports=async(req,res)=>{
  for(const [k,v] of limits)if(now-v.at>60000)limits.delete(k);
  const limit=limits.get(key)||{at:now,count:0};if(limit.count>=12)return send(res,429,{error:'Please wait a minute before sending more messages.'});limit.count++;limits.set(key,limit);
  try{
+  // Daily cap per person, kept in the private Blob store so it holds across server instances.
+  const day=new Date().toISOString().slice(0,10),capPath='assistant-usage/'+day+'/'+crypto.createHash('sha256').update(key).digest('hex')+'.json';
+  let used=0;
+  try{const {get}=await import('@vercel/blob');const r=await get(capPath,{access:'private',useCache:false});if(r&&r.statusCode===200&&r.stream)used=Number(JSON.parse(await new Response(r.stream).text()).n)||0;}catch{}
+  if(used>=DAILY_CAP)return send(res,429,{error:'You have reached today\u2019s assistant limit. It resets tomorrow.'});
+  try{const {put}=await import('@vercel/blob');await put(capPath,JSON.stringify({n:used+1}),{access:'private',addRandomSuffix:false,allowOverwrite:true,contentType:'application/json'});}catch{}
   const response=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':process.env.ANTHROPIC_API_KEY,'anthropic-version':'2023-06-01'},signal:AbortSignal.timeout(25000),body:JSON.stringify({model:process.env.ANTHROPIC_MODEL,max_tokens:1200,system:'You are CUEPA, a practical and warm assistant for a business workspace. Help think through ideas, prepare meetings, draft text, and plan next steps. Only the conversation is available to you. You do not have access to the user’s email, calendar, timecards, files, or live business metrics. Say so when those are needed and ask the user to supply relevant details. Never invent operational facts or claim to have sent, approved, scheduled, or saved anything. You have no action tools. Keep responses concise and in English unless explicitly asked otherwise.',messages:messages.map(m=>({role:m.role,content:m.content}))})});
   if(!response.ok)return send(res,response.status===429?429:502,{error:response.status===429?'The AI provider is busy. Try again shortly.':'The AI provider could not respond. Check the server’s model, API key, and billing configuration.'});
   const data=await response.json(),reply=(data.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('\n');

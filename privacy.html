@@ -102,6 +102,8 @@ footer{border-top:0!important;box-shadow:inset 0 1px 0 var(--x-rule)}
       <li><b>Timecards:</b> for team members, the hours you enter, the days, what you worked on, any notes, and whether they were approved.</li>
       <li><b>Contact details for reminders:</b> the email address or phone number your employer adds so reminders can reach you.</li>
       <li><b>Connected calendars:</b> if you connect Google Calendar, we read event titles, times, locations and calendar names to show them in your hub.</li>
+      <li><b>Connected email:</b> if you connect Gmail, we read the messages in your inbox (senders, subjects, dates and message text) so you can read and reply to them in your hub, and we can organise them (move, label, mark read, delete) when you ask. Email is fetched when you open your inbox and is not stored on our servers.</li>
+      <li><b>AI assistant:</b> if you use the assistant, the messages you type into it are sent to Anthropic to produce a reply.</li>
       <li><b>Connected accounting:</b> if your business connects QuickBooks, we read the employee list needed to match people to timecards, and we add the hours a person approved.</li>
       <li><b>Basic technical data:</b> sign-in cookies and standard server logs (such as time of request and error messages) used to keep the service working and secure.</li>
     </ul>
@@ -111,20 +113,23 @@ footer{border-top:0!important;box-shadow:inset 0 1px 0 var(--x-rule)}
     <h2 id="p3">How we use it</h2>
     <ul>
       <li>To show your hub: your day, your calendar, timecards and what needs your attention.</li>
+      <li>To let you read, organise and reply to your email from the hub. Nothing is sent from your Gmail until you press Send.</li>
+      <li>To answer the questions you ask the assistant.</li>
       <li>To send reminders that a person at your business reviewed and approved.</li>
       <li>To move hours a person approved into QuickBooks for payroll.</li>
       <li>To keep accounts secure, fix problems and support you when you ask for help.</li>
     </ul>
-    <p>We do not use your information to train AI models, for advertising, or for anything unrelated to running your hub.</p>
+    <p>We do not use your information, including your email, to train AI models, for advertising, or for anything unrelated to running your hub.</p>
   </section>
 
   <section class="card" aria-labelledby="p4">
     <h2 id="p4">Google and Intuit data</h2>
     <ul>
       <li><b>Google Calendar</b> access is read-only. CUEPA cannot create, change or delete your events. Events are fetched when you open the hub and are not stored on our servers.</li>
+      <li><b>Gmail</b> access lets CUEPA read your messages, change them on your behalf (move, label, mark read, delete) and send mail you write and send. CUEPA never sends email from your account on its own, and does not read your email for advertising.</li>
       <li>CUEPA's use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</li>
       <li><b>QuickBooks</b> data is used only to match employees and add approved hours. CUEPA cannot run payroll, pay anyone or send invoices.</li>
-      <li>Connection keys for Google and QuickBooks are encrypted before they are stored.</li>
+      <li>Connection keys for Google (Calendar and Gmail) and QuickBooks are encrypted before they are stored.</li>
     </ul>
   </section>
 
@@ -133,7 +138,7 @@ footer{border-top:0!important;box-shadow:inset 0 1px 0 var(--x-rule)}
     <p>We share information only as needed to run the service:</p>
     <ul>
       <li><b>Your business:</b> the owner and the people they choose can see the hub, including the timecards in it.</li>
-      <li><b>Service providers:</b> Vercel hosts the hub and stores its data. Google and Intuit receive requests only when you connect their services. Email or text providers deliver approved reminders.</li>
+      <li><b>Service providers:</b> Vercel hosts the hub and stores its data. Anthropic receives only what you type into the assistant. Google and Intuit receive requests only when you connect their services. Email or text providers deliver approved reminders.</li>
       <li><b>When the law requires it,</b> or to protect people's safety or the security of the service.</li>
     </ul>
     <p>We never sell or rent personal information.</p>
