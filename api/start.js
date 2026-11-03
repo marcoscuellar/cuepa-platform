@@ -82,10 +82,10 @@ h1 .dot{color:var(--turq)}
 .foot a{color:var(--mute)}
 @media (max-width:520px){.form{grid-template-columns:1fr}.acts .btn{flex:1;justify-content:center}.skip{margin-left:0;width:100%;text-align:center}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style></head><body>
+</style><style id="cuepa-logo">.cuepa-rm.cuepa-rm{display:block;flex:none;width:18px;height:18px}.cuepa-wm.cuepa-wm.cuepa-wm{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif!important;font-weight:800!important;letter-spacing:-.035em!important;font-size:20px!important;line-height:1!important;text-transform:none!important}</style></head><body>
 <div class="wrap">
   <div class="top">
-    <a class="brand" href="/${W}"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b><span>${N}</span></a>
+    <a class="brand" href="/${W}"><svg class="cuepa-rm" viewBox="0 0 200 200" width="18" height="18" aria-hidden="true"><rect x="0" y="0" width="90" height="90" fill="currentColor"/><rect x="0" y="110" width="90" height="90" fill="currentColor"/><rect x="110" y="110" width="90" height="90" fill="#0F766E"/></svg><b class="cuepa-wm">CUEPA</b><span>${N}</span></a>
     <button class="look" id="look" title="Switch light / dark" aria-label="Switch light or dark look">◐</button>
   </div>
   <div class="stage"><div class="card" id="card" role="region" aria-live="polite"><p class="lede">One moment…</p></div></div>

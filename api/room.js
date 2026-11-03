@@ -40,12 +40,12 @@ function page(ws, wsName, person) {
   return workspaceUI.apply(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>The Room · ${N} · CUEPA</title>
 <script>try{if(localStorage.getItem("cuepa_look")==="dark")document.documentElement.dataset.look="dark"}catch(e){}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/assets/room.css">
-</head><body data-ws="${W}" data-owner="${P}">
+<style id="cuepa-logo">.cuepa-rm.cuepa-rm{display:block;flex:none;width:18px;height:18px}.cuepa-wm.cuepa-wm.cuepa-wm{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif!important;font-weight:800!important;letter-spacing:-.035em!important;font-size:20px!important;line-height:1!important;text-transform:none!important}</style></head><body data-ws="${W}" data-owner="${P}">
 <a class="skip" href="#main">Skip to content</a>
 <header class="global-header">
-  <a class="brand" href="/${W}" aria-label="CUEPA home"><b>CUEPA</b><span class="brand-dot" aria-hidden="true"></span><span class="ws">${N}</span></a>
+  <a class="brand" href="/${W}" aria-label="CUEPA home"><svg class="cuepa-rm" viewBox="0 0 200 200" width="18" height="18" aria-hidden="true"><rect x="0" y="0" width="90" height="90" fill="currentColor"/><rect x="0" y="110" width="90" height="90" fill="currentColor"/><rect x="110" y="110" width="90" height="90" fill="#0F766E"/></svg><b class="cuepa-wm">CUEPA</b><span class="ws">${N}</span></a>
   <nav aria-label="Hub">${nav}</nav>
   <div class="profile"><span class="av" aria-hidden="true">${ini}</span><span>${P}</span><button class="look" id="look" aria-label="Switch light or dark look">◐</button></div>
 </header>

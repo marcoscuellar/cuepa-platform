@@ -173,10 +173,10 @@ nav a.on .ct{background:var(--turq);color:#04201d}
 @media (max-width:980px){.cols{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:820px){.shell{grid-template-columns:minmax(0,1fr)}.side{position:static;height:auto}.side .tiles,.side .me{display:none}nav{grid-auto-flow:column;overflow-x:auto}.topbar{position:static;padding:12px 16px}.center{padding:20px 16px 40px}.why{padding:20px 16px 40px}.conn{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style></head><body>
+</style><style id="cuepa-logo">.cuepa-rm.cuepa-rm{display:block;flex:none;width:18px;height:18px}.cuepa-wm.cuepa-wm.cuepa-wm{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif!important;font-weight:800!important;letter-spacing:-.035em!important;font-size:20px!important;line-height:1!important;text-transform:none!important}</style></head><body>
 <div class="shell">
   <aside class="side">
-    <a class="brand" href="/${W}/today"><span class="mark" aria-hidden="true"><i></i><i></i></span><b>CUEPA</b></a>
+    <a class="brand" href="/${W}/today"><svg class="cuepa-rm" viewBox="0 0 200 200" width="18" height="18" aria-hidden="true"><rect x="0" y="0" width="90" height="90" fill="currentColor"/><rect x="0" y="110" width="90" height="90" fill="currentColor"/><rect x="110" y="110" width="90" height="90" fill="#0F766E"/></svg><b class="cuepa-wm">CUEPA</b></a>
     <div class="wsbox"><div class="lab">Workspace</div><b>${N}</b></div>
     <nav aria-label="Hub">
       <a class="on" href="/${W}/today" aria-current="page">Today<span class="ct" id="nNeeds" hidden></span></a>
