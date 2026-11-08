@@ -57,12 +57,14 @@ function page(ws, wsName, person) {
       <section class="metrics" id="metrics" aria-label="This week at a glance"></section>
       <div class="board">
         <div>
-          <h2 class="section-label">Live processes</h2>
+          <section class="panel" aria-labelledby="inboxH"><div class="panel-head"><h3 id="inboxH">Inbox</h3><a class="see" href="/${W}/inbox">See all →</a></div><div id="inbox"><p class="empty-note">Checking your inbox…</p></div></section>
+          <h2 class="section-label gap">Live processes</h2>
           <div class="proc-list" id="procs"></div>
           <h2 class="section-label gap">Recent activity</h2>
           <div class="panel" id="activity"><p class="empty-note">Checking…</p></div>
         </div>
         <div class="rside">
+          <section class="panel" aria-labelledby="weekH"><div class="panel-head"><h3 id="weekH">Your week</h3><a class="see" href="/${W}/hub#calendar">Calendar →</a></div><div class="days" id="days" role="group" aria-label="Pick a day"></div><div id="agenda"><p class="empty-note">Checking your calendar…</p></div></section>
           <section class="panel" aria-labelledby="waitH"><div class="panel-head"><h3 id="waitH">Waiting on you</h3><span class="count" id="waitCount" hidden></span></div><div id="approvals"><p class="empty-note">Checking…</p></div></section>
           <section class="panel" aria-labelledby="trustH"><div class="panel-head"><h3 id="trustH">Trust &amp; controls</h3></div><div id="trust"></div><p class="trust-note">Human in the middle. Nothing is sent, posted or approved without you.</p></section>
         </div>
@@ -71,6 +73,7 @@ function page(ws, wsName, person) {
     <footer class="dash-foot">Protect. Challenge. Verify. You decide.</footer>
   </div>
 </div>
+<script src="/assets/folder-colors.js"></script>
 <script src="/assets/room-concept.js"></script>
 </body></html>`, ws, wsName, 'room');
 }

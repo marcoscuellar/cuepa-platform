@@ -112,3 +112,39 @@ body[data-workspace-page="room"] :focus-visible{outline:2px solid var(--clay);ou
 .log-item .lc{color:var(--ink-soft)}.log-item .lc b{color:var(--ink);font-weight:600}
 .dash-foot{max-width:1280px;margin:0 auto;padding:20px 32px 40px;font-size:11.5px;color:var(--text-2)}
 @media (prefers-reduced-motion:reduce){.proc-bar{transition:none}}
+
+/* inbox + week */
+.board.feed{margin-bottom:32px}
+.see{font-size:12.5px;font-weight:600;color:var(--clay);text-decoration:none}
+.mail{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:start;padding:11px 8px;border-radius:10px;text-decoration:none;color:var(--ink)}
+.mail+.mail{box-shadow:0 -1px 0 var(--hair)}
+.mail:hover{background:var(--base)}
+.mail .av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;background:var(--pill);color:var(--ink-soft)}
+.mail .who{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:7px}
+.mail.unread .who::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--clay);flex:none}
+.mail:not(.unread) .who{font-weight:500;color:var(--ink-soft)}
+.mail .subj{font-size:13px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mail.unread .subj{font-weight:600}
+.mail .snip{font-size:12px;color:var(--text-1);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mail .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.mail .when{font-size:11.5px;color:var(--text-2);white-space:nowrap}
+.mail>div{min-width:0}
+.fc-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+.fc-chip i{width:6px;height:6px;border-radius:50%}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px}
+.days button{border:0;background:var(--base);border-radius:10px;padding:8px 0;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--text-1)}
+.days button b{font-size:15px;color:var(--ink)}
+.days button .n{height:6px;display:flex;gap:2px}.days button .n i{width:5px;height:5px;border-radius:50%;background:var(--clay)}
+.days button.today b{color:var(--clay)}
+.days button[aria-pressed="true"]{background:var(--ink);color:#d4d4d1}.days button[aria-pressed="true"] b{color:#fff}
+.ev{border-radius:10px;background:var(--base);margin-bottom:8px}
+.ev>button{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:62px 1fr auto;gap:10px;align-items:center;padding:11px 12px;cursor:pointer;border-radius:10px}
+.ev>button:focus-visible{outline:2px solid var(--clay)}
+.ev .t{font-size:12px;font-weight:600;color:var(--text-1)}
+.ev .ti{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;min-width:0}
+.ev .ti span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev .ti i{width:8px;height:8px;border-radius:50%;flex:none;background:var(--clay)}
+.ev .chev{font-size:12px;color:var(--text-2)}
+.ev .more{padding:0 12px 12px 84px;font-size:12.5px;color:var(--ink-soft);line-height:1.5}
+.ev .more a{color:var(--clay);font-weight:600}
+@media (max-width:640px){.ev .more{padding-left:12px}.mail{grid-template-columns:30px 1fr}.mail .when{display:none}}
