@@ -148,3 +148,12 @@ body[data-workspace-page="room"] :focus-visible{outline:2px solid var(--clay);ou
 .ev .more{padding:0 12px 12px 84px;font-size:12.5px;color:var(--ink-soft);line-height:1.5}
 .ev .more a{color:var(--clay);font-weight:600}
 @media (max-width:640px){.ev .more{padding-left:12px}.mail{grid-template-columns:30px 1fr}.mail .when{display:none}}
+
+/* three panels: what needs you · inbox · your week */
+.content{max-width:1600px}.topbar,.dash-foot{max-width:1600px}
+.board.three{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) minmax(0,1fr);gap:20px;align-items:start}
+.board.three .col{display:flex;flex-direction:column;gap:20px;min-width:0}
+.board.three .section-label{margin-bottom:12px!important}
+.col-left .proc{padding:14px 16px}.col-left .proc-desc{font-size:12px}
+@media (max-width:1180px){.board.three{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.board.three .col-left{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;align-items:start}.board.three .col-left>section:nth-child(2){grid-row:span 2}}
+@media (max-width:760px){.board.three,.board.three .col-left{grid-template-columns:1fr}.board.three .col-right{order:-1}}

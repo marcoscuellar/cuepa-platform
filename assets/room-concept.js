@@ -148,7 +148,7 @@
       metric(mailOn() ? unread.length : '—', 'Unread emails in your inbox', mailOn() ? (S.inbox.length - unread.length) + ' of ' + S.inbox.length + ' recent emails read' : 'Waiting for Gmail', mailOn(), !mailOn())
       + metric(calOn() ? S.events.length : '—', 'Classes, events and meetings this week', calOn() ? (upcoming.length ? upcoming.length + ' still ahead' : 'All done for the week') : 'Waiting for Calendar', calOn(), !calOn())
       + metric(tcOn() && S.tc.team.length ? (S.tc.team.length - S.tc.late.length) + ' <span class="arrow">/</span> ' + S.tc.team.length : '—', 'Instructor timecards in this week', tcOn() ? (S.tc.team.length ? S.tc.approved.length + ' approved' : 'Add your team in Timecards') : 'Timecards unavailable', tcOn() && S.tc.team.length, !(tcOn() && S.tc.team.length))
-      + metric(N.length, 'Items waiting on you', N.length ? 'See the list on the right' : 'You’re all caught up', true, N.length > 0);
+      + metric(N.length, 'Items waiting on you', N.length ? 'Listed under Waiting on you' : 'You’re all caught up', true, N.length > 0);
 
     /* processes */
     var newest = S.inbox[0];
