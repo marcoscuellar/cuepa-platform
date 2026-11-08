@@ -24,7 +24,7 @@ test('signed in gets The Room, escaped, with no sample data', async () => {
   const r = await call(load({ ws: 'cirques-experience', name: '<b>Chris</b>' }), '/api/room?ws=cirques-experience&room=1');
   assert.equal(r.statusCode, 200);
   assert.match(r.body, /The Room · Cirques Experience/);
-  assert.match(r.body, /aria-current="page">.*The Room/);
+  assert.match(r.body, /<h1>Cirques Experience Room<\/h1>/);
   assert.ok(!r.body.includes('<b>Chris</b>'));
   assert.ok(!/\[#\]|\[HRS\]|Test Sender/.test(r.body));
   assert.equal(r.headers['x-frame-options'], 'DENY');
