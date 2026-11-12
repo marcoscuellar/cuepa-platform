@@ -35,61 +35,47 @@ module.exports = async (req, res) => {
 function page(ws, wsName, person) {
   const W = esc(ws), N = esc(wsName), P = esc(person);
   const ini = esc(String(person || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?');
-  const nav = [['The Room', '/' + W, true], ['Today', '/' + W + '/today'], ['Inbox', '/' + W + '/inbox'], ['Calendar', '/' + W + '/hub#calendar'], ['Timecards', '/' + W + '/hub#timecards'], ['More', '/' + W + '/hub#connect']]
-    .map(([l, h, on]) => '<a href="' + h + '"' + (on ? ' class="on" aria-current="page"' : '') + '>' + (on ? '<i aria-hidden="true"></i>' : '') + l + '</a>').join('');
   return workspaceUI.apply(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>The Room · ${N} · CUEPA</title>
-<script>try{if(localStorage.getItem("cuepa_look")==="dark")document.documentElement.dataset.look="dark"}catch(e){}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/room.css">
-<style id="cuepa-logo">.cuepa-rm.cuepa-rm{display:block;flex:none;width:18px;height:18px}.cuepa-wm.cuepa-wm.cuepa-wm{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif!important;font-weight:800!important;letter-spacing:-.035em!important;font-size:20px!important;line-height:1!important;text-transform:none!important}</style></head><body data-ws="${W}" data-owner="${P}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/assets/room-concept.css"></head><body data-ws="${W}" data-owner="${P}">
 <a class="skip" href="#main">Skip to content</a>
-<header class="global-header">
-  <a class="brand" href="/${W}" aria-label="CUEPA home"><svg class="cuepa-rm" viewBox="0 0 200 200" width="18" height="18" aria-hidden="true"><rect x="0" y="0" width="90" height="90" fill="currentColor"/><rect x="0" y="110" width="90" height="90" fill="currentColor"/><rect x="110" y="110" width="90" height="90" fill="#0F766E"/></svg><b class="cuepa-wm">CUEPA</b><span class="ws">${N}</span></a>
-  <nav aria-label="Hub">${nav}</nav>
-  <div class="profile"><span class="av" aria-hidden="true">${ini}</span><span>${P}</span><button class="look" id="look" aria-label="Switch light or dark look">◐</button></div>
-</header>
-<main id="main" class="workspace">
-  <div class="page-heading"><div><p class="eyebrow">WORK, IN VIEW</p><h1 class="hello" id="hi">Hello.</h1><p class="quiet">Your priorities, conversations, and day. Together.</p></div><div class="page-meta"><div class="roomdate" id="date"></div><section class="ticker" aria-label="What’s connected"><div class="tickmove" id="ticker">Checking connections…</div></section></div></div>
-    <section class="card brief" aria-labelledby="update">
-      <h1 id="update">Checking your day…</h1>
-      <div class="boxes" id="boxes"></div>
-    </section>
-
-  <div class="shell">
-    <aside class="priorities-column" aria-label="Priorities and business overview">
-    <section class="needsec" aria-labelledby="needsH">
-      <h2 id="needsH" class="h2 teal">Needs you <span class="soft">Only what’s off track</span></h2>
-      <div id="needs" class="needs"></div>
-      <div class="ontrack" id="health" role="status">Checking connected sources…</div>
-    </section>
-
-
-    </aside>
-    <section class="panel card" aria-label="Inbox, details, and assistant">
-      <div class="switch" role="group" aria-label="Workspace panel">
-        <button id="tabInbox" aria-pressed="true">Inbox</button><button id="tabDetails" aria-pressed="false">Details</button>
+<div class="shell">
+  <div class="main">
+    <header class="topbar">
+      <div><h1>${N} Room</h1><p class="sub">Your leadership team's view. CUEPA sits in the middle of all of it.</p></div>
+      <div class="topbar-right">
+        <div class="room-status wait" id="sync" role="status"><span class="d"></span><span id="syncText">Checking connections…</span></div>
+        <div class="whoami"><span class="av" aria-hidden="true">${ini}</span>${P || 'You'} <span class="role">· signed in</span></div>
       </div>
-    <div id="panel" tabindex="-1"></div>
-
-
-    </section>
-    <aside class="schedule-column" aria-label="Your calendar">
-    <section class="card agenda cal" aria-labelledby="agendaH">
-      <div class="weekhead"><h2 id="agendaH" class="h2">Your day</h2><span class="soft" id="calWhen"></span></div>
-      <div class="days" id="days" role="group" aria-label="Pick a day this week"></div>
-      <div id="agenda"><p class="quiet">Checking your calendar…</p></div>
-      <div id="dayOpen" hidden></div>
-    </section>
-
-    </aside>
+    </header>
+    <main id="main" class="content">
+      <section class="room-q" aria-labelledby="rq">
+        <div class="rq-text"><b class="display" id="rq">Let's make room for you.</b><span id="rqLine">Checking your day…</span></div>
+        <button class="rq-cta" id="tell" type="button">Tell CUEPA →</button>
+      </section>
+      <section class="metrics" id="metrics" aria-label="This week at a glance"></section>
+      <div class="board three">
+        <div class="col col-left" aria-label="What needs you">
+          <section class="panel" aria-labelledby="waitH"><div class="panel-head"><h3 id="waitH">Waiting on you</h3><span class="count" id="waitCount" hidden></span></div><div id="approvals"><p class="empty-note">Checking…</p></div></section>
+          <section aria-labelledby="procH"><h2 class="section-label" id="procH">Live processes</h2><div class="proc-list" id="procs"></div></section>
+          
+        </div>
+        <div class="col col-mid" aria-label="Inbox">
+          <section class="panel" aria-labelledby="inboxH"><div class="panel-head"><h3 id="inboxH">Inbox</h3><a class="see" href="/${W}/inbox">See all →</a></div><div id="inbox"><p class="empty-note">Checking your inbox…</p></div></section>
+        </div>
+        <div class="col col-right" aria-label="Your week and activity">
+          <section class="panel" aria-labelledby="weekH"><div class="panel-head"><h3 id="weekH">Your week</h3><a class="see" href="/${W}/hub#calendar">Calendar →</a></div><div class="days" id="days" role="group" aria-label="Pick a day"></div><div id="agenda"><p class="empty-note">Checking your calendar…</p></div></section>
+          <section class="panel" aria-labelledby="actH"><div class="panel-head"><h3 id="actH">Recent activity</h3></div><div id="activity"><p class="empty-note">Checking…</p></div></section>
+          <section class="panel" aria-labelledby="trustH"><div class="panel-head"><h3 id="trustH">Trust &amp; controls</h3></div><div id="trust"></div><p class="trust-note">Human in the middle. Nothing is sent, posted or approved without you.</p></section>
+        </div>
+      </div>
+    </main>
+    <footer class="dash-foot">Protect. Challenge. Verify. You decide.</footer>
   </div>
-  <footer class="workspace-footer">Protect. Challenge. Verify. You decide.</footer>
-</main>
-<div class="toast" id="toast" role="status" hidden></div>
-<script src="/assets/room-model.js"></script>
+</div>
 <script src="/assets/folder-colors.js"></script>
-<script src="/assets/room.js"></script>
+<script src="/assets/room-concept.js"></script>
 </body></html>`, ws, wsName, 'room');
 }
-
+module.exports.page = page;
