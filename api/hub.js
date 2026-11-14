@@ -25,6 +25,10 @@ const BTN_NEW = 'onClick=${()=>c.id==="calendar"?setStep("cals"):' + GMAIL + '?l
 // The top-right sample badge + 'Review drafted reminders' button from the prototype.
 const TOP_OLD = "        <div class=\"hub-top-right\">\n          <span class=\"hub-badge\"><i aria-hidden=\"true\"></i>${live?`${live} of ${CONNS.length} connected`:BLANK?\"Nothing connected yet\":\"Sample data \u00b7 nothing connected\"}</span>\n          <button type=\"button\" class=\"hub-primary\" disabled=${!draftsLeft.length} onClick=${()=>setModal(draftsLeft[0].id)}>${draftsLeft.length?`Review drafted reminders (${draftsLeft.length})`:BLANK&&!s.drafts.length?\"No reminders yet\":\"All drafts reviewed\"}</button>\n        </div>";
 
+// Keep the client's own logo in the header when the hub runs empty (BLANK mode shows a plain name otherwise).
+const LOGO_OLD = '${BLANK?html`<span class="hub-wsname">';
+const LOGO_NEW = '${BLANK&&!window.CUEPA_KEEP_LOGO?html`<span class="hub-wsname">';
+
 module.exports = async (req, res) => {
   const ws = new URL(req.url, "http://x").searchParams.get("ws") || "";
   const conf = WORKSPACES[ws];
@@ -51,11 +55,19 @@ module.exports = async (req, res) => {
   // No sample-data badge or sample reminders in a real client's hub: real data only.
   html = patch(html, TOP_OLD, '');
 
+  // Real client workspaces never show the prototype's sample content (vendors, meetings, reminders, "sample data" labels).
+  // Every workspace starts empty and fills only from what the client connects. A brand-new client also gets the
+  // placeholder name swaps below; an existing client keeps their own name and logo.
+  html = all(html, "Preview with sample data.", "");
+  if (!conf.blank) {
+    html = patch(html, LOGO_OLD, LOGO_NEW);
+    html = all(html, 'const KEY="cirques-hub-v4"', 'const KEY="' + ws + '-live-v1"'); // drop any sample state saved in the browser
+    html = html.replace("<script>\nconst {useState", `<script>window.CUEPA_BLANK=true;window.CUEPA_KEEP_LOGO=true;window.CUEPA_OWNER="${name}";</script>\n<script>\nconst {useState`);
+  }
   if (conf.blank) {
     const first = name.split(" ")[0] || "You";
     html = all(html, "Cirques Experience", conf.name);
     html = all(html, "Cirques hub", conf.name + " hub");
-    html = all(html, "Preview with sample data.", "");
     html = all(html, 'const KEY="cirques-hub-v4"', 'const KEY="' + ws + '-hub-v1"');
     html = all(html, "Christian Ochsner", name);
     html = all(html, 'owner="Christian"', 'owner="' + first + '"');
@@ -71,4 +83,4 @@ module.exports = async (req, res) => {
   res.setHeader("X-Robots-Tag", "noindex, nofollow");
   res.end(workspaceUI.policyNotice(workspaceUI.apply(html, ws, conf.name, 'hub'), session.policy === false, POLICY_VERSION));
 };
-
+module.exports.PATCHES = () => ({ NOTE_OLD, BTN_OLD, TOP_OLD, LOGO_OLD });
