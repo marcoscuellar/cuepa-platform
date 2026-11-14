@@ -54,7 +54,6 @@ function page(ws, wsName, person) {
         <svg class="grain" aria-hidden="true" width="100%" height="100%"><filter id="rqgrain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#rqgrain)"></rect></svg>
         <svg class="rq-mark" aria-hidden="true" width="44" height="44" viewBox="14 14 172 172"><path d="M155.2 146.3 A72 72 0 1 1 155.2 53.7 A17 17 0 0 1 129.1 75.6 A38 38 0 1 0 129.1 124.4" fill="none" stroke="#FFFFFF" stroke-width="22" stroke-linecap="round"/></svg>
         <div class="rq-text"><b class="display" id="rq">Let's make room for you<span class="dot">.</span></b><span id="rqLine">Checking your day…</span></div>
-        <button class="rq-cta" id="tell" type="button">Tell CUEPA →</button>
       </section>
       <section class="metrics" id="metrics" aria-label="This week at a glance"></section>
       <div class="board three">
