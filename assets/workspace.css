@@ -503,3 +503,8 @@ html body[data-workspace-page="start"] .state.ok i{background:#0E7490!important}
 html body[data-workspace-page="start"] .fine,html body[data-workspace-page="start"] .foot,html body[data-workspace-page="start"] .skip{color:#5E6670!important}
 html body[data-workspace-page="start"] .skip:hover{color:#080B0F!important}
 html body[data-workspace-page="start"] :focus-visible{outline:2px solid #0E7490!important;outline-offset:2px}
+html body[data-workspace-page="start"] .stage{position:relative;isolation:isolate;padding-top:56px!important}
+html body[data-workspace-page="start"] .stage::before{content:"";position:absolute;left:0;right:0;top:0;height:340px;z-index:-2;background:radial-gradient(circle at 88% 8%,#0E7490 0%,transparent 55%),radial-gradient(circle at 8% 100%,#0F766E 0%,transparent 62%),radial-gradient(circle at 58% 62%,#2DD4BF66 0%,transparent 42%),#080B0F}
+html body[data-workspace-page="start"] .stage::after{content:"";position:absolute;left:0;right:0;top:0;height:340px;z-index:-1;opacity:.35;mix-blend-mode:overlay;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+html body[data-workspace-page="start"] .card{box-shadow:0 2px 6px rgba(8,11,15,.10),0 24px 60px rgba(8,11,15,.22)!important}
+@media(max-width:520px){html body[data-workspace-page="start"] .stage::before,html body[data-workspace-page="start"] .stage::after{height:220px}html body[data-workspace-page="start"] .stage{padding-top:32px!important}}
