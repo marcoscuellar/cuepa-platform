@@ -189,7 +189,6 @@
     ['Auto-post to social', 'Off. Every post waits for approval']
   ].map(function (r) { return '<div class="toggle-row"><div><div class="tt">' + r[0] + '</div><div class="td">' + r[1] + '</div></div><button class="rswitch" type="button" role="switch" aria-checked="false" aria-label="' + r[0] + '" disabled></button></div>'; }).join('');
 
-  $('tell').onclick = function () { var b = document.querySelector('#cuepa-ai [data-toggle]'); if (b) { if (b.getAttribute('aria-expanded') !== 'true') b.click(); var t = document.getElementById('cuepa-ai-input'); if (t) t.focus(); } };
 
   function refresh() { S.log = []; return Promise.all([loadMail(), loadCal(), loadTc()]).then(render); }
   refresh(); setInterval(refresh, 15 * 60 * 1000);

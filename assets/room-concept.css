@@ -6,7 +6,7 @@
   --lift:0 1px 2px rgba(0,0,0,.05),0 6px 18px rgba(0,0,0,.07);
 }
 html body[data-workspace-page="room"]{background:var(--base)!important;color:var(--ink);margin:0;-webkit-font-smoothing:antialiased}
-body[data-workspace-page="room"] .display,body[data-workspace-page="room"] .display *,body[data-workspace-page="room"] .metric .mv,body[data-workspace-page="room"] .metric .mv *{font-family:'Archivo Black',Inter,sans-serif!important;font-weight:800;font-synthesis:none;letter-spacing:-.01em}
+body[data-workspace-page="room"] .display,body[data-workspace-page="room"] .display *,body[data-workspace-page="room"] .metric .mv,body[data-workspace-page="room"] .metric .mv *{font-family:Inter,sans-serif!important;font-weight:800;font-synthesis:none;letter-spacing:-.01em}
 body[data-workspace-page="room"] h1,body[data-workspace-page="room"] h2,body[data-workspace-page="room"] h3{margin:0;text-wrap:balance}
 body[data-workspace-page="room"] p{margin:0}
 body[data-workspace-page="room"] button{font-family:inherit;cursor:pointer}
@@ -161,3 +161,40 @@ body[data-workspace-page="room"] :focus-visible{outline:2px solid var(--clay);ou
 /* CUEPA glow (brand background): soft palette glows + grain */
 .room-q::before{content:'';position:absolute;inset:0;z-index:-1;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.16;mix-blend-mode:overlay;pointer-events:none}
 .room-q .rq-text span{color:#d6e6e6}
+
+/* ---- CUEPA branding (from the CUEPA Bold Banner System, Ink + Teal) ----
+   Glow: Ground Ink #080B0F with Primary Accent #0E7490, Secondary Teal #0F766E and a soft Bright Signal #2DD4BF, plus grain.
+   Page stays light (Christian: no black backgrounds); the glow lives in the banner. Inter only. White pill buttons, black shadows. */
+body[data-workspace-page="room"] .display,body[data-workspace-page="room"] .display *,body[data-workspace-page="room"] .metric .mv,body[data-workspace-page="room"] .metric .mv *{font-family:Inter,Helvetica,Arial,sans-serif!important;font-weight:900;letter-spacing:-.02em}
+.topbar h1{font-weight:900;letter-spacing:-.02em}
+.room-q{position:relative;overflow:hidden;isolation:isolate;justify-content:flex-start;background:radial-gradient(circle at 88% 8%,#0E7490 0%,transparent 55%),radial-gradient(circle at 8% 100%,#0F766E 0%,transparent 62%),radial-gradient(circle at 58% 62%,#2DD4BF66 0%,transparent 42%),#080B0F;border-radius:20px;box-shadow:0 18px 40px rgba(0,0,0,.28)}
+.room-q::before{display:none}
+.room-q .grain{position:absolute;inset:0;z-index:-1;opacity:.35;mix-blend-mode:overlay;pointer-events:none}
+.room-q .rq-mark{flex:none}
+.room-q .rq-text{flex:1;min-width:220px}
+.room-q .rq-text b{font-weight:900;font-size:21px;letter-spacing:-.01em}
+.room-q .rq-text span{color:rgba(255,255,255,.82)}
+.room-q .rq-cta{background:#FFFFFF;color:#080B0F;border-radius:999px;padding:12px 22px;font-weight:700;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.proc-bar{background:linear-gradient(90deg,#0F766E,#0E7490)}
+.mail.unread .who::before,.days button .n i{background:#0E7490}
+.days button.today b{color:#0E7490}
+
+/* Brand book (Nov 2026) on top of the banner system: page opens white; Primary Accent #0E7490 is the one button
+   (white Inter Bold, 8px corners, 44px); statements Inter ExtraBold with a colored period (Bright Signal on dark only);
+   Secondary Teal #0F766E for labels; cards 14px, soft black shadow, never outlined, lift 3px; bands 24px; captions #5E6670. */
+.room-q{border-radius:24px}
+.room-q .rq-text b{font-weight:800;letter-spacing:-.04em;font-size:22px}
+.room-q .rq-text b .dot{color:#2DD4BF}
+.room-q .rq-cta{background:#0E7490;color:#FFFFFF;border-radius:8px;min-height:44px;padding:0 20px;font-weight:700;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.room-q .rq-cta:hover{background:#0c6680}
+.btn-approve{background:#0E7490;color:#fff}
+.approval .a-kind,.section-label{color:#0F766E!important}
+.see,.proc-foot a{color:#0E7490}
+.panel-head .count{background:#0E7490}
+.days button.today[aria-pressed="true"] b{color:#FFFFFF}
+
+/* Colors only: orange accent -> CUEPA Primary Accent; page and cards unchanged. */
+:root{--clay:#0E7490}
+/* Room space for the Ask CUEPA corner button so it never covers the last panel. */
+body[data-workspace-page="room"] .content{padding-bottom:120px}
+@media (max-width:640px){body[data-workspace-page="room"] .content{padding-bottom:110px}}

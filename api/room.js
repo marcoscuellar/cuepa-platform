@@ -37,7 +37,7 @@ function page(ws, wsName, person) {
   const ini = esc(String(person || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?');
   return workspaceUI.apply(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex"><title>The Room · ${N} · CUEPA</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
 <link rel="stylesheet" href="/assets/room-concept.css"></head><body data-ws="${W}" data-owner="${P}">
 <a class="skip" href="#main">Skip to content</a>
 <div class="shell">
@@ -51,8 +51,9 @@ function page(ws, wsName, person) {
     </header>
     <main id="main" class="content">
       <section class="room-q" aria-labelledby="rq">
-        <div class="rq-text"><b class="display" id="rq">Let's make room for you.</b><span id="rqLine">Checking your day…</span></div>
-        <button class="rq-cta" id="tell" type="button">Tell CUEPA →</button>
+        <svg class="grain" aria-hidden="true" width="100%" height="100%"><filter id="rqgrain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#rqgrain)"></rect></svg>
+        <svg class="rq-mark" aria-hidden="true" width="44" height="44" viewBox="14 14 172 172"><path d="M155.2 146.3 A72 72 0 1 1 155.2 53.7 A17 17 0 0 1 129.1 75.6 A38 38 0 1 0 129.1 124.4" fill="none" stroke="#FFFFFF" stroke-width="22" stroke-linecap="round"/></svg>
+        <div class="rq-text"><b class="display" id="rq">Let's make room for you<span class="dot">.</span></b><span id="rqLine">Checking your day…</span></div>
       </section>
       <section class="metrics" id="metrics" aria-label="This week at a glance"></section>
       <div class="board three">
