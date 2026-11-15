@@ -152,7 +152,7 @@ function render(){
       +msg()
       +(ok?'<div class="state ok"><i></i><span>Connected as <b>'+esc(S.mail.email||'your Gmail')+'</b></span></div>':'')
       +'<p class="fine"><b>Heads up:</b> Google may say it hasn’t verified CUEPA yet while we finish their review. Click <b>Advanced</b>, then <b>Go to CUEPA</b>. Tick both boxes (read and send).</p>'
-      +'<div class="acts">'+(ok?'<button class="btn go" data-a="next">Next: Calendar →</button><a class="btn" href="/api/gmail?action=start&ws='+WS+'&back=start">Use a different account</a>'
+      +'<div class="acts">'+(ok?'<button class="btn go" data-a="next">Next: Calendar →</button><a class="btn" href="/api/gmail?action=start&ws='+WS+'&back=start">Use a different account</a><button class="skip" data-a="gmail-off">Disconnect Gmail</button>'
         :'<a class="btn go" href="/api/gmail?action=start&ws='+WS+'&back=start">Connect Gmail</a><button class="skip" data-a="next">Skip for now</button>')+'</div>';
   }else if(S.step===1){
     const ok=S.cal&&S.cal.connected;
@@ -161,7 +161,7 @@ function render(){
       +msg()
       +(ok?'<div class="state ok"><i></i><span>Google Calendar connected'+((S.cal.selected||[]).length?' · '+(S.cal.selected||[]).length+' calendar'+((S.cal.selected||[]).length===1?'':'s')+' showing':'')+'</span></div>':'')
       +'<p class="fine"><b>Same heads up:</b> if Google says CUEPA isn’t verified yet, click <b>Advanced</b>, then <b>Go to CUEPA</b>.</p>'
-      +'<div class="acts">'+(ok?'<button class="btn go" data-a="next">Next: Your team →</button><a class="btn" href="/'+WS+'/hub#connect">Choose calendars (classic hub)</a>'
+      +'<div class="acts">'+(ok?'<button class="btn go" data-a="next">Next: Your team →</button><a class="btn" href="/'+WS+'/hub#connect">Choose calendars (classic hub)</a><button class="skip" data-a="cal-off">Disconnect Calendar</button>'
         :'<a class="btn go" id="calGo" href="/api/google?action=start&ws='+WS+'">Connect Google Calendar</a><button class="skip" data-a="next">Skip for now</button>')
       +'</div>';
     const g=$('calGo');if(g)g.onclick=()=>onboarding(true);
@@ -184,7 +184,12 @@ function render(){
       +'<p class="lede">'+(n.length?'Connected: '+esc(n.join(', '))+'. ':'')+'Your Today page shows what needs you, your day in one view, and why each thing is there. Anything you skipped is waiting in Setup.</p>'
       +'<div class="acts"><button class="btn go" data-a="finish">Open my hub →</button>'+(n.length<3?'<button class="btn" data-a="later">Finish setup later</button>':'')+'</div>';
   }
-  c.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.dataset.a==='next'){S.step++;render();window.scrollTo({top:0,behavior:'smooth'});}else if(b.dataset.a==='finish')finish();else if(b.dataset.a==='later'){toured();onboarding(false);location.href='/'+WS;}};
+  c.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;
+    if(b.dataset.a==='gmail-off'||b.dataset.a==='cal-off'){const mail=b.dataset.a==='gmail-off';
+      if(!confirm(mail?'Disconnect Gmail? Your emails stop showing in CUEPA for you. Nothing in your Gmail is changed, and you can reconnect anytime.':'Disconnect Google Calendar? Your calendar stops showing in CUEPA for you. Nothing in your calendar is changed, and you can reconnect anytime.'))return;
+      b.disabled=true;post((mail?'/api/gmail':'/api/google')+'?action=disconnect&ws='+WS,{})
+        .then(()=>{if(mail)S.mail={connected:false};else S.cal={connected:false};S.msg=['ok',(mail?'Gmail':'Calendar')+' disconnected.'];render();})
+        .catch(x=>{S.msg=['warn',x.message||'Couldn’t disconnect. Try again.'];render();});return;}if(b.dataset.a==='next'){S.step++;render();window.scrollTo({top:0,behavior:'smooth'});}else if(b.dataset.a==='finish')finish();else if(b.dataset.a==='later'){toured();onboarding(false);location.href='/'+WS;}};
 }
 load().catch(()=>render());
 </script></body></html>`, ws, wsName, 'start');
