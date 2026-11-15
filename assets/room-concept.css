@@ -195,3 +195,6 @@ body[data-workspace-page="room"] .display,body[data-workspace-page="room"] .disp
 
 /* Colors only: orange accent -> CUEPA Primary Accent; page and cards unchanged. */
 :root{--clay:#0E7490}
+/* Room space for the Ask CUEPA corner button so it never covers the last panel. */
+body[data-workspace-page="room"] .content{padding-bottom:120px}
+@media (max-width:640px){body[data-workspace-page="room"] .content{padding-bottom:110px}}
