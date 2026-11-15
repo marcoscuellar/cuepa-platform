@@ -46,3 +46,16 @@ test('The Room is not in the menu while Today is home',()=>{
  const html=require('../lib/workspace-ui').header('cirques-experience','Cirques Experience','today');
  assert.doesNotMatch(html,/>The Room</);assert.match(html,/>Today</);
 });
+
+test('a real client hub starts empty: no prototype sample data, own logo kept',async()=>{
+ const html=(await call('hub',session)).body;
+ assert.match(html,/window\.CUEPA_BLANK=true;window\.CUEPA_KEEP_LOGO=true/);
+ assert.match(html,/const KEY="cirques-experience-live-v1"/);
+ assert.doesNotMatch(html,/Preview with sample data/);
+ assert.match(html,/BLANK&&!window\.CUEPA_KEEP_LOGO\?html`<span class="hub-wsname">/);
+});
+test('every hub patch target still exists in the template (a missing one would silently skip)',()=>{
+ delete require.cache[require.resolve('../api/hub.js')];
+ const P=require('../api/hub.js').PATCHES(), t=fs.readFileSync(require.resolve('../_app/cirques-experience.html'),'utf8');
+ for(const [k,v] of Object.entries(P)) assert.ok(t.includes(v),k+' not found in template');
+});

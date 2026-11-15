@@ -1,1 +1,4 @@
 # Vercel builds from the repo root. Nothing to ignore yet.
+# Never publish these as files on the live site (vercel.json also redirects them away).
+reviews/
+docs/
