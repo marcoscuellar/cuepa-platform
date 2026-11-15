@@ -484,3 +484,27 @@ body[data-workspace-page="today"] .surface.line .day{grid-column:1/-1;box-shadow
 @media(max-width:650px){#cuepa-ai>[data-toggle]{width:56px;height:56px!important;padding:0!important;justify-content:center}#cuepa-ai>[data-toggle] .ai-txt{display:none}#cuepa-ai>[data-toggle] .ai-ico{width:40px;height:40px;background:transparent;color:#fff}}
 @media(prefers-reduced-motion:reduce){#cuepa-ai>[data-toggle],#cuepa-ai>[data-toggle] .ai-ico svg,#cuepa-ai>[data-toggle]::after{animation:none!important;transition:none!important}}
 #cuepa-ai header{display:flex;align-items:center;gap:4px}#cuepa-ai header button{white-space:nowrap;padding:6px 8px}#cuepa-ai .ai-title{min-width:0}
+
+/* ---------- Setup (start): CUEPA brand book (Nov 2026) ---------- */
+html body[data-workspace-page="start"] .lab{font-family:Inter,'Helvetica Neue',Helvetica,Arial,sans-serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:#0F766E!important}
+html body[data-workspace-page="start"] h1{font-weight:800!important}
+html body[data-workspace-page="start"] h1 .dot{display:inline!important;color:#0E7490!important}
+html body[data-workspace-page="start"] .card{border-radius:14px!important;box-shadow:0 1px 2px rgba(8,11,15,.06),0 12px 32px rgba(8,11,15,.10)!important}
+html body[data-workspace-page="start"] .btn{border-radius:8px!important;min-height:44px!important;padding:0 20px!important;font-weight:700!important;display:inline-flex!important;align-items:center!important}
+html body[data-workspace-page="start"] .btn.go{background:#0E7490!important;color:#fff!important}
+html body[data-workspace-page="start"] .btn.go:hover{background:#0B5F75!important;filter:none!important}
+html body[data-workspace-page="start"] .btn:not(.go):not(.dark){background:#fff!important;color:#080B0F!important;box-shadow:inset 0 0 0 1px #D5DADF!important}
+html body[data-workspace-page="start"] .btn.dark,html body[data-workspace-page="start"] button.dark{background:#080B0F!important;color:#fff!important}
+html body[data-workspace-page="start"] .dots i{background:#D5DADF!important}
+html body[data-workspace-page="start"] .dots i.on{background:#0E7490!important}
+html body[data-workspace-page="start"] .dots i.done{background:#080B0F!important}
+html body[data-workspace-page="start"] .state.ok{background:#E6F2F4!important;color:#0E7490!important}
+html body[data-workspace-page="start"] .state.ok i{background:#0E7490!important}
+html body[data-workspace-page="start"] .fine,html body[data-workspace-page="start"] .foot,html body[data-workspace-page="start"] .skip{color:#5E6670!important}
+html body[data-workspace-page="start"] .skip:hover{color:#080B0F!important}
+html body[data-workspace-page="start"] :focus-visible{outline:2px solid #0E7490!important;outline-offset:2px}
+html body[data-workspace-page="start"] .stage{position:relative;isolation:isolate;padding-top:56px!important}
+html body[data-workspace-page="start"] .stage::before{content:"";position:absolute;left:0;right:0;top:0;height:340px;z-index:-2;background:radial-gradient(circle at 88% 8%,#0E7490 0%,transparent 55%),radial-gradient(circle at 8% 100%,#0F766E 0%,transparent 62%),radial-gradient(circle at 58% 62%,#2DD4BF66 0%,transparent 42%),#080B0F}
+html body[data-workspace-page="start"] .stage::after{content:"";position:absolute;left:0;right:0;top:0;height:340px;z-index:-1;opacity:.35;mix-blend-mode:overlay;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+html body[data-workspace-page="start"] .card{box-shadow:0 2px 6px rgba(8,11,15,.10),0 24px 60px rgba(8,11,15,.22)!important}
+@media(max-width:520px){html body[data-workspace-page="start"] .stage::before,html body[data-workspace-page="start"] .stage::after{height:220px}html body[data-workspace-page="start"] .stage{padding-top:32px!important}}
